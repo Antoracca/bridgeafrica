@@ -31,6 +31,7 @@ import { PasswordStrengthIndicator } from '@/components/ui/password-strength-ind
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
 import countries from 'world-countries'
+import { validateEmailDomain } from '@/lib/utils/validation'
 
 const formSchema = z.object({
   firstName: z.string().min(2, { message: "Le prénom doit contenir au moins 2 caractères" }),
@@ -44,7 +45,21 @@ const formSchema = z.object({
       return false
     }
   }, { message: "Numéro de téléphone invalide pour ce pays" }),
-  email: z.string().email({ message: "Format d'email invalide" }),
+  email: z.string()
+    .email({ message: "Format d'email invalide" })
+    .refine((email) => {
+      const validation = validateEmailDomain(email)
+      return validation.valid
+    }, { message: "Domaine email invalide" })
+    .superRefine((email, ctx) => {
+      const validation = validateEmailDomain(email)
+      if (!validation.valid && validation.error) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: validation.error
+        })
+      }
+    }),
   password: z.string()
     .min(8, { message: "Le mot de passe doit contenir au moins 8 caractères" })
     .regex(/[A-Z]/, { message: "Le mot de passe doit contenir au moins une majuscule" })
@@ -122,11 +137,8 @@ export function RegisterForm() {
         })
         const data = await res.json()
         setIsPhoneAvailable(data.isAvailable)
-        if (!data.isAvailable) {
-          form.setError('phone', { message: 'Ce numéro est déjà utilisé' })
-        } else {
-          form.clearErrors('phone')
-        }
+        // Message affiché via le <p> ligne 433 quand isPhoneAvailable === false
+        // Pas besoin de form.setError pour éviter les doublons
       } catch (error) {
         setIsPhoneAvailable(null)
       }
@@ -138,11 +150,21 @@ export function RegisterForm() {
   // Vérification live de l'email
   useEffect(() => {
     async function checkEmail() {
-      // On enlève dirtyFields pour que la vérification se fasse même sur un remplissage auto
+      // Validation format basique d'abord
       if (!debouncedEmail || !z.string().email().safeParse(debouncedEmail).success) {
         setIsEmailAvailable(null)
         return
       }
+
+      // CRITICAL: Validate domain BEFORE calling API (sync with Zod schema)
+      const domainValidation = validateEmailDomain(debouncedEmail)
+      if (!domainValidation.valid) {
+        setIsEmailAvailable(false)
+        setIsCheckingEmail(false) // Stop loading indicator
+        form.setError('email', { message: domainValidation.error || 'Domaine email invalide' })
+        return
+      }
+
       setIsCheckingEmail(true)
       try {
         const res = await fetch('/api/auth/check-email', {
@@ -153,7 +175,9 @@ export function RegisterForm() {
         const data = await res.json()
         setIsEmailAvailable(data.isAvailable)
         if (!data.isAvailable) {
-          form.setError('email', { message: 'Cet email est déjà utilisé' })
+          // Use error message from API if available (contains domain validation errors)
+          const errorMessage = data.error || 'Cet email est déjà utilisé'
+          form.setError('email', { message: errorMessage })
         } else {
           form.clearErrors('email')
         }
@@ -168,12 +192,18 @@ export function RegisterForm() {
   // Vérification live du couple nom/prénom
   useEffect(() => {
     async function checkName() {
-      if (!debouncedName.firstName || !debouncedName.lastName || 
+      console.log('[NAME CHECK] debouncedName:', debouncedName)
+
+      if (!debouncedName.firstName || !debouncedName.lastName ||
           debouncedName.firstName.length < 2 || debouncedName.lastName.length < 2) {
+        console.log('[NAME CHECK] Conditions non remplies, skip')
         setIsNameAvailable(null)
         return
       }
+
+      console.log('[NAME CHECK] Vérification en cours pour:', debouncedName)
       setIsCheckingName(true)
+
       try {
         const res = await fetch('/api/auth/check-name', {
           method: 'POST',
@@ -181,11 +211,22 @@ export function RegisterForm() {
           body: JSON.stringify(debouncedName),
         })
         const data = await res.json()
+        console.log('[NAME CHECK] Réponse API:', data)
+
         setIsNameAvailable(data.isAvailable)
+
         if (!data.isAvailable) {
-          toast.warning('Ce nom et prénom sont déjà utilisés. Veuillez vérifier ou vous connecter.')
+          console.log('[NAME CHECK] Nom/Prénom déjà utilisé - affichage message')
+          // Message déjà affiché sous le champ (ligne 369-371)
+          // On affiche aussi un toast informatif
+          toast('Un compte avec ce nom existe déjà', {
+            description: 'Si c\'est vous, veuillez vous connecter.',
+            duration: 5000,
+            icon: 'ℹ️',
+          })
         }
       } catch (error) {
+        console.error('[NAME CHECK] Erreur:', error)
         setIsNameAvailable(null)
       }
       setIsCheckingName(false)
@@ -194,51 +235,84 @@ export function RegisterForm() {
   }, [debouncedName])
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    // Validation frontend : on bloque la soumission sans toast (le message est déjà visible sous le champ)
     if (isEmailAvailable === false) {
-      toast.error("Cet email est déjà utilisé")
-      return
-    }
-    
-    if (isNameAvailable === false) {
-      toast.error("Ce nom et prénom sont déjà utilisés")
-      return
+      return // Message d'erreur déjà affiché sous le champ email
     }
 
+    // REMOVED: Name availability check - informational only per user policy (medical context)
+    // Name check is informational only, does not block submission
+
     if (isPhoneAvailable === false) {
-      toast.error("Ce numéro de téléphone est déjà utilisé")
-      return
+      return // Message d'erreur déjà affiché sous le champ téléphone
     }
 
     startTransition(async () => {
-      const formData = new FormData()
-      formData.append('firstName', values.firstName)
-      formData.append('lastName', values.lastName)
-      formData.append('country', values.country)
-      formData.append('phone', values.phone)
-      formData.append('email', values.email)
-      formData.append('password', values.password)
-      formData.append('role', 'patient')
-      
-      const result = await signup(formData)
-      
-      if (result?.error) {
-        // Gestion fine des erreurs serveur pour une UX préventive
-        if (result.error.toLowerCase().includes("email") || result.error.includes("déjà")) {
-             form.setError('email', { message: "Cet email est déjà inscrit (ou en attente de validation)." })
-             setIsEmailAvailable(false) // Force l'état visuel
+      try {
+        const formData = new FormData()
+        formData.append('firstName', values.firstName)
+        formData.append('lastName', values.lastName)
+        formData.append('country', values.country)
+        formData.append('phone', values.phone)
+        formData.append('email', values.email)
+        formData.append('password', values.password)
+        formData.append('role', 'patient')
+
+        console.log('Soumission inscription avec:', {
+          email: values.email,
+          phone: values.phone,
+          name: `${values.firstName} ${values.lastName}`
+        })
+
+        const result = await signup(formData)
+        console.log('Résultat signup:', result)
+
+        // CRITICAL: Check if result exists at all
+        if (!result) {
+          console.error('[SIGNUP] Result is null/undefined')
+          toast.error("Erreur de connexion", {
+            description: "Impossible de contacter le serveur. Vérifiez votre connexion internet.",
+            duration: 6000,
+          })
+          return
         }
-        else if (result.error.toLowerCase().includes("téléphone") || result.error.includes("phone")) {
-             form.setError('phone', { message: "Ce numéro est déjà utilisé." })
-             setIsPhoneAvailable(false)
+
+        if (result?.error) {
+          console.error('[SIGNUP] Erreur reçue:', result.error)
+          // Gestion fine des erreurs serveur pour une UX préventive
+          if (result.error.toLowerCase().includes("email") || result.error.includes("déjà")) {
+               setIsEmailAvailable(false) // Force l'affichage du message ligne 469
+          }
+          else if (result.error.toLowerCase().includes("téléphone") || result.error.includes("phone")) {
+               setIsPhoneAvailable(false) // Force l'affichage du message ligne 433
+          }
+          else {
+            // Pour toutes les autres erreurs (validation, serveur, etc.)
+            // On affiche un toast uniquement pour les erreurs non liées aux champs
+            toast.error("Inscription impossible", {
+              description: result.error,
+              duration: 6000,
+            })
+          }
+        } else if (result?.success) {
+          console.log('[SIGNUP] Success - redirection vers check-email')
+          // Redirection vers la page check-email avec l'email en paramètre
+          router.push(`/check-email?email=${encodeURIComponent(values.email)}`)
+        } else {
+          // Cas où result existe mais ne contient ni error ni success
+          console.warn('[SIGNUP] Result inattendu:', result)
+          toast.error("Erreur inattendue", {
+            description: "La réponse du serveur est invalide. Veuillez réessayer.",
+            duration: 6000,
+          })
         }
-        
-        toast.error("Inscription impossible", {
-          description: result.error,
+      } catch (error) {
+        // Capture des erreurs non gérées (network, parsing, etc.)
+        console.error('Erreur inattendue lors de l\'inscription:', error)
+        toast.error("Erreur inattendue", {
+          description: error instanceof Error ? error.message : "Une erreur technique s'est produite. Veuillez réessayer.",
           duration: 5000,
         })
-      } else if (result?.success) {
-        // Redirection vers la page check-email avec l'email en paramètre
-        router.push(`/check-email?email=${encodeURIComponent(values.email)}`)
       }
     })
   }
@@ -257,12 +331,13 @@ export function RegisterForm() {
   }
   
   // Vérifier si tous les champs requis sont valides
-  const isFormValid = form.formState.isValid && 
-                      isEmailAvailable !== false && 
-                      isNameAvailable !== false && 
+  // NOTE: Name availability is informational only - does not block submission
+  const isFormValid = form.formState.isValid &&
+                      isEmailAvailable !== false &&
+                      // REMOVED: isNameAvailable !== false &&  // Informational only per user policy
                       isPhoneAvailable !== false &&
-                      !isCheckingEmail && 
-                      !isCheckingName &&
+                      !isCheckingEmail &&
+                      // REMOVED: !isCheckingName &&  // Don't block on name check
                       !isCheckingPhone
 
   return (

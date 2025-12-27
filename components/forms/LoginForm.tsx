@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
-import { Eye, EyeOff, Loader2, AlertCircle, CheckCircle, XCircle, Mail } from 'lucide-react'
+import { Eye, EyeOff, Loader2, AlertCircle, CheckCircle, XCircle } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import Link from 'next/link'
 import { useDebounce } from '@/hooks/use-debounce'
@@ -40,7 +40,6 @@ function LoginFormContent() {
     const err = searchParams.get('error')
     return err ? decodeURIComponent(err) : null
   })
-  const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null)
 
   useEffect(() => {
     if (!urlError) return
@@ -61,17 +60,17 @@ function LoginFormContent() {
         setEmailExists(null)
         return
       }
-      
+
       setIsCheckingEmail(true)
       try {
-        const res = await fetch('/api/auth/check-email', {
+        const res = await fetch('/api/auth/verify-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: debouncedEmail }),
         })
         const data = await res.json()
-        // Si l'email n'est pas disponible, c'est qu'il existe
-        setEmailExists(!data.isAvailable)
+        // API retourne directement si l'email existe
+        setEmailExists(data.exists)
       } catch (error) {
         setEmailExists(null)
       }
@@ -90,8 +89,7 @@ function LoginFormContent() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setUrlError(null)
-    setUnverifiedEmail(null) // Reset state
-    
+
     if (emailExists === false) {
       form.setError('email', { message: "Aucun compte n'existe avec cet email" })
       return
@@ -107,11 +105,12 @@ function LoginFormContent() {
       if (result?.error) {
         // Cas spécifique email non confirmé
         if (result.code === 'email_not_confirmed' && result.email) {
-          setUnverifiedEmail(result.email)
-          toast.error("Compte non activé", {
-             description: "Veuillez vérifier vos emails pour activer votre compte."
-          })
-          return 
+          // ENVOI AUTOMATIQUE du lien de confirmation
+          await resendConfirmationEmail(result.email)
+
+          // REDIRECTION vers check-email (comme après inscription)
+          router.push(`/check-email?email=${encodeURIComponent(result.email)}`)
+          return
         }
 
         // Cas identifiants invalides
@@ -134,22 +133,6 @@ function LoginFormContent() {
     })
   }
 
-  const handleResendConfirmation = async () => {
-    if (!unverifiedEmail) return
-    
-    startTransition(async () => {
-       const res = await resendConfirmationEmail(unverifiedEmail)
-       if (res?.success) {
-         toast.success("Email envoyé !", {
-           description: "Vérifiez votre boîte de réception."
-         })
-         router.push(`/check-email?email=${encodeURIComponent(unverifiedEmail)}`)
-       } else {
-         toast.error("Erreur", { description: res?.error || "Impossible de renvoyer l'email" })
-       }
-    })
-  }
-
   const handleSocialLogin = (provider: 'google' | 'apple') => {
     setUrlError(null)
     startTransition(async () => {
@@ -165,28 +148,6 @@ function LoginFormContent() {
 
   return (
     <div className="space-y-6">
-      {/* Alerte Email Non Confirmé */}
-      {unverifiedEmail && (
-        <Alert className="border-yellow-200 bg-yellow-50/50 dark:border-yellow-900 dark:bg-yellow-950/20">
-          <AlertCircle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
-          <div className="ml-2 w-full">
-            <AlertDescription className="text-yellow-700 dark:text-yellow-300 mb-2">
-              Votre email n&apos;a pas encore été confirmé.
-            </AlertDescription>
-            <Button 
-              size="sm" 
-              variant="outline" 
-              className="w-full bg-white dark:bg-black border-yellow-300 hover:bg-yellow-100 text-yellow-800"
-              onClick={handleResendConfirmation}
-              disabled={isPending}
-            >
-              {isPending ? <Loader2 className="mr-2 h-3 w-3 animate-spin" /> : <Mail className="mr-2 h-3 w-3" />}
-              Renvoyer le lien de confirmation
-            </Button>
-          </div>
-        </Alert>
-      )}
-
       {/* Afficher les erreurs OAuth */}
       {urlError && (
         <Alert className="border-red-200 bg-red-50/50 dark:border-red-900 dark:bg-red-950/20">

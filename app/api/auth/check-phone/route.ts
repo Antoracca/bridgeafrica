@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { normalizePhone } from '@/lib/utils/validation'
 
 export async function POST(request: Request) {
   try {
@@ -9,23 +10,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ isAvailable: false, error: 'Numéro de téléphone requis' }, { status: 400 })
     }
 
+    // Normalize phone to E.164 format BEFORE any checks
+    const normalizedPhone = normalizePhone(phone)
+
+    if (!normalizedPhone) {
+      return NextResponse.json({ isAvailable: false, error: 'Numéro de téléphone invalide' }, { status: 400 })
+    }
+
     const supabase = await createClient()
 
-    // Nettoyage strict (suppression espaces, tirets, points)
-    const cleanPhone = phone.replace(/[\s\.\-\(\)]/g, '')
-
-    // Tentative 1: Via RPC
-    const { data: rpcData, error: rpcError } = await supabase.rpc('check_phone_exists', { phone_to_check: cleanPhone } as any)
+    // Attempt 1: Via RPC (preferred - handles normalization)
+    const { data: rpcData, error: rpcError } = await supabase.rpc('check_phone_exists', { phone_to_check: normalizedPhone } as any)
 
     if (!rpcError) {
         return NextResponse.json({ isAvailable: !rpcData })
     }
 
-    // Fallback: Requête directe
+    // Fallback: Direct query if RPC fails
     const { data, error } = await supabase
       .from('profiles')
       .select('id')
-      .eq('phone', cleanPhone)
+      .eq('phone', normalizedPhone)
       .limit(1)
     
     if (error) {
@@ -35,9 +40,10 @@ export async function POST(request: Request) {
 
     const isAvailable = !data || data.length === 0
     return NextResponse.json({ isAvailable })
-    
+
   } catch (error) {
     console.error('Erreur API check-phone:', error)
-    return NextResponse.json({ isAvailable: true })
+    // FIX: Fail closed - treat unknown errors as "unavailable" to prevent duplicates
+    return NextResponse.json({ isAvailable: false })
   }
 }

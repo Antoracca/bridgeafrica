@@ -13,10 +13,10 @@ function CheckEmailContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const email = searchParams.get('email') || ''
-  
+
   const { isVerified, isLoading, error, userRole } = useEmailVerification(email)
   const [isResending, setIsResending] = useState(false)
-  const [countdown, setCountdown] = useState(0)
+  const [countdown, setCountdown] = useState(45) // Cooldown initial de 45 secondes
   const timerRef = useRef<NodeJS.Timeout | null>(null)
 
   // Redirection auto quand vérifié
@@ -64,7 +64,7 @@ function CheckEmailContent() {
         toast.success('Email envoyé', {
           description: 'Vérifiez votre boîte de réception.',
         })
-        setCountdown(35) // Cooldown manuel de 35s
+        setCountdown(45) // Cooldown de 45 secondes
       } else {
         toast.error('Erreur', { description: result.error || 'Impossible de renvoyer' })
       }
@@ -132,9 +132,9 @@ function CheckEmailContent() {
                   
                   {countdown > 0 && (
                     <div className="absolute bottom-0 left-0 h-1 bg-primary/20 w-full">
-                       <div 
+                       <div
                          className="h-full bg-primary transition-all duration-1000 ease-linear"
-                         style={{ width: `${(countdown / 35) * 100}%` }}
+                         style={{ width: `${(countdown / 45) * 100}%` }}
                        />
                     </div>
                   )}
