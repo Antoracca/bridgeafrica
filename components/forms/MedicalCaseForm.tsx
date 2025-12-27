@@ -67,16 +67,31 @@ export function MedicalCaseForm() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     startTransition(async () => {
       const formData = new FormData()
-      // Append all fields manually for the server action
-      Object.entries(values).forEach(([key, value]) => {
-        if (value) formData.append(key, value.toString())
-      })
+      
+      // Ajout des champs texte
+      formData.append('diagnosis', values.diagnosis)
+      formData.append('specialty', values.specialty)
+      formData.append('urgency', values.urgency)
+      formData.append('description', values.description)
+      if (values.symptoms) formData.append('symptoms', values.symptoms)
+      if (values.budget) formData.append('budget', values.budget)
+      if (values.travelDate) formData.append('travelDate', values.travelDate.toISOString())
 
-      try {
-        await createMedicalCase(formData)
+      // Gestion des fichiers (depuis l'élément DOM car non géré par RHF ici par simplicité)
+      const fileInput = document.getElementById('dropzone-file') as HTMLInputElement
+      if (fileInput && fileInput.files) {
+        for (let i = 0; i < fileInput.files.length; i++) {
+          formData.append('files', fileInput.files[i])
+        }
+      }
+
+      const result = await createMedicalCase(formData)
+      
+      if (result?.error) {
+        toast.error(result.error)
+      } else {
         toast.success("Dossier créé avec succès")
-      } catch (error) {
-        toast.error("Erreur lors de la création du dossier")
+        form.reset()
       }
     })
   }

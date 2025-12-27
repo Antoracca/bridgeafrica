@@ -12,8 +12,21 @@ import {
   Play
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { createClient } from "@/lib/supabase/server"
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  // Déterminer le lien du dashboard selon le rôle
+  let dashboardLink = "/login"
+  if (user) {
+      const role = user.user_metadata?.role
+      if (role === 'medecin_referent') dashboardLink = "/medecin"
+      else if (role === 'clinique') dashboardLink = "/clinique"
+      else dashboardLink = "/patient"
+  }
+
   return (
     <div className="min-h-screen bg-[#020817] text-white selection:bg-blue-500 selection:text-white overflow-x-hidden">
       
@@ -41,18 +54,30 @@ export default function LandingPage() {
           </nav>
 
           <div className="flex items-center gap-4">
-            <Link href="/login" className="hidden md:block text-sm font-medium text-slate-300 hover:text-white transition-colors">
-              Se connecter
-            </Link>
-            <Button asChild className="bg-white text-slate-900 hover:bg-slate-200 rounded-full px-6">
-              <Link href="/register">
-                Commencer
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+            {user ? (
+                <Button asChild className="bg-blue-600 text-white hover:bg-blue-700 rounded-full px-6">
+                    <Link href={dashboardLink}>
+                        Accéder à mon espace
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                </Button>
+            ) : (
+                <>
+                    <Link href="/login" className="hidden md:block text-sm font-medium text-slate-300 hover:text-white transition-colors">
+                    Se connecter
+                    </Link>
+                    <Button asChild className="bg-white text-slate-900 hover:bg-slate-200 rounded-full px-6">
+                    <Link href="/register">
+                        Commencer
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                    </Button>
+                </>
+            )}
           </div>
         </div>
       </header>
+{/* ... Reste du composant inchangé ... */}
 
       {/* --- HERO SECTION --- */}
       <section className="relative z-10 pt-32 pb-20 md:pt-48 md:pb-32 container mx-auto px-6 text-center">

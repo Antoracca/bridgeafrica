@@ -1,84 +1,65 @@
 import { Metadata } from "next"
-import Link from "next/link"
-import { Search, Filter, MoreHorizontal, ArrowRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-  } from "@/components/ui/dropdown-menu"
+import { createClient } from "@/lib/supabase/server"
+import { CaseCard } from "@/components/cases/CaseCard"
+import { AlertCircle, CheckSquare } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Dossiers | Médecin",
-  description: "Liste complète des dossiers médicaux.",
+  title: "Dossiers à Valider | MediBridge Africa",
+  description: "Revue des demandes d'évacuation.",
 }
 
-const allCases = [
-  { id: "CASE-003", patient: "Jean Dupont", diag: "Suspicion AVC", status: "submitted", urgency: "critical", date: "25/12/2024" },
-  { id: "CASE-002", patient: "Aminata Diallo", diag: "Fracture Fémur", status: "submitted", urgency: "high", date: "25/12/2024" },
-  { id: "CASE-001", patient: "Moussa Koné", diag: "Bilan Onco", status: "quote_sent", urgency: "medium", date: "24/12/2024" },
-]
+export default async function DoctorCasesPage() {
+  const supabase = await createClient()
+  
+  // Récupérer tous les dossiers au statut 'submitted' ou 'under_review'
+  const { data: cases, error } = await supabase
+    .from('medical_cases')
+    .select(`
+        *,
+        profiles:patient_id (first_name, last_name)
+    `)
+    .in('status', ['submitted', 'under_review'])
+    .order('created_at', { ascending: false })
 
-export default function DoctorCasesPage() {
   return (
-    <div className="space-y-4">
-       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold tracking-tight">Tous les Dossiers</h2>
-      </div>
-      <div className="flex items-center gap-2">
-        <Input placeholder="Rechercher par patient, ID..." className="max-w-sm" />
-        <Button variant="outline" size="icon"><Filter className="h-4 w-4" /></Button>
+    <div className="flex flex-1 flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-3xl font-bold tracking-tight">Dossiers à Valider</h2>
       </div>
 
-      <div className="rounded-md border">
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHead>Réf.</TableHead>
-                    <TableHead>Patient</TableHead>
-                    <TableHead>Diagnostic</TableHead>
-                    <TableHead>Urgence</TableHead>
-                    <TableHead>Statut</TableHead>
-                    <TableHead className="text-right">Action</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {allCases.map((c) => (
-                    <TableRow key={c.id}>
-                        <TableCell className="font-mono">{c.id}</TableCell>
-                        <TableCell className="font-medium">{c.patient}</TableCell>
-                        <TableCell>{c.diag}</TableCell>
-                        <TableCell>
-                            {c.urgency === 'critical' ? <Badge variant="destructive">Critique</Badge> : 
-                             c.urgency === 'high' ? <Badge className="bg-orange-500">Élevée</Badge> : <Badge variant="secondary">Moyenne</Badge>}
-                        </TableCell>
-                         <TableCell>
-                            {c.status === 'submitted' ? <Badge variant="outline" className="border-blue-500 text-blue-500">À Valider</Badge> : <Badge variant="outline">En cours</Badge>}
-                        </TableCell>
-                        <TableCell className="text-right">
-                             <Button size="sm" variant="ghost" asChild>
-                                <Link href={`/medecin/dossier/${c.id}`}>
-                                    Ouvrir
-                                </Link>
-                            </Button>
-                        </TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
-      </div>
+      {error && (
+        <div className="p-4 border border-red-200 bg-red-50 text-red-600 rounded-lg flex items-center gap-2">
+          <AlertCircle className="h-5 w-5" />
+          Erreur lors du chargement des dossiers.
+        </div>
+      )}
+
+      {cases && cases.length > 0 ? (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {cases.map((c: any) => (
+            <CaseCard
+              key={c.id}
+              id={c.id}
+              diagnosis={c.diagnosis}
+              patientName={c.profiles ? `${c.profiles.first_name} ${c.profiles.last_name}` : 'Patient Inconnu'}
+              specialty={c.required_specialty}
+              status={c.status}
+              date={c.created_at}
+              role="medecin_referent"
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-20 text-center border-2 border-dashed rounded-xl">
+          <div className="bg-muted rounded-full p-6 mb-4">
+             <CheckSquare className="h-10 w-10 text-muted-foreground" />
+          </div>
+          <h3 className="text-xl font-semibold mb-2">Tout est à jour !</h3>
+          <p className="text-muted-foreground max-w-sm">
+            Il n&apos;y a aucun nouveau dossier en attente de validation pour le moment.
+          </p>
+        </div>
+      )}
     </div>
   )
 }

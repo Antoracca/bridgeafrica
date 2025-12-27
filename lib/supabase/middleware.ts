@@ -36,18 +36,14 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   // Protection des routes
-  if (request.nextUrl.pathname.startsWith('/dashboard') || request.nextUrl.pathname.startsWith('/patient') || request.nextUrl.pathname.startsWith('/medecin')) {
-      if (!user) {
-          return NextResponse.redirect(new URL('/login', request.url))
-      }
+  const protectedPaths = ['/dashboard', '/patient', '/medecin', '/clinique']
+  const isProtected = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path))
+
+  if (isProtected && !user) {
+    return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  if (request.nextUrl.pathname === '/') {
-      if (user) {
-        // Redirection basique - à affiner selon le rôle plus tard
-        return NextResponse.redirect(new URL('/patient', request.url)) 
-      }
-  }
-
+  // Suppression de la redirection automatique depuis l'accueil pour permettre la navigation
+  
   return response
 }

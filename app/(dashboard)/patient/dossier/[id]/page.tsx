@@ -1,5 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
+import { notFound } from "next/navigation"
 import { 
   ArrowLeft, 
   FileText, 
@@ -9,7 +10,8 @@ import {
   MessageSquare,
   Building2,
   Stethoscope,
-  Paperclip
+  Paperclip,
+  AlertTriangle
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -24,10 +26,23 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { createClient } from "@/lib/supabase/server"
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
 
 export const metadata: Metadata = {
   title: "Détail Dossier | MediBridge Africa",
   description: "Suivi détaillé de votre évacuation sanitaire.",
+}
+
+const statusConfig: Record<string, { label: string, color: string }> = {
+  draft: { label: "Brouillon", color: "bg-slate-500" },
+  submitted: { label: "Soumis", color: "bg-orange-500" },
+  under_review: { label: "En cours d'examen", color: "bg-blue-500" },
+  approved: { label: "Approuvé", color: "bg-green-500" },
+  quote_sent: { label: "Devis reçu", color: "bg-purple-500" },
+  quote_accepted: { label: "Devis accepté", color: "bg-emerald-600" },
+  completed: { label: "Terminé", color: "bg-green-700" },
 }
 
 export default async function CaseDetailPage({
@@ -36,34 +51,33 @@ export default async function CaseDetailPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  
-  // Simulation de données (Mock)
-  const caseData = {
-    id: id,
-    status: "quote_received",
-    diagnosis: "Cardiopathie Ischémique",
-    created_at: "24 Déc 2024",
-    description: "Douleurs thoraciques persistantes à l'effort. ECG montre des signes d'ischémie. Coronarographie recommandée rapidement.",
-    documents: [
-      { name: "ECG_Repos.pdf", size: "2.4 MB", date: "24 Déc 2024" },
-      { name: "Lettre_Medecin_Traitant.pdf", size: "1.1 MB", date: "24 Déc 2024" },
-    ],
-    doctor: {
-      name: "Dr. Ahmed Benjelloun",
-      role: "Cardiologue Référent",
-      hospital: "Hôpital Militaire, Rabat"
-    },
-    clinic: {
-      name: "Clinique Agdal",
-      city: "Rabat, Maroc",
-      quote: {
-        amount: 4500,
-        currency: "EUR",
-        validity: "7 jours",
-        details: "Hospitalisation 48h, Coronarographie, Stent si nécessaire."
-      }
-    }
+  const supabase = await createClient()
+
+  // Récupérer les données du dossier
+  const { data: caseData, error } = await supabase
+    .from('medical_cases')
+    .select(`
+        *,
+        doctor:referent_doctor_id (first_name, last_name, specialty),
+        clinic:assigned_clinic_id (clinic_name, clinic_address)
+    `)
+    .eq('id', id)
+    .single() as { data: any, error: any }
+
+  if (error || !caseData) {
+    return notFound()
   }
+
+  // Récupérer le devis (si présent)
+  const { data: quote } = await supabase
+    .from('quotes')
+    .select('*')
+    .eq('case_id', id)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single() as { data: any }
+
+  const status = statusConfig[caseData.status] || { label: caseData.status, color: "bg-gray-500" }
 
   return (
     <div className="flex flex-col space-y-6 pb-10">
@@ -77,17 +91,19 @@ export default async function CaseDetailPage({
         </Button>
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h2 className="text-2xl font-bold tracking-tight">Dossier #{caseData.id}</h2>
-            <Badge className="bg-blue-600">Devis Reçu</Badge>
+            <h2 className="text-2xl font-bold tracking-tight">Dossier #{caseData.id.slice(0, 8)}</h2>
+            <Badge className={status.color}>{status.label}</Badge>
           </div>
           <p className="text-muted-foreground text-sm">
-            Créé le {caseData.created_at} • {caseData.diagnosis}
+            Créé le {format(new Date(caseData.created_at), "d MMMM yyyy", { locale: fr })} • {caseData.diagnosis}
           </p>
         </div>
         <div className="flex gap-2">
-            <Button variant="outline">
-                <MessageSquare className="mr-2 h-4 w-4" />
-                Contacter Support
+            <Button variant="outline" asChild>
+                <Link href="/patient/messages">
+                    <MessageSquare className="mr-2 h-4 w-4" />
+                    Contacter Support
+                </Link>
             </Button>
         </div>
       </div>
@@ -97,49 +113,35 @@ export default async function CaseDetailPage({
         {/* COLONNE PRINCIPALE (Gauche) */}
         <div className="md:col-span-2 space-y-6">
             
-            {/* 1. Timeline / Statut */}
+            {/* 1. Timeline / Statut Simplifiée */}
             <Card>
                 <CardHeader>
                     <CardTitle>État d&apos;avancement</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="relative border-l border-muted ml-3 space-y-8 pb-1">
-                        {/* Etape 1: Création */}
                         <div className="relative pl-8">
                             <span className="absolute -left-[9px] top-1 h-4 w-4 rounded-full bg-primary ring-4 ring-background" />
                             <div className="flex flex-col gap-1">
                                 <span className="text-sm font-semibold leading-none">Dossier Soumis</span>
-                                <span className="text-xs text-muted-foreground">24 Déc 2024 - 10:30</span>
+                                <span className="text-xs text-muted-foreground">{format(new Date(caseData.created_at), "PPp", { locale: fr })}</span>
                             </div>
                         </div>
-                        {/* Etape 2: Validation Médicale */}
-                        <div className="relative pl-8">
-                            <span className="absolute -left-[9px] top-1 h-4 w-4 rounded-full bg-primary ring-4 ring-background" />
-                            <div className="flex flex-col gap-1">
-                                <span className="text-sm font-semibold leading-none">Validé par Médecin Référent</span>
-                                <span className="text-xs text-muted-foreground">24 Déc 2024 - 14:15</span>
-                                <div className="mt-2 rounded-md bg-muted p-3 text-sm italic text-muted-foreground">
-                                    &quot;Dossier complet. Indication opératoire confirmée. Transmission aux cliniques partenaires.&quot;
+                        
+                        {caseData.status !== 'submitted' && (
+                             <div className="relative pl-8">
+                                <span className={`absolute -left-[9px] top-1 h-4 w-4 rounded-full ring-4 ring-background ${['under_review', 'approved', 'quote_sent'].includes(caseData.status) ? 'bg-primary' : 'bg-muted'}`} />
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-sm font-semibold leading-none text-muted-foreground">Examen médical</span>
+                                    <span className="text-xs text-muted-foreground">En cours...</span>
                                 </div>
                             </div>
-                        </div>
-                        {/* Etape 3: Devis (Actif) */}
-                        <div className="relative pl-8">
-                            <span className="absolute -left-[9px] top-1 h-4 w-4 rounded-full bg-blue-600 ring-4 ring-blue-100 dark:ring-blue-900 animate-pulse" />
-                            <div className="flex flex-col gap-1">
-                                <span className="text-sm font-semibold leading-none text-blue-600">Devis Reçu</span>
-                                <span className="text-xs text-muted-foreground">Il y a 2h</span>
-                                <p className="text-sm text-muted-foreground mt-1">
-                                    La Clinique Agdal a envoyé une proposition. Veuillez l&apos;examiner.
-                                </p>
-                            </div>
-                        </div>
-                         {/* Etape 4: Voyage */}
-                         <div className="relative pl-8 opacity-50">
+                        )}
+
+                        <div className="relative pl-8 opacity-50">
                             <span className="absolute -left-[9px] top-1 h-4 w-4 rounded-full border border-muted bg-background" />
                             <div className="flex flex-col gap-1">
-                                <span className="text-sm font-semibold leading-none">Logistique & Visa</span>
-                                <span className="text-xs text-muted-foreground">En attente validation devis</span>
+                                <span className="text-sm font-semibold leading-none text-muted-foreground">Logistique & Visa</span>
                             </div>
                         </div>
                     </div>
@@ -150,7 +152,7 @@ export default async function CaseDetailPage({
             <Tabs defaultValue="medical" className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="medical">Infos Médicales</TabsTrigger>
-                    <TabsTrigger value="documents">Documents ({caseData.documents.length})</TabsTrigger>
+                    <TabsTrigger value="documents">Documents</TabsTrigger>
                 </TabsList>
                 <TabsContent value="medical" className="mt-4">
                     <Card>
@@ -165,13 +167,17 @@ export default async function CaseDetailPage({
                                 </div>
                                 <div>
                                     <h4 className="text-sm font-medium text-muted-foreground">Urgence</h4>
-                                    <Badge variant="secondary" className="bg-orange-100 text-orange-700 mt-1">Moyenne</Badge>
+                                    <Badge variant="secondary" className="mt-1">
+                                        {caseData.urgency_level === 'critical' ? 'Critique' : 
+                                         caseData.urgency_level === 'high' ? 'Élevée' : 
+                                         caseData.urgency_level === 'medium' ? 'Moyenne' : 'Faible'}
+                                    </Badge>
                                 </div>
                             </div>
                             <div>
-                                <h4 className="text-sm font-medium text-muted-foreground mb-1">Histoire de la maladie</h4>
-                                <p className="text-sm leading-relaxed text-muted-foreground bg-muted/50 p-3 rounded-md">
-                                    {caseData.description}
+                                <h4 className="text-sm font-medium text-muted-foreground mb-1">Détails / Symptômes</h4>
+                                <p className="text-sm leading-relaxed text-muted-foreground bg-muted/50 p-3 rounded-md whitespace-pre-wrap">
+                                    {caseData.symptoms || "Aucun détail supplémentaire fourni."}
                                 </p>
                             </div>
                         </CardContent>
@@ -189,23 +195,9 @@ export default async function CaseDetailPage({
                             </div>
                         </CardHeader>
                         <CardContent>
-                            <div className="space-y-2">
-                                {caseData.documents.map((doc, idx) => (
-                                    <div key={idx} className="flex items-center justify-between p-3 border rounded-md hover:bg-muted/50 transition-colors">
-                                        <div className="flex items-center gap-3">
-                                            <div className="h-10 w-10 rounded bg-red-50 flex items-center justify-center text-red-500">
-                                                <FileText className="h-5 w-5" />
-                                            </div>
-                                            <div>
-                                                <p className="font-medium text-sm">{doc.name}</p>
-                                                <p className="text-xs text-muted-foreground">{doc.date} • {doc.size}</p>
-                                            </div>
-                                        </div>
-                                        <Button variant="ghost" size="icon">
-                                            <Download className="h-4 w-4 text-muted-foreground" />
-                                        </Button>
-                                    </div>
-                                ))}
+                            <div className="flex flex-col items-center justify-center py-10 border border-dashed rounded-lg bg-muted/10">
+                                <FileText className="h-10 w-10 text-muted-foreground/40 mb-2" />
+                                <p className="text-sm text-muted-foreground">Chargement des documents du dossier...</p>
                             </div>
                         </CardContent>
                     </Card>
@@ -218,63 +210,69 @@ export default async function CaseDetailPage({
         <div className="space-y-6">
             
             {/* ACTION REQUISE : DEVIS */}
-            <Card className="border-blue-200 bg-blue-50/30 dark:border-blue-900 dark:bg-blue-950/10 shadow-md">
-                <CardHeader className="pb-3">
-                    <CardTitle className="text-blue-700 dark:text-blue-400 flex items-center gap-2">
-                        <FileText className="h-5 w-5" />
-                        Proposition reçue
-                    </CardTitle>
-                    <CardDescription>
-                        Validité : {caseData.clinic.quote.validity}
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="flex items-baseline justify-between">
-                        <span className="text-sm font-medium text-muted-foreground">Total Estimé</span>
-                        <span className="text-3xl font-bold text-foreground">
-                            {caseData.clinic.quote.amount} €
-                        </span>
-                    </div>
-                    <Separator />
-                    <div className="text-sm text-muted-foreground space-y-1">
-                        <p className="font-medium text-foreground">{caseData.clinic.name}</p>
-                        <p>{caseData.clinic.quote.details}</p>
-                    </div>
-                </CardContent>
-                <CardFooter className="flex flex-col gap-2 pt-0">
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                        Accepter le devis
-                    </Button>
-                    <Button variant="outline" className="w-full border-blue-200 text-blue-700 hover:bg-blue-50 dark:border-blue-900 dark:text-blue-400">
-                        Discuter / Négocier
-                    </Button>
-                </CardFooter>
-            </Card>
+            {quote && quote.created_at ? (
+                <Card className="border-blue-200 bg-blue-50/30 dark:border-blue-900 dark:bg-blue-950/10 shadow-md">
+                    <CardHeader className="pb-3">
+                        <CardTitle className="text-blue-700 dark:text-blue-400 flex items-center gap-2">
+                            <FileText className="h-5 w-5" />
+                            Proposition reçue
+                        </CardTitle>
+                        <CardDescription>
+                            Dernière mise à jour : {format(new Date(quote.created_at), "PP", { locale: fr })}
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="flex items-baseline justify-between">
+                            <span className="text-sm font-medium text-muted-foreground">Total Estimé</span>
+                            <span className="text-3xl font-bold text-foreground">
+                                {quote.total_cost} {quote.currency}
+                            </span>
+                        </div>
+                        <Separator />
+                        <div className="text-sm text-muted-foreground space-y-1">
+                            <p className="font-medium text-foreground">Clinique Partenaire</p>
+                            <p>{quote.treatment_description}</p>
+                        </div>
+                    </CardContent>
+                    <CardFooter className="flex flex-col gap-2 pt-0">
+                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                            Accepter le devis
+                        </Button>
+                    </CardFooter>
+                </Card>
+            ) : (
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-sm font-medium">Statut du Devis</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex flex-col items-center py-6 text-center">
+                        <Clock className="h-8 w-8 text-muted-foreground mb-2 animate-pulse" />
+                        <p className="text-sm text-muted-foreground">
+                            En attente d&apos;examen par nos cliniques partenaires.
+                        </p>
+                    </CardContent>
+                </Card>
+            )}
 
             {/* ÉQUIPE MÉDICALE */}
             <Card>
                 <CardHeader>
-                    <CardTitle>Équipe Médicale</CardTitle>
+                    <CardTitle>Intervenants</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center dark:bg-slate-800">
-                            <Stethoscope className="h-5 w-5 text-slate-600" />
+                    {caseData.doctor ? (
+                        <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center dark:bg-slate-800">
+                                <Stethoscope className="h-5 w-5 text-slate-600" />
+                            </div>
+                            <div>
+                                <p className="text-sm font-medium">Dr. {caseData.doctor.first_name} {caseData.doctor.last_name}</p>
+                                <p className="text-xs text-muted-foreground">{caseData.doctor.specialty || "Médecin Référent"}</p>
+                            </div>
                         </div>
-                        <div>
-                            <p className="text-sm font-medium">{caseData.doctor.name}</p>
-                            <p className="text-xs text-muted-foreground">{caseData.doctor.role}</p>
-                        </div>
-                    </div>
-                     <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center dark:bg-slate-800">
-                            <Building2 className="h-5 w-5 text-slate-600" />
-                        </div>
-                        <div>
-                            <p className="text-sm font-medium">{caseData.clinic.name}</p>
-                            <p className="text-xs text-muted-foreground">{caseData.clinic.city}</p>
-                        </div>
-                    </div>
+                    ) : (
+                        <p className="text-xs text-muted-foreground italic text-center">Aucun médecin assigné</p>
+                    )}
                 </CardContent>
             </Card>
 

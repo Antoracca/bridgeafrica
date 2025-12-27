@@ -16,7 +16,8 @@ import {
   CheckSquare,
   Stethoscope,
   Building2,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Globe
 } from "lucide-react"
 
 import {
@@ -42,8 +43,11 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-// Configuration des menus par rôle
+// ... imports existants
+
+// Configuration des menus par rôle (Garder navConfig inchangé pour l'instant)
 const navConfig = {
+  // ... (code existant)
   patient: [
     {
       title: "Mon Espace",
@@ -67,63 +71,61 @@ const navConfig = {
     },
     {
       title: "Rendez-vous",
-      url: "/patient/appointments",
+      url: "/patient/appointments", // Correction potentielle: cette route n'existait pas dans l'arborescence, à créer ou supprimer
       icon: Calendar,
     },
   ],
   medecin: [
     {
-      title: "Tableau de bord",
-      url: "/medecin",
-      icon: Activity,
+        title: "Tableau de bord",
+        url: "/medecin",
+        icon: Activity,
     },
     {
-      title: "Mes Patients",
-      url: "/medecin/patients",
-      icon: Users,
+        title: "Mes Patients",
+        url: "/medecin/patients",
+        icon: Users,
     },
     {
-      title: "À Valider",
-      url: "/medecin/dossiers",
-      icon: CheckSquare,
+        title: "À Valider",
+        url: "/medecin/dossiers",
+        icon: CheckSquare,
     },
     {
-      title: "Messagerie",
-      url: "/medecin/messages",
-      icon: MessageSquare,
+        title: "Messagerie",
+        url: "/medecin/messages",
+        icon: MessageSquare,
     },
   ],
   clinique: [
     {
-      title: "Tableau de bord",
-      url: "/clinique",
-      icon: Activity,
+        title: "Tableau de bord",
+        url: "/clinique",
+        icon: Activity,
     },
     {
-      title: "Demandes Reçues",
-      url: "/clinique/dossiers",
-      icon: FileText,
+        title: "Demandes Reçues",
+        url: "/clinique/dossiers",
+        icon: FileText,
     },
     {
-      title: "Mes Devis",
-      url: "/clinique/devis",
-      icon: FileSpreadsheet,
+        title: "Mes Devis",
+        url: "/clinique/devis",
+        icon: FileSpreadsheet,
     },
     {
-      title: "Planning",
-      url: "/clinique/planning",
-      icon: Calendar,
+        title: "Planning",
+        url: "/clinique/planning",
+        icon: Calendar,
     },
   ]
 }
 
-const userData = {
-  name: "Utilisateur",
-  email: "user@medibridge.africa",
-  avatar: "/avatars/shadcn.jpg",
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+    user?: any // Typage loose pour l'instant pour accepter l'objet User Supabase
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ user, ...props }: AppSidebarProps) {
   const pathname = usePathname()
   const isMedecin = pathname?.startsWith("/medecin")
   const isClinique = pathname?.startsWith("/clinique")
@@ -142,9 +144,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     RoleIcon = Building2
   }
 
+  const displayName = user?.user_metadata?.first_name 
+    ? `${user.user_metadata.first_name} ${user.user_metadata.last_name || ''}`
+    : user?.email || "Utilisateur"
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
+        {/* ... Header identique ... */}
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
@@ -206,6 +213,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Retour à l'accueil">
+              <a href="/">
+                <Globe />
+                <span>Retour à l'accueil</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
@@ -213,12 +228,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
                   <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src={userData.avatar} alt={userData.name} />
-                    <AvatarFallback className="rounded-lg">MB</AvatarFallback>
+                    <AvatarImage src="" alt={displayName} />
+                    <AvatarFallback className="rounded-lg">{displayName.substring(0, 2).toUpperCase()}</AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">{userData.name}</span>
-                    <span className="truncate text-xs">{userData.email}</span>
+                    <span className="truncate font-semibold">{displayName}</span>
+                    <span className="truncate text-xs">{user?.email}</span>
                   </div>
                   <User className="ml-auto size-4" />
                 </SidebarMenuButton>
@@ -232,12 +247,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <DropdownMenuLabel className="p-0 font-normal">
                   <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                     <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarImage src={userData.avatar} alt={userData.name} />
-                      <AvatarFallback className="rounded-lg">MB</AvatarFallback>
+                      <AvatarImage src="" alt={displayName} />
+                      <AvatarFallback className="rounded-lg">{displayName.substring(0, 2).toUpperCase()}</AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">{userData.name}</span>
-                      <span className="truncate text-xs">{userData.email}</span>
+                      <span className="truncate font-semibold">{displayName}</span>
+                      <span className="truncate text-xs">{user?.email}</span>
                     </div>
                   </div>
                 </DropdownMenuLabel>

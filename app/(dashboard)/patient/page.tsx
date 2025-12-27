@@ -6,8 +6,7 @@ import {
   MessageSquare, 
   Plus, 
   Clock, 
-  CheckCircle2,
-  AlertCircle
+  CheckCircle2
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -19,15 +18,25 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { StatsCard } from "@/components/dashboard/StatsCard"
+
+import { createClient } from "@/lib/supabase/server"
+import { getPatientStats } from "@/lib/actions/cases"
 
 export const metadata: Metadata = {
   title: "Tableau de bord | MediBridge Africa",
   description: "Vue d'ensemble de vos dossiers médicaux.",
 }
 
-export default function PatientDashboardPage() {
+export default async function PatientDashboardPage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  const stats = user ? await getPatientStats(user.id) : { activeCases: 0, quotesReceived: 0, messagesUnread: 0 }
+
   return (
     <div className="flex flex-1 flex-col gap-4">
+      {/* ... Header ... */}
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">Tableau de bord</h2>
         <div className="flex items-center space-x-2">
@@ -42,62 +51,30 @@ export default function PatientDashboardPage() {
 
       {/* STATS CARDS */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Dossiers Actifs
-            </CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">1</div>
-            <p className="text-xs text-muted-foreground">
-              +1 depuis le mois dernier
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Devis Reçus
-            </CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">2</div>
-            <p className="text-xs text-muted-foreground">
-              En attente de validation
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Messages
-            </CardTitle>
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">4</div>
-            <p className="text-xs text-muted-foreground">
-              2 non-lus
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Prochain RDV
-            </CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">12 Jan</div>
-            <p className="text-xs text-muted-foreground">
-              14:00 - Téléconsultation
-            </p>
-          </CardContent>
-        </Card>
+        <StatsCard 
+          title="Dossiers Actifs" 
+          value={stats.activeCases} 
+          description="Dossiers en cours de traitement" 
+          icon={Activity} 
+        />
+        <StatsCard 
+          title="Devis Reçus" 
+          value={stats.quotesReceived} 
+          description="En attente de votre validation" 
+          icon={FileText} 
+        />
+        <StatsCard 
+          title="Messages" 
+          value={stats.messagesUnread} 
+          description="Communications non-lues" 
+          icon={MessageSquare} 
+        />
+        <StatsCard 
+          title="Prochain RDV" 
+          value="À définir" 
+          description="Consultez votre planning" 
+          icon={Clock} 
+        />
       </div>
 
       {/* RECENT FILES & ACTIVITY */}

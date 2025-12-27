@@ -1,37 +1,27 @@
 import { Metadata } from "next"
 import Link from "next/link"
+import { notFound } from "next/navigation"
 import { 
   ArrowLeft, 
   FileText, 
-  Download, 
   User, 
-  CheckCircle2, 
-  XCircle,
-  MessageCircle,
-  AlertTriangle,
-  Send
+  AlertTriangle
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { Textarea } from "@/components/ui/textarea"
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { createClient } from "@/lib/supabase/server"
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
+import { CaseActions } from "@/components/cases/CaseActions"
 
 export const metadata: Metadata = {
   title: "Revue Médicale | MediBridge Africa",
@@ -44,27 +34,20 @@ export default async function MedicalReviewPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  
-  // Mock Data pour le Médecin
-  const caseData = {
-    id: id,
-    status: "submitted", // 'submitted' nécessite une validation
-    patient: {
-      name: "Jean Dupont",
-      age: 45,
-      gender: "M",
-      origin: "Libreville, Gabon",
-      history: "Hypertension (traitée), Fumeur (10 PA)"
-    },
-    clinical: {
-      diagnosis: "Suspicion AVC Ischémique",
-      symptoms: "Hémiparésie gauche brutale, aphasie transitoire. Début il y a 4h.",
-      urgency: "critical"
-    },
-    documents: [
-      { name: "IRM_Cerebrale.dcm", size: "45 MB", date: "25 Déc 2024" },
-      { name: "Bilan_Sanguin.pdf", size: "0.5 MB", date: "25 Déc 2024" },
-    ]
+  const supabase = await createClient()
+
+  // Récupérer le dossier avec les infos du patient (profil)
+  const { data: caseData, error } = await supabase
+    .from('medical_cases')
+    .select(`
+        *,
+        patient:patient_id (first_name, last_name, birth_date, country, city, medical_history)
+    `)
+    .eq('id', id)
+    .single() as { data: any, error: any }
+
+  if (error || !caseData) {
+    return notFound()
   }
 
   return (
@@ -73,26 +56,31 @@ export default async function MedicalReviewPage({
       {/* Header Navigation */}
       <div className="flex items-center gap-4">
         <Button variant="outline" size="icon" asChild>
-          <Link href="/medecin">
+          <Link href="/medecin/dossiers">
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h2 className="text-2xl font-bold tracking-tight">Dossier #{caseData.id}</h2>
-            <Badge variant="outline" className="animate-pulse border-orange-500 text-orange-500">
-                En attente de validation
-            </Badge>
+            <h2 className="text-2xl font-bold tracking-tight">Dossier #{caseData.id.slice(0, 8)}</h2>
+            {caseData.status === 'submitted' ? (
+                <Badge className="bg-orange-500 animate-pulse">Nouveau à valider</Badge>
+            ) : (
+                <Badge variant="outline" className="border-blue-500 text-blue-500">{caseData.status}</Badge>
+            )}
           </div>
           <p className="text-muted-foreground text-sm">
-            Reçu le 25 Déc à 10:30 • Urgence : <span className="text-red-500 font-bold uppercase">{caseData.clinical.urgency}</span>
+            Reçu le {format(new Date(caseData.created_at), "PPp", { locale: fr })} • Urgence : 
+            <span className={`ml-1 font-bold uppercase ${caseData.urgency_level === 'critical' ? 'text-red-500' : 'text-orange-500'}`}>
+                {caseData.urgency_level}
+            </span>
           </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         
-        {/* COLONNE GAUCHE : DONNÉES PATIENT (Lecture Seule) */}
+        {/* COLONNE GAUCHE : DONNÉES PATIENT & CLINIQUE */}
         <div className="md:col-span-2 space-y-6">
             
             {/* 1. Identité Patient */}
@@ -107,19 +95,15 @@ export default async function MedicalReviewPage({
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                         <div>
                             <span className="text-muted-foreground">Nom Complet</span>
-                            <p className="font-medium">{caseData.patient.name}</p>
-                        </div>
-                        <div>
-                            <span className="text-muted-foreground">Âge / Sexe</span>
-                            <p className="font-medium">{caseData.patient.age} ans / {caseData.patient.gender}</p>
+                            <p className="font-medium">{caseData.patient?.first_name} {caseData.patient?.last_name}</p>
                         </div>
                         <div>
                             <span className="text-muted-foreground">Origine</span>
-                            <p className="font-medium">{caseData.patient.origin}</p>
+                            <p className="font-medium">{caseData.patient?.city}, {caseData.patient?.country}</p>
                         </div>
                         <div>
-                            <span className="text-muted-foreground">Antécédents</span>
-                            <p className="font-medium">{caseData.patient.history}</p>
+                            <span className="text-muted-foreground">Historique</span>
+                            <p className="font-medium">{caseData.patient?.medical_history || "Non renseigné"}</p>
                         </div>
                     </div>
                 </CardContent>
@@ -128,46 +112,32 @@ export default async function MedicalReviewPage({
             {/* 2. Données Cliniques */}
             <Card className="border-l-4 border-l-blue-500">
                 <CardHeader>
-                    <CardTitle>Données Cliniques</CardTitle>
+                    <CardTitle>Anamnèse & Motif</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div>
-                        <h4 className="text-sm font-medium text-muted-foreground mb-1">Motif / Diagnostic Présumé</h4>
-                        <p className="text-lg font-medium">{caseData.clinical.diagnosis}</p>
+                        <h4 className="text-sm font-medium text-muted-foreground mb-1">Diagnostic du Patient / Proche</h4>
+                        <p className="text-lg font-medium">{caseData.diagnosis}</p>
                     </div>
                     <Separator />
                     <div>
-                        <h4 className="text-sm font-medium text-muted-foreground mb-1">Symptomatologie & Histoire</h4>
-                        <p className="text-sm leading-relaxed bg-muted/50 p-4 rounded-md">
-                            {caseData.clinical.symptoms}
+                        <h4 className="text-sm font-medium text-muted-foreground mb-1">Symptomatologie détaillée</h4>
+                        <p className="text-sm leading-relaxed bg-muted/50 p-4 rounded-md whitespace-pre-wrap">
+                            {caseData.symptoms || "Aucune description fournie."}
                         </p>
                     </div>
                 </CardContent>
             </Card>
 
-            {/* 3. Documents Viewer */}
+            {/* 3. Documents (Placeholder) */}
             <Card>
                 <CardHeader>
                     <CardTitle>Imagerie & Rapports</CardTitle>
                 </CardHeader>
                 <CardContent>
-                     <div className="grid gap-2">
-                        {caseData.documents.map((doc, idx) => (
-                            <div key={idx} className="flex items-center justify-between p-3 border rounded-md hover:bg-muted/50 transition-colors cursor-pointer group">
-                                <div className="flex items-center gap-3">
-                                    <div className="h-10 w-10 rounded bg-blue-50 flex items-center justify-center text-blue-500 group-hover:bg-blue-100">
-                                        <FileText className="h-5 w-5" />
-                                    </div>
-                                    <div>
-                                        <p className="font-medium text-sm group-hover:underline">{doc.name}</p>
-                                        <p className="text-xs text-muted-foreground">{doc.size} • {doc.date}</p>
-                                    </div>
-                                </div>
-                                <Button variant="ghost" size="sm">
-                                    <Download className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        ))}
+                     <div className="flex flex-col items-center justify-center py-10 border border-dashed rounded-lg">
+                        <FileText className="h-10 w-10 text-muted-foreground/30 mb-2" />
+                        <p className="text-sm text-muted-foreground">Les documents attachés apparaîtront ici.</p>
                     </div>
                 </CardContent>
             </Card>
@@ -182,45 +152,11 @@ export default async function MedicalReviewPage({
                 <CardHeader className="bg-muted/50 pb-3">
                     <CardTitle>Décision Médicale</CardTitle>
                     <CardDescription>
-                        Valider la demande pour transmission aux cliniques.
+                        Analysez le dossier avant de le transmettre.
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4 pt-4">
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium">Spécialité Confirmée</label>
-                        <Select defaultValue="neurologie">
-                            <SelectTrigger>
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="neurologie">Neurologie</SelectItem>
-                                <SelectItem value="neurochirurgie">Neurochirurgie</SelectItem>
-                                <SelectItem value="cardio">Cardiologie</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium">Note au dossier (Interne)</label>
-                        <Textarea placeholder="Ex: Patient stable pour transport, mais nécessite surveillance..." className="min-h-[100px]" />
-                    </div>
-
-                    <div className="space-y-2">
-                        <Button className="w-full bg-green-600 hover:bg-green-700 text-white" size="lg">
-                            <CheckCircle2 className="mr-2 h-4 w-4" />
-                            Valider & Transmettre
-                        </Button>
-                        <div className="grid grid-cols-2 gap-2">
-                            <Button variant="outline" className="w-full">
-                                <MessageCircle className="mr-2 h-4 w-4" />
-                                Infos +
-                            </Button>
-                            <Button variant="outline" className="w-full text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-950/30">
-                                <XCircle className="mr-2 h-4 w-4" />
-                                Rejeter
-                            </Button>
-                        </div>
-                    </div>
+                <CardContent>
+                    <CaseActions caseId={id} />
                 </CardContent>
             </Card>
 
@@ -229,11 +165,11 @@ export default async function MedicalReviewPage({
                 <CardHeader className="pb-2">
                     <CardTitle className="text-orange-800 dark:text-orange-400 text-sm flex items-center gap-2">
                         <AlertTriangle className="h-4 w-4" />
-                        Protocole Critique
+                        Consignes de Triage
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="text-xs text-orange-800/80 dark:text-orange-400/80">
-                    Pour les cas &quot;Critiques&quot; (AVC, IDM), la validation doit se faire sous <strong>2 heures</strong>. Assurez-vous que le patient est transportable.
+                    Vérifiez la complétude des examens complémentaires (Scanner, IRM, Bilans) avant de valider pour les cliniques marocaines.
                 </CardContent>
             </Card>
 

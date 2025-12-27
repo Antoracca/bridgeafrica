@@ -32,7 +32,7 @@ export default function NewCasePage() {
                     <p>
                         <strong>Diagnostic :</strong> Soyez le plus précis possible. Si vous avez un compte rendu médical, copiez la conclusion.
                     </p>
-                    <p>
+                    <div className="space-y-1">
                         <strong>Urgence :</strong>
                         <ul className="list-disc pl-4 mt-1 space-y-1">
                             <li>Faible : Pas de risque vital, confort.</li>
@@ -40,7 +40,7 @@ export default function NewCasePage() {
                             <li>Élevée : Soins nécessaires sous 7j.</li>
                             <li>Critique : Risque vital immédiat.</li>
                         </ul>
-                    </p>
+                    </div>
                     <p>
                         <strong>Documents :</strong> Les scanners (DICOM) et les rapports PDF sont essentiels pour obtenir un devis précis.
                     </p>

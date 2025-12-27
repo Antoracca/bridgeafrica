@@ -26,6 +26,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { StatsCard } from "@/components/dashboard/StatsCard"
 
 export const metadata: Metadata = {
   title: "Espace Médecin | MediBridge Africa",
@@ -77,69 +78,38 @@ export default function DoctorDashboardPage() {
 
       {/* KPI CARDS */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              À Valider
-            </CardTitle>
-            <CheckSquare className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">5</div>
-            <p className="text-xs text-muted-foreground">
-              +2 depuis votre dernière connexion
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Urgences Critiques
-            </CardTitle>
-            <AlertTriangle className="h-4 w-4 text-red-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-red-600">1</div>
-            <p className="text-xs text-muted-foreground">
-              Action immédiate requise
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Patients Actifs
-            </CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground">
-              En cours de traitement
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Taux d&apos;acceptation
-            </CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">92%</div>
-            <p className="text-xs text-muted-foreground">
-              Dossiers validés ce mois
-            </p>
-          </CardContent>
-        </Card>
+        <StatsCard 
+          title="À Valider" 
+          value="5" 
+          description="+2 depuis votre dernière connexion" 
+          icon={CheckSquare} 
+        />
+        <StatsCard 
+          title="Urgences Critiques" 
+          value="1" 
+          description="Action immédiate requise" 
+          icon={AlertTriangle} 
+          className="border-red-500/50 bg-red-50 dark:bg-red-950/20"
+        />
+        <StatsCard 
+          title="Patients Actifs" 
+          value="12" 
+          description="En cours de traitement" 
+          icon={Users} 
+        />
+        <StatsCard 
+          title="Taux d'acceptation" 
+          value="92%" 
+          description="Dossiers validés ce mois" 
+          icon={Activity} 
+        />
       </div>
 
       {/* TRIAGE LIST */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         <Card className="col-span-4">
           <CardHeader>
-            <CardTitle>File d&apos;attente (Triage)</CardTitle>
+            <CardTitle>File d'attente (Triage)</CardTitle>
             <CardDescription>
               Derniers dossiers soumis nécessitant une revue médicale.
             </CardDescription>

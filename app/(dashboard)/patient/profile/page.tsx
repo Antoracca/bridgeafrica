@@ -1,13 +1,23 @@
 import { Metadata } from "next"
 import { Separator } from "@/components/ui/separator"
 import { PatientProfileForm } from "@/components/forms/PatientProfileForm"
+import { createClient } from "@/lib/supabase/server"
 
 export const metadata: Metadata = {
   title: "Profil | MediBridge Africa",
   description: "Gérez vos informations personnelles et médicales de base.",
 }
 
-export default function SettingsProfilePage() {
+export default async function SettingsProfilePage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user?.id || '')
+    .single()
+
   return (
     <div className="space-y-6">
       <div>
@@ -17,7 +27,7 @@ export default function SettingsProfilePage() {
         </p>
       </div>
       <Separator />
-      <PatientProfileForm />
+      <PatientProfileForm profile={profile as any} email={user?.email} />
     </div>
   )
 }

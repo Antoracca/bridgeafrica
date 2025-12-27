@@ -1,5 +1,6 @@
 'use client'
 
+import { useTransition } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -23,6 +24,7 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "sonner"
+import { updateProfile } from "@/lib/actions/auth"
 
 const profileFormSchema = z.object({
   firstName: z.string().min(2, {
@@ -31,45 +33,63 @@ const profileFormSchema = z.object({
   lastName: z.string().min(2, {
     message: "Le nom doit contenir au moins 2 caractères.",
   }),
-  email: z.string().email({
-    message: "Veuillez entrer une adresse email valide.",
-  }),
+  email: z.string().email().optional(),
   phone: z.string().min(8, {
     message: "Numéro de téléphone invalide.",
-  }),
-  country: z.string().min(1, {
-    message: "Veuillez sélectionner un pays.",
-  }),
-  city: z.string().min(2, {
-    message: "La ville est requise.",
-  }),
-  bio: z.string().max(160).min(4).optional(),
+  }).optional().or(z.literal('')),
+  country: z.string().optional(),
+  city: z.string().optional(),
   allergies: z.string().optional(),
 })
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 
-// Valeurs par défaut simulées (à remplacer par data de Supabase)
-const defaultValues: Partial<ProfileFormValues> = {
-  firstName: "Patient",
-  lastName: "Test",
-  email: "patient@medibridge.africa",
-  bio: "J'ai des antécédents cardiaques.",
+interface PatientProfile {
+  first_name?: string
+  last_name?: string
+  phone?: string
+  country?: string
+  city?: string
+  allergies?: string
 }
 
-export function PatientProfileForm() {
+export function PatientProfileForm({ profile, email }: { profile: PatientProfile, email?: string }) {
+  const [isPending, startTransition] = useTransition()
+
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
-    defaultValues,
+    defaultValues: {
+      firstName: profile?.first_name || "",
+      lastName: profile?.last_name || "",
+      email: email || "",
+      phone: profile?.phone || "",
+      country: profile?.country || "",
+      city: profile?.city || "",
+      allergies: profile?.allergies || "",
+    },
     mode: "onChange",
   })
 
-  function onSubmit(data: ProfileFormValues) {
-    toast.success("Profil mis à jour", {
-        description: "Vos informations ont été enregistrées avec succès."
+  function onSubmit(values: ProfileFormValues) {
+    startTransition(async () => {
+      const formData = new FormData()
+      formData.append('firstName', values.firstName)
+      formData.append('lastName', values.lastName)
+      if (values.phone) formData.append('phone', values.phone)
+      if (values.country) formData.append('country', values.country)
+      if (values.city) formData.append('city', values.city)
+      if (values.allergies) formData.append('allergies', values.allergies)
+
+      const result = await updateProfile(formData)
+      
+      if (result?.error) {
+        toast.error(result.error)
+      } else {
+        toast.success("Profil mis à jour avec succès")
+      }
     })
-    console.log(data)
   }
+// ... reste du formulaire identique (render)
 
   return (
     <Form {...form}>
