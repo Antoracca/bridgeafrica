@@ -60,7 +60,7 @@ export default function LoginPage() {
           {/* Animation Lottie - réduite */}
           <LottieAnimation
             animationData={DoctorAnimation}
-            className="w-28 h-28 sm:w-32 sm:h-32 lg:w-48 lg:h-48 mx-auto -mb-2 lg:-mb-4"
+            className="w-30 h-30 sm:w-36 sm:h-36 lg:w-48 lg:h-48 mx-auto -mb-2 lg:-mb-4"
           />
 
           {/* Header compact */}
@@ -74,10 +74,12 @@ export default function LoginPage() {
           </div>
 
           {/* Formulaire avec belle carte glassmorphism */}
-          <div className="relative backdrop-blur-2xl bg-linear-to-br from-white/95 via-white/90 to-white/95 lg:bg-transparent rounded-3xl lg:rounded-none p-5 sm:p-6 lg:p-0 shadow-[0_8px_32px_0_rgba(31,38,135,0.37)] lg:shadow-none border border-white/40 lg:border-0 overflow-hidden">
-            {/* Effet brillant sur la carte */}
-            <div className="absolute inset-0 bg-linear-to-br from-white/20 to-transparent opacity-50 lg:hidden" />
-            <div className="relative">
+          <div className="relative backdrop-blur-2xl bg-gradient-to-br from-white/95 via-white/90 to-white/95 lg:bg-transparent rounded-3xl lg:rounded-none p-6 sm:p-7 lg:p-0 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] lg:shadow-none border-2 border-white/50 lg:border-0 overflow-hidden">
+            {/* Effet brillant animé sur la carte */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-blue-50/20 opacity-60 lg:hidden" />
+            <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-400/20 rounded-full blur-3xl lg:hidden" />
+            <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-cyan-400/20 rounded-full blur-3xl lg:hidden" />
+            <div className="relative z-10">
               <LoginForm />
             </div>
           </div>

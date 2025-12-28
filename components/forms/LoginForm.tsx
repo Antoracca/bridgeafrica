@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
-import { Eye, EyeOff, Loader2, AlertCircle, CheckCircle, XCircle } from 'lucide-react'
+import { Eye, EyeOff, Loader2, AlertCircle, CheckCircle, XCircle, Mail } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import Link from 'next/link'
 import { useDebounce } from '@/hooks/use-debounce'
@@ -35,6 +35,7 @@ function LoginFormContent() {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [showPassword, setShowPassword] = useState(false)
+  const [isShaking, setIsShaking] = useState(false)
   const searchParams = useSearchParams()
   const [urlError, setUrlError] = useState<string | null>(() => {
     const err = searchParams.get('error')
@@ -87,11 +88,24 @@ function LoginFormContent() {
     },
   })
 
+  // Fonction pour vibration haptique + animation shake
+  const triggerHapticFeedback = () => {
+    // Vibration (fonctionne sur Android mobile uniquement)
+    if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+      navigator.vibrate([100, 50, 100])
+    }
+
+    // Animation shake (fonctionne partout - iOS, Android, Desktop)
+    setIsShaking(true)
+    setTimeout(() => setIsShaking(false), 500)
+  }
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     setUrlError(null)
 
     if (emailExists === false) {
       form.setError('email', { message: "Aucun compte n'existe avec cet email" })
+      triggerHapticFeedback()
       return
     }
     
@@ -116,18 +130,22 @@ function LoginFormContent() {
         // Cas identifiants invalides
         if (result.code === 'invalid_credentials' || result.error.includes('incorrect')) {
           form.setError('password', { message: "Mot de passe incorrect" })
+          triggerHapticFeedback()
           return
         }
-        
+
         if (result.error.includes('compte n\'existe')) {
           form.setError('email', { message: result.error })
+          triggerHapticFeedback()
         } else if (result.error.includes('Google') || result.error.includes('Apple')) {
           setUrlError(result.error)
+          triggerHapticFeedback()
         } else {
           toast.error('Erreur de connexion', {
             description: result.error,
             duration: 6000,
           })
+          triggerHapticFeedback()
         }
       }
     })
@@ -145,6 +163,7 @@ function LoginFormContent() {
           description: result.error,
           duration: 6000,
         })
+        triggerHapticFeedback()
       } else if (result?.url) {
         console.log(`[LOGIN] Redirection vers ${provider}`)
         // Redirection côté client vers Google/Apple
@@ -166,15 +185,22 @@ function LoginFormContent() {
       )}
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className={`space-y-5 ${isShaking ? 'animate-shake' : ''}`}
+          suppressHydrationWarning
+        >
             <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
                 <FormItem>
                 <FormLabel className="text-sm font-semibold text-foreground/90">Email</FormLabel>
-                <div className="relative group">
-                  <FormControl>
+                <div className="relative group" suppressHydrationWarning>
+                  <div className="absolute left-3 top-0 h-full flex items-center pointer-events-none" suppressHydrationWarning>
+                    <Mail className="h-4 w-4 text-muted-foreground/60 group-focus-within:text-primary transition-colors duration-200" />
+                  </div>
+                  <FormControl suppressHydrationWarning>
                     <Input
                       type="email"
                       placeholder="exemple@email.com"
@@ -183,10 +209,12 @@ function LoginFormContent() {
                         field.onChange(e)
                         setEmailToCheck(e.target.value)
                       }}
-                      className="h-11 px-4 transition-all duration-300 border-2 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 shadow-sm hover:border-primary/50"
+                      className="h-11 pl-10 pr-10 transition-all duration-300 border-2 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 shadow-sm hover:border-primary/50"
+                      suppressHydrationWarning
+                      autoComplete="email"
                     />
                   </FormControl>
-                  <div className="absolute right-3 top-0 h-full flex items-center">
+                  <div className="absolute right-3 top-0 h-full flex items-center" suppressHydrationWarning>
                     {isCheckingEmail && <Loader2 className="h-4 w-4 animate-spin text-primary" />}
                     {emailExists === true && !isCheckingEmail && field.value && (
                       <CheckCircle className="h-4 w-4 text-green-500 animate-in zoom-in duration-200" />
@@ -209,22 +237,16 @@ function LoginFormContent() {
             name="password"
             render={({ field }) => (
                 <FormItem>
-                <div className="flex items-center justify-between mb-2">
-                    <FormLabel className="text-sm font-semibold text-foreground/90">Mot de passe</FormLabel>
-                    <Link
-                        href="/forgot-password"
-                        className="text-xs font-medium text-primary hover:text-primary/80 transition-colors duration-200 hover:underline underline-offset-4"
-                    >
-                        Mot de passe oublié ?
-                    </Link>
-                </div>
-                <div className="relative group">
-                    <FormControl>
+                <FormLabel className="text-sm font-semibold text-foreground/90">Mot de passe</FormLabel>
+                <div className="relative group" suppressHydrationWarning>
+                    <FormControl suppressHydrationWarning>
                     <Input
                         type={showPassword ? "text" : "password"}
                         placeholder="••••••••"
                         {...field}
                         className="h-11 px-4 pr-11 transition-all duration-300 border-2 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 shadow-sm hover:border-primary/50"
+                        suppressHydrationWarning
+                        autoComplete="current-password"
                     />
                     </FormControl>
                     <Button
@@ -233,6 +255,7 @@ function LoginFormContent() {
                     size="sm"
                     className="absolute right-0 top-0 h-full px-3 hover:bg-transparent focus:ring-2 focus:ring-primary/20 transition-all duration-200"
                     onClick={() => setShowPassword(!showPassword)}
+                    suppressHydrationWarning
                     >
                     {showPassword ? <EyeOff className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" /> : <Eye className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />}
                     </Button>
@@ -242,27 +265,32 @@ function LoginFormContent() {
             )}
             />
 
-            <Button
-              type="submit"
-              className="w-full h-11 mt-6 bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
-              disabled={isPending || emailExists === false}
-            >
-              {isPending ? (
-                <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Connexion en cours...</>
-              ) : (
-                "Se connecter"
-              )}
-            </Button>
+            <div className="flex items-center justify-between gap-4 mt-6">
+              <Link
+                href="/forgot-password"
+                className="text-xs font-medium text-muted-foreground hover:text-primary transition-colors duration-200 hover:underline underline-offset-4"
+              >
+                Mot de passe oublié ?
+              </Link>
+              <Button
+                type="submit"
+                className="flex-1 h-11 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-sm"
+                disabled={isPending || emailExists === false || !form.watch('email') || !form.watch('password')}
+              >
+                {isPending ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Connexion en cours...</>
+                ) : (
+                  "Se connecter"
+                )}
+              </Button>
+            </div>
         </form>
         </Form>
 
-        <div className="relative my-8">
-            <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-border/60" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-3 text-muted-foreground/80 font-medium">Ou continuer avec</span>
-            </div>
+        <div className="flex items-center justify-center gap-3 my-8">
+            <span className="w-8 border-t border-border/60" />
+            <span className="text-xs uppercase text-muted-foreground/80 font-medium">Ou continuer avec</span>
+            <span className="w-8 border-t border-border/60" />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
