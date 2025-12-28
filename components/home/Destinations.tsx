@@ -158,28 +158,20 @@ export function Destinations() {
 
             {/* Globe central mobile - Entre les deux sections */}
             <motion.div
-              initial={{ scale: 0, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
               viewport={{ once: true }}
               className="flex flex-col items-center py-4"
             >
               <div className="relative w-48 h-48 sm:w-56 sm:h-56">
-                {/* Rotating rings */}
-                <motion.div
-                  className="absolute inset-0"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                >
+                {/* Static rings - pas de rotation */}
+                <div className="absolute inset-0">
                   <div className="w-full h-full rounded-full border-2 border-blue-400/30 border-dashed" />
-                </motion.div>
-                <motion.div
-                  className="absolute inset-0"
-                  animate={{ rotate: -360 }}
-                  transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                >
+                </div>
+                <div className="absolute inset-0">
                   <div className="w-full h-full rounded-full border-2 border-cyan-400/30 border-dashed" />
-                </motion.div>
+                </div>
 
                 {/* Globe Lottie */}
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -188,10 +180,10 @@ export function Destinations() {
                       animationData={WorldAnimation}
                       className="w-32 h-32 sm:w-40 sm:h-40"
                     />
-                    {/* Pulse effect */}
+                    {/* Pulse effect - juste opacity, pas de scale */}
                     <motion.div
                       className="absolute inset-0 rounded-full border-4 border-blue-400"
-                      animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0, 0.3] }}
+                      animate={{ opacity: [0.3, 0.1, 0.3] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     />
                   </div>
@@ -413,28 +405,20 @@ export function Destinations() {
             {/* Central Globe with Lottie - 50% plus grand */}
             <motion.div
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-              initial={{ scale: 0, rotate: 0 }}
-              whileInView={{ scale: 1, rotate: 360 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               transition={{ duration: 1.5, ease: "easeOut" }}
               viewport={{ once: true }}
               style={{ zIndex: 5 }}
             >
               <div className="relative">
-                {/* Rotating rings */}
-                <motion.div
-                  className="absolute inset-0"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                >
+                {/* Static rings - pas de rotation */}
+                <div className="absolute inset-0">
                   <div className="w-[28rem] xl:w-[36rem] 2xl:w-[44rem] h-[28rem] xl:h-[36rem] 2xl:h-[44rem] rounded-full border-2 xl:border-3 border-blue-400/30 border-dashed" />
-                </motion.div>
-                <motion.div
-                  className="absolute inset-0"
-                  animate={{ rotate: -360 }}
-                  transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                >
+                </div>
+                <div className="absolute inset-0">
                   <div className="w-[28rem] xl:w-[36rem] 2xl:w-[44rem] h-[28rem] xl:h-[36rem] 2xl:h-[44rem] rounded-full border-2 xl:border-3 border-cyan-400/30 border-dashed" />
-                </motion.div>
+                </div>
 
                 {/* Globe core with Lottie - Encore plus grand */}
                 <div className="relative w-[28rem] xl:w-[36rem] 2xl:w-[44rem] h-[28rem] xl:h-[36rem] 2xl:h-[44rem] rounded-full bg-gradient-to-br from-blue-500/10 via-blue-600/10 to-cyan-600/10 backdrop-blur-sm shadow-2xl shadow-blue-500/30 flex items-center justify-center overflow-hidden border border-blue-200/50">
@@ -445,10 +429,10 @@ export function Destinations() {
                     />
                   </div>
 
-                  {/* Pulse effect */}
+                  {/* Pulse effect - juste opacity, pas de scale */}
                   <motion.div
                     className="absolute inset-0 rounded-full border-4 border-blue-400"
-                    animate={{ scale: [1, 1.3, 1], opacity: [0.4, 0, 0.4] }}
+                    animate={{ opacity: [0.4, 0.1, 0.4] }}
                     transition={{ duration: 2.5, repeat: Infinity }}
                   />
                 </div>
@@ -589,9 +573,9 @@ export function Destinations() {
         >
           <div className="grid grid-cols-3 gap-3 sm:gap-4 xl:gap-6 2xl:gap-8 max-w-3xl xl:max-w-5xl 2xl:max-w-6xl mx-auto">
             {[
-              { label: 'Pays connectés', value: '9+', color: 'from-blue-500 to-blue-600' },
-              { label: 'Trajets/an', value: '500+', color: 'from-cyan-500 to-cyan-600' },
-              { label: 'Satisfaction', value: '98%', color: 'from-emerald-500 to-emerald-600' },
+              { label: 'Pays connectés', value: '10+', color: 'from-blue-500 to-blue-600' },
+              { label: 'Prises en charge/an', value: '1000', color: 'from-cyan-500 to-cyan-600' },
+              { label: 'Satisfaction patients', value: '90%', color: 'from-emerald-500 to-emerald-600' },
             ].map((stat, i) => (
               <motion.div
                 key={i}
@@ -611,7 +595,7 @@ export function Destinations() {
             <p className="text-xs sm:text-sm xl:text-base 2xl:text-lg text-slate-500 font-medium">
               <span className="inline-flex items-center gap-2 xl:gap-3 px-3 xl:px-4 2xl:px-5 py-1.5 xl:py-2 2xl:py-2.5 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-full border border-blue-200">
                 <span className="w-2 h-2 xl:w-2.5 xl:h-2.5 2xl:w-3 2xl:h-3 bg-blue-500 rounded-full animate-pulse"></span>
-                Objectif en cours : 50+ pays d&apos;ici 2026
+                Objectif en cours : 50+ pays d&apos;Afrique connectés d&apos;ici 2026
               </span>
             </p>
           </div>
