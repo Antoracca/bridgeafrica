@@ -136,12 +136,19 @@ function LoginFormContent() {
   const handleSocialLogin = (provider: 'google' | 'apple') => {
     setUrlError(null)
     startTransition(async () => {
+      console.log(`[LOGIN] Connexion OAuth ${provider}`)
       const result = await signInWithOAuth(provider)
+      console.log(`[LOGIN] Résultat OAuth:`, result)
+
       if (result?.error) {
         toast.error(`Erreur connexion ${provider}`, {
           description: result.error,
           duration: 6000,
         })
+      } else if (result?.url) {
+        console.log(`[LOGIN] Redirection vers ${provider}`)
+        // Redirection côté client vers Google/Apple
+        window.location.href = result.url
       }
     })
   }

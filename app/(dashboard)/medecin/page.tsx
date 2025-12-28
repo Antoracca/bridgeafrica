@@ -1,5 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
+import { redirect } from "next/navigation"
 import { 
   Activity, 
   Users, 
@@ -27,6 +28,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { StatsCard } from "@/components/dashboard/StatsCard"
+import { createClient } from "@/lib/supabase/server"
 
 export const metadata: Metadata = {
   title: "Espace Médecin | MediBridge Africa",

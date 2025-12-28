@@ -126,6 +126,7 @@ DO $$ DECLARE duplicate_count INT; duplicate_phones TEXT; BEGIN
  IF duplicate_count > 0 THEN SELECT STRING_AGG(phone, ', ') INTO duplicate_phones FROM (SELECT phone FROM public.profiles WHERE phone IS NOT NULL GROUP BY phone HAVING COUNT(*) > 1 LIMIT 10) dup_list; RAISE WARNING '⚠ Trouvé % téléphones en doublon après normalisation : %', duplicate_count, duplicate_phones; RAISE WARNING 'Vérifiez la table phone_migration_backup pour les valeurs originales'; ELSE RAISE NOTICE '✓ Aucun doublon détecté après normalisation'; END IF; END $$;
 DO $$ DECLARE invalid_count INT; BEGIN SELECT COUNT(*) INTO invalid_count FROM public.profiles WHERE phone IS NOT NULL AND NOT (phone ~ '^\+[0-9]+$'); IF invalid_count > 0 THEN RAISE WARNING '⚠ Trouvé % numéros avec format invalide (pas E.164)', invalid_count; ELSE RAISE NOTICE '✓ Tous les numéros sont au format E.164'; END IF; END $$;
 
+
 -- PARTIE 11 : RAPPORT FINAL
 DO $$ DECLARE total_profiles INT; profiles_with_phone INT; valid_e164_format INT; backed_up_phones INT; trigger_count INT; rpc_count INT; BEGIN
  SELECT COUNT(*) INTO total_profiles FROM public.profiles;

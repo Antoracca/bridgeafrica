@@ -25,19 +25,29 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
+  // Vérifier la session utilisateur
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Protection des routes
+  // Protection des routes dashboard
   const protectedPaths = ['/dashboard', '/patient', '/medecin', '/clinique']
   const isProtected = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path))
 
   if (isProtected && !user) {
-    return NextResponse.redirect(new URL('/login', request.url))
+    // Si pas d'utilisateur connecté, rediriger vers login
+    const redirectUrl = new URL('/login', request.url)
+    const redirectResponse = NextResponse.redirect(redirectUrl)
+    
+    // Nettoyer tous les cookies de session Supabase pour une déconnexion complète
+    request.cookies.getAll().forEach((cookie) => {
+      if (cookie.name.startsWith('sb-')) {
+        redirectResponse.cookies.delete(cookie.name)
+      }
+    })
+    
+    return redirectResponse
   }
 
-  // Suppression de la redirection automatique depuis l'accueil pour permettre la navigation
-  
   return response
 }

@@ -1,5 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
+import { redirect } from "next/navigation"
 import { 
   Activity, 
   FileText, 
@@ -32,7 +33,12 @@ export default async function PatientDashboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   
-  const stats = user ? await getPatientStats(user.id) : { activeCases: 0, quotesReceived: 0, messagesUnread: 0 }
+  // Protection de la page - rediriger si pas de session
+  if (!user) {
+    redirect('/login')
+  }
+  
+  const stats = await getPatientStats(user.id)
 
   return (
     <div className="flex flex-1 flex-col gap-4">

@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useTransition, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { signup, signInWithOAuth } from '@/lib/actions/auth'
+import { signInWithOAuth } from '@/lib/actions/auth'
+import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -17,7 +18,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
-import { Eye, EyeOff, Loader2, CheckCircle, XCircle } from 'lucide-react'
+import { Eye, EyeOff, Loader2, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Select,
@@ -74,10 +76,23 @@ const formSchema = z.object({
 
 export function RegisterForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  
+
+  // Gestion des erreurs OAuth depuis l'URL
+  const [urlError, setUrlError] = useState<string | null>(() => {
+    const err = searchParams.get('error')
+    return err ? decodeURIComponent(err) : null
+  })
+
+  useEffect(() => {
+    if (!urlError) return
+    const timeout = setTimeout(() => setUrlError(null), 10000)
+    return () => clearTimeout(timeout)
+  }, [urlError])
+
   // États pour la vérification live de l'email
   const [emailToCheck, setEmailToCheck] = useState('')
   const [isEmailAvailable, setIsEmailAvailable] = useState<boolean | null>(null)
@@ -249,66 +264,78 @@ export function RegisterForm() {
 
     startTransition(async () => {
       try {
-        const formData = new FormData()
-        formData.append('firstName', values.firstName)
-        formData.append('lastName', values.lastName)
-        formData.append('country', values.country)
-        formData.append('phone', values.phone)
-        formData.append('email', values.email)
-        formData.append('password', values.password)
-        formData.append('role', 'patient')
-
-        console.log('Soumission inscription avec:', {
+        console.log('[SIGNUP CLIENT] Soumission inscription avec:', {
           email: values.email,
           phone: values.phone,
           name: `${values.firstName} ${values.lastName}`
         })
 
-        const result = await signup(formData)
-        console.log('Résultat signup:', result)
+        // IMPORTANT: Utiliser le client BROWSER pour que le code PKCE soit stocké dans les cookies du navigateur
+        const supabase = createClient()
 
-        // CRITICAL: Check if result exists at all
-        if (!result) {
-          console.error('[SIGNUP] Result is null/undefined')
-          toast.error("Erreur de connexion", {
-            description: "Impossible de contacter le serveur. Vérifiez votre connexion internet.",
-            duration: 6000,
-          })
-          return
-        }
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email: values.email.toLowerCase().trim(),
+          password: values.password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/auth/callback`,
+            data: {
+              role: 'patient',
+              first_name: values.firstName,
+              last_name: values.lastName,
+              country: values.country,
+              phone: values.phone,
+              auth_method: 'manual',
+            },
+          },
+        })
 
-        if (result?.error) {
-          console.error('[SIGNUP] Erreur reçue:', result.error)
-          // Gestion fine des erreurs serveur pour une UX préventive
-          if (result.error.toLowerCase().includes("email") || result.error.includes("déjà")) {
-               setIsEmailAvailable(false) // Force l'affichage du message ligne 469
-          }
-          else if (result.error.toLowerCase().includes("téléphone") || result.error.includes("phone")) {
-               setIsPhoneAvailable(false) // Force l'affichage du message ligne 433
-          }
-          else {
-            // Pour toutes les autres erreurs (validation, serveur, etc.)
-            // On affiche un toast uniquement pour les erreurs non liées aux champs
+        console.log('[SIGNUP CLIENT] Résultat Supabase:', {
+          user: authData?.user?.id,
+          session: !!authData?.session,
+          error: authError?.message
+        })
+
+        if (authError) {
+          console.error('[SIGNUP CLIENT] Erreur Supabase:', authError)
+          
+          // Gestion des erreurs
+          if (authError.message?.includes('already registered') || authError.message?.includes('already exists')) {
+            setIsEmailAvailable(false)
             toast.error("Inscription impossible", {
-              description: result.error,
+              description: "Cet email est déjà associé à un compte.",
+              duration: 6000,
+            })
+          } else if (authError.message?.includes('unique') || authError.message?.includes('duplicate')) {
+            if (authError.message.includes('email')) {
+              setIsEmailAvailable(false)
+            } else if (authError.message.includes('phone')) {
+              setIsPhoneAvailable(false)
+            }
+            toast.error("Inscription impossible", {
+              description: "Ces informations sont déjà utilisées.",
+              duration: 6000,
+            })
+          } else {
+            toast.error("Inscription impossible", {
+              description: authError.message || "Une erreur s'est produite.",
               duration: 6000,
             })
           }
-        } else if (result?.success) {
-          console.log('[SIGNUP] Success - redirection vers check-email')
-          // Redirection vers la page check-email avec l'email en paramètre
-          router.push(`/check-email?email=${encodeURIComponent(values.email)}`)
-        } else {
-          // Cas où result existe mais ne contient ni error ni success
-          console.warn('[SIGNUP] Result inattendu:', result)
-          toast.error("Erreur inattendue", {
-            description: "La réponse du serveur est invalide. Veuillez réessayer.",
-            duration: 6000,
-          })
+          return
         }
+
+        // Inscription réussie - email de confirmation envoyé
+        if (authData.user && !authData.session) {
+          console.log('[SIGNUP CLIENT] Inscription réussie - en attente de confirmation email')
+          router.push(`/check-email?email=${encodeURIComponent(values.email)}`)
+        } else if (authData.session) {
+          // Session active (auto-confirm activé ou autre config)
+          console.log('[SIGNUP CLIENT] Inscription réussie - session active, redirection')
+          router.push('/patient')
+        }
+
       } catch (error) {
-        // Capture des erreurs non gérées (network, parsing, etc.)
-        console.error('Erreur inattendue lors de l\'inscription:', error)
+        console.error('[SIGNUP CLIENT] Erreur inattendue:', error)
         toast.error("Erreur inattendue", {
           description: error instanceof Error ? error.message : "Une erreur technique s'est produite. Veuillez réessayer.",
           duration: 5000,
@@ -318,14 +345,26 @@ export function RegisterForm() {
   }
 
   const handleSocialLogin = (provider: 'google' | 'apple') => {
+    console.log(`[REGISTER] Clic sur bouton ${provider}`)
     startTransition(async () => {
+        console.log(`[REGISTER] Appel signInWithOAuth pour ${provider}`)
         const result = await signInWithOAuth(provider)
+        console.log(`[REGISTER] Résultat signInWithOAuth:`, result)
+
         if (result?.error) {
+          console.error(`[REGISTER] Erreur OAuth ${provider}:`, result.error)
           if (result.error.includes('existe déjà')) {
             toast.error('Un compte existe déjà avec cet email. Veuillez vous connecter avec votre compte Google sur la page de connexion.')
           } else {
             toast.error(result.error)
           }
+        } else if (result?.url) {
+          console.log(`[REGISTER] Redirection côté client vers:`, result.url)
+          // Redirection côté client vers Google/Apple
+          window.location.href = result.url
+        } else {
+          console.error(`[REGISTER] Résultat inattendu - pas d'URL ni d'erreur`)
+          toast.error('Une erreur est survenue lors de la connexion')
         }
     })
   }
@@ -343,6 +382,16 @@ export function RegisterForm() {
   return (
     <Card className="border-none shadow-none md:border md:shadow-sm bg-transparent md:bg-card">
       <CardContent className="pt-6 md:p-6">
+        {/* Afficher les erreurs OAuth */}
+        {urlError && (
+          <Alert className="border-red-200 bg-red-50/50 dark:border-red-900 dark:bg-red-950/20 mb-4">
+            <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
+            <AlertDescription className="text-red-700 dark:text-red-300">
+              {urlError}
+            </AlertDescription>
+          </Alert>
+        )}
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 text-left">
             <div className="grid grid-cols-2 gap-4">

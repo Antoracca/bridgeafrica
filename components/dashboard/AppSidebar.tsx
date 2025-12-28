@@ -2,6 +2,8 @@
 
 import * as React from "react"
 import { usePathname } from "next/navigation"
+import { logout } from "@/lib/actions/auth"
+import { toast } from "sonner"
 import {
   Activity,
   Calendar,
@@ -17,7 +19,8 @@ import {
   Stethoscope,
   Building2,
   FileSpreadsheet,
-  Globe
+  Globe,
+  Loader2
 } from "lucide-react"
 
 import {
@@ -127,6 +130,7 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
   const pathname = usePathname()
+  const [isLoggingOut, setIsLoggingOut] = React.useState(false)
   const isMedecin = pathname?.startsWith("/medecin")
   const isClinique = pathname?.startsWith("/clinique")
   
@@ -147,6 +151,25 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
   const displayName = user?.user_metadata?.first_name 
     ? `${user.user_metadata.first_name} ${user.user_metadata.last_name || ''}`
     : user?.email || "Utilisateur"
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true)
+    try {
+      const result = await logout()
+      if (result?.error) {
+        toast.error("Erreur de déconnexion", {
+          description: result.error,
+        })
+        setIsLoggingOut(false)
+      }
+      // Si succès, la fonction logout() redirige automatiquement
+    } catch (error) {
+      toast.error("Erreur inattendue", {
+        description: "Impossible de se déconnecter. Veuillez réessayer.",
+      })
+      setIsLoggingOut(false)
+    }
+  }
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -257,9 +280,13 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Déconnexion
+                <DropdownMenuItem onClick={handleLogout} disabled={isLoggingOut}>
+                  {isLoggingOut ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <LogOut className="mr-2 h-4 w-4" />
+                  )}
+                  {isLoggingOut ? "Déconnexion..." : "Déconnexion"}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

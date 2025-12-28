@@ -253,9 +253,13 @@ export async function updateProfile(formData: FormData) {
 
 export async function signInWithOAuth(provider: 'google' | 'apple') {
   try {
+    console.log(`[OAUTH] Début connexion ${provider}`)
     const supabase = await createClient()
     const origin = (await headers()).get('origin')
     const redirectTo = origin ? `${origin}/auth/callback` : undefined
+
+    console.log(`[OAUTH] Origin:`, origin)
+    console.log(`[OAUTH] RedirectTo:`, redirectTo)
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
@@ -266,14 +270,24 @@ export async function signInWithOAuth(provider: 'google' | 'apple') {
     })
 
     if (error) {
+      console.error(`[OAUTH] Erreur Supabase ${provider}:`, error)
       return { error: parseSupabaseError(error, 'oauth').userFriendly }
     }
-    
+
+    console.log(`[OAUTH] URL de redirection générée:`, data.url)
+
     if (data.url) {
-      redirect(data.url)
+      console.log(`[OAUTH] Retour de l'URL au client pour redirection`)
+      // IMPORTANT: On retourne l'URL au lieu de redirect() car cette fonction
+      // est appelée depuis le client (RegisterForm/LoginForm)
+      // Le redirect() côté serveur ne fonctionne pas dans ce contexte
+      return { url: data.url }
+    } else {
+      console.error(`[OAUTH] Pas d'URL de redirection !`)
+      return { error: 'Impossible de générer le lien de connexion' }
     }
   } catch (error) {
-    console.error('OAuth error:', error)
+    console.error('[OAUTH] Erreur catch:', error)
     return { error: 'Une erreur est survenue lors de la connexion' }
   }
 }
@@ -302,5 +316,135 @@ export async function resendConfirmationEmail(email: string) {
   } catch (error) {
     console.error('[RESEND] Erreur inattendue:', error)
     return { error: 'Impossible d\'envoyer l\'email. Veuillez réessayer.' }
+  }
+}
+
+export async function completeOAuthProfile(formData: FormData) {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
+      return { error: 'Non autorisé' }
+    }
+
+    const data = {
+      firstName: formData.get('firstName') as string,
+      lastName: formData.get('lastName') as string,
+      country: formData.get('country') as string,
+      phone: formData.get('phone') as string,
+      role: (formData.get('role') as any) || 'patient',
+    }
+
+    console.log('[COMPLETE OAUTH PROFILE] Données reçues:', data)
+
+    // Valider les données
+    if (!data.firstName || data.firstName.length < 2) {
+      return { error: 'Le prénom doit contenir au moins 2 caractères' }
+    }
+    if (!data.lastName || data.lastName.length < 2) {
+      return { error: 'Le nom doit contenir au moins 2 caractères' }
+    }
+    if (!data.country || data.country.length < 2) {
+      return { error: 'Veuillez sélectionner un pays' }
+    }
+    if (!data.phone) {
+      return { error: 'Le numéro de téléphone est requis' }
+    }
+
+    // Normaliser le téléphone
+    const normalizedPhone = normalizePhone(data.phone)
+    if (!normalizedPhone) {
+      return { error: 'Numéro de téléphone invalide' }
+    }
+
+    // Vérifier l'unicité du téléphone (SAUF pour le profil actuel)
+    const { data: phoneExists, error: phoneCheckError } = await supabase.rpc(
+      'check_phone_exists_excluding_user',
+      {
+        phone_to_check: normalizedPhone,
+        user_id_to_exclude: user.id
+      } as any
+    )
+
+    if (phoneCheckError) {
+      console.error('[COMPLETE OAUTH PROFILE] Erreur vérification téléphone:', phoneCheckError)
+      return { error: 'Impossible de vérifier la disponibilité du téléphone.' }
+    }
+
+    if (phoneExists) {
+      console.warn('[COMPLETE OAUTH PROFILE] Téléphone déjà utilisé par un autre utilisateur')
+      return { error: "Ce numéro de téléphone est déjà utilisé par un autre compte." }
+    }
+
+    // Mettre à jour le profil
+    const { error: updateError } = await (supabase as any)
+      .from('profiles')
+      .update({
+        first_name: data.firstName,
+        last_name: data.lastName,
+        country: data.country,
+        phone: normalizedPhone,
+        role: data.role,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', user.id)
+
+    if (updateError) {
+      console.error('[COMPLETE OAUTH PROFILE] Erreur mise à jour:', updateError)
+      return { error: 'Erreur lors de la mise à jour du profil: ' + updateError.message }
+    }
+
+    // Mettre à jour les métadonnées utilisateur
+    const { error: userUpdateError } = await supabase.auth.updateUser({
+      data: {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        country: data.country,
+        phone: normalizedPhone,
+        role: data.role,
+      }
+    })
+
+    if (userUpdateError) {
+      console.warn('[COMPLETE OAUTH PROFILE] Erreur mise à jour user_metadata:', userUpdateError)
+      // Non bloquant
+    }
+
+    console.log('[COMPLETE OAUTH PROFILE] Profil complété avec succès')
+
+    // Revalider le cache
+    revalidatePath('/', 'layout')
+
+    // Retourner succès (la redirection est gérée côté client)
+    return { success: true }
+
+  } catch (error) {
+    console.error('[COMPLETE OAUTH PROFILE] Erreur inattendue:', error)
+    return { error: 'Une erreur inattendue s\'est produite.' }
+  }
+}
+
+export async function logout() {
+  try {
+    console.log('[LOGOUT] Déconnexion en cours...')
+    const supabase = await createClient()
+    
+    // Déconnexion avec suppression de toutes les sessions
+    const { error } = await supabase.auth.signOut({ scope: 'local' })
+    
+    if (error) {
+      console.error('[LOGOUT] Erreur Supabase:', error)
+      return { error: 'Erreur lors de la déconnexion. Veuillez réessayer.' }
+    }
+
+    console.log('[LOGOUT] ✓ Déconnexion réussie - redirection vers accueil')
+    
+    // Nettoyer le cache et rediriger vers l'accueil
+    revalidatePath('/', 'layout')
+    redirect('/')
+  } catch (error) {
+    console.error('[LOGOUT] Erreur inattendue:', error)
+    return { error: 'Une erreur est survenue lors de la déconnexion.' }
   }
 }
