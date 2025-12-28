@@ -83,3 +83,24 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
   right: 0;
   pointer-events: none;
 }
+
+/* --- Cacher les scrollbars (mobile et desktop) --- */
+
+/* Webkit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  display: none;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Pour garder le scroll fonctionnel mais invisible */
+html, body {
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}

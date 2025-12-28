@@ -89,17 +89,29 @@ export async function createMedicalCase(formData: FormData) {
   const files = formData.getAll('files')
   console.log(`${files.length} fichiers reçus pour le dossier`)
 
-  const { error } = await (supabase as any)
+  interface MedicalCaseInsert {
+    patient_id: string;
+    diagnosis: string;
+    symptoms: string;
+    required_specialty: string;
+    urgency_level: string;
+    estimated_budget: number | null;
+    status: string;
+  }
+
+  const caseData: MedicalCaseInsert = {
+    patient_id: user.id,
+    diagnosis: result.data.diagnosis,
+    symptoms: combinedSymptoms,
+    required_specialty: result.data.specialty,
+    urgency_level: result.data.urgency,
+    estimated_budget: result.data.budget ? parseFloat(result.data.budget) : null,
+    status: 'submitted'
+  }
+
+  const { error } = await supabase
     .from('medical_cases')
-    .insert({
-      patient_id: user.id,
-      diagnosis: result.data.diagnosis,
-      symptoms: combinedSymptoms,
-      required_specialty: result.data.specialty,
-      urgency_level: result.data.urgency,
-      estimated_budget: result.data.budget ? parseFloat(result.data.budget) : null,
-      status: 'submitted'
-    })
+    .insert(caseData as never)
 
   if (error) {
     console.error("Erreur insertion dossier:", error)
@@ -111,20 +123,26 @@ export async function createMedicalCase(formData: FormData) {
   redirect('/patient?success=true')
 }
 
-export async function updateCaseStatus(caseId: string, newStatus: string, notes?: string) {
+export async function updateCaseStatus(caseId: string, newStatus: string, _notes?: string) {
   const supabase = await createClient()
-  
+
   // Vérification basique des droits (Optionnel: vérifier si l'user est médecin)
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: "Non autorisé" }
 
-  const { error } = await (supabase as any)
+  interface CaseUpdate {
+    status: string;
+    updated_at: string;
+  }
+
+  const updateData: CaseUpdate = {
+    status: newStatus,
+    updated_at: new Date().toISOString()
+  }
+
+  const { error } = await supabase
     .from('medical_cases')
-    .update({ 
-      status: newStatus,
-      // On pourrait stocker les notes dans un champ dédié 'internal_notes' plus tard
-      updated_at: new Date().toISOString()
-    })
+    .update(updateData as never)
     .eq('id', caseId)
 
   if (error) {

@@ -54,6 +54,7 @@ interface PatientProfile {
 }
 
 export function PatientProfileForm({ profile, email }: { profile: PatientProfile, email?: string }) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isPending, startTransition] = useTransition()
 
   const form = useForm<ProfileFormValues>({

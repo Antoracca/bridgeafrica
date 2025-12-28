@@ -27,7 +27,7 @@ function ConfirmationContent() {
   }, [redirectPath, router])
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-linear-to-r from-blue-50 via-white to-purple-50 p-4">
       <Card className="w-full max-w-md border-none shadow-2xl">
         <CardContent className="pt-8 pb-8 text-center">
           <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
@@ -53,7 +53,7 @@ function ConfirmationContent() {
             onClick={() => router.push(redirectPath)}
             className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
           >
-            Cliquez ici si vous n'êtes pas redirigé automatiquement
+            Cliquez ici si vous n&apos;êtes pas redirigé automatiquement
           </button>
         </CardContent>
       </Card>

@@ -1,4 +1,14 @@
-export function parseSupabaseError(error: any, context: 'login' | 'signup' | 'oauth' | 'resend' | 'updateProfile'): {
+// Type pour les erreurs Supabase
+interface SupabaseError {
+    message?: string;
+    code?: string;
+    status?: number;
+}
+
+export function parseSupabaseError(
+    error: SupabaseError | string | unknown,
+    context: 'login' | 'signup' | 'oauth' | 'resend' | 'updateProfile'
+): {
     userFriendly: string;
     raw: string;
     code?: string;
@@ -7,10 +17,10 @@ export function parseSupabaseError(error: any, context: 'login' | 'signup' | 'oa
     let raw = JSON.stringify(error);
     let code: string | undefined;
 
-    if (error && typeof error.message === 'string') {
+    if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
         raw = error.message;
-        
-        if (error.code) {
+
+        if ('code' in error && typeof error.code === 'string') {
             code = error.code;
         }
 

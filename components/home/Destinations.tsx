@@ -27,7 +27,7 @@ export function Destinations() {
             Le Pont Médical <span className="text-blue-600">Intercontinental</span>
           </h2>
           <p className="text-slate-600 text-lg">
-            Nous connectons les patients d\'Afrique Centrale et de l\'Ouest aux pôles d\'excellence médicale mondiaux.
+            Nous connectons les patients d\&apos;Afrique Centrale et de l\&apos;Ouest aux pôles d\&apos;excellence médicale mondiaux.
           </p>
         </div>
 

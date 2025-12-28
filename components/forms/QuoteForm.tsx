@@ -82,7 +82,7 @@ export function QuoteForm() {
                 <FormControl>
                 <Textarea 
                     placeholder="Détaillez les actes médicaux (ex: Coronarographie, Pose de Stents, Hospitalisation 48h...)" 
-                    className="min-h-[100px]"
+                    className="min-h-25"
                     {...field} 
                 />
                 </FormControl>

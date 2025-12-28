@@ -22,13 +22,13 @@ export function Hero() {
             transition={{ duration: 0.6 }}
           >
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold mb-6">
-              <Sparkles size={16} /> L'IA au service de votre santé
+              <Sparkles size={16} /> L&apos;IA au service de votre santé
             </span>
             <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 leading-[1.15] mb-6">
-              Votre Santé n'a pas de <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Frontières</span>.
+              Votre Santé n&apos;a pas de <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Frontières</span>.
             </h1>
             <p className="text-lg md:text-xl text-slate-600 mb-8 leading-relaxed">
-              Accédez aux meilleures cliniques du <strong>Maroc, Turquie et France</strong> depuis le Gabon, Cameroun et toute l'Afrique de l'Ouest. Une prise en charge complète, du visa au retour.
+              Accédez aux meilleures cliniques du <strong>Maroc, Turquie et France</strong> depuis le Gabon, Cameroun et toute l&apos;Afrique de l&apos;Ouest. Une prise en charge complète, du visa au retour.
             </p>
           </motion.div>
 

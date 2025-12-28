@@ -1,7 +1,7 @@
 "use client"
 
 import dynamic from "next/dynamic"
-import { useMemo } from "react"
+import { useMemo, useState, useEffect } from "react"
 
 // Import dynamique pour éviter les erreurs SSR avec Lottie
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false })
@@ -9,22 +9,28 @@ const Lottie = dynamic(() => import("lottie-react"), { ssr: false })
 interface LottieAnimationProps {
   animationData: any
   className?: string
-  loop?: boolean // Nouvelle prop
+  loop?: boolean
 }
 
 export function LottieAnimation({ animationData, className, loop = true }: LottieAnimationProps) {
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
   const options = useMemo(() => ({
-    loop: loop, // Utilisation de la prop
+    loop: loop,
     autoplay: true,
     animationData: animationData,
     rendererSettings: {
       preserveAspectRatio: 'xMidYMid slice'
     }
-  }), [animationData, loop]) // Ajouter loop aux dépendances du useMemo
+  }), [animationData, loop])
 
   return (
-    <div className={className}>
-      <Lottie {...options} />
+    <div className={className} suppressHydrationWarning>
+      {isMounted && <Lottie {...options} />}
     </div>
   )
 }

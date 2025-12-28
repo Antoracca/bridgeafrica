@@ -2,7 +2,7 @@
 
 import { useState, useTransition, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { completeOAuthProfile } from '@/lib/actions/auth'
@@ -66,6 +66,11 @@ export function CompleteProfileForm() {
     mode: 'onChange',
   })
 
+  const selectedCountry = useWatch({
+    control: form.control,
+    name: 'country',
+  })
+
   // Charger les données du profil (créé par le trigger)
   useEffect(() => {
     async function loadUserData() {
@@ -88,7 +93,12 @@ export function CompleteProfileForm() {
           .from('profiles')
           .select('first_name, last_name, phone, country')
           .eq('id', user.id)
-          .single()
+          .single<{
+            first_name: string | null
+            last_name: string | null
+            phone: string | null
+            country: string | null
+          }>()
 
         console.log('[COMPLETE PROFILE] Profil DB:', profile)
 
@@ -301,7 +311,7 @@ export function CompleteProfileForm() {
                   <FormControl>
                     <PhoneInput
                       international
-                      defaultCountry={form.watch('country') as any}
+                      defaultCountry={selectedCountry as any} // eslint-disable-line @typescript-eslint/no-explicit-any
                       value={field.value}
                       onChange={(value) => field.onChange(value || '')}
                       disabled={isPending}
@@ -320,7 +330,7 @@ export function CompleteProfileForm() {
               </p>
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 h-11 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                className="w-full bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 h-11 text-base font-medium shadow-md hover:shadow-lg transition-all"
                 disabled={isPending || !form.formState.isValid}
               >
                 {isPending ? (

@@ -19,6 +19,9 @@ const config: Config = {
       },
     },
     extend: {
+      screens: {
+        'xs': '375px',  // iPhone SE, petits téléphones
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',

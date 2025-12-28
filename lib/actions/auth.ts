@@ -97,6 +97,9 @@ export async function signup(formData: FormData) {
     
     const origin = (await headers()).get('origin')
 
+    const rawRole = formData.get('role') as string | null
+    const role = (rawRole as 'patient' | 'medecin_referent' | 'clinique' | null) || 'patient'
+
     const data = {
       email: formData.get('email') as string,
       password: formData.get('password') as string,
@@ -104,7 +107,7 @@ export async function signup(formData: FormData) {
       lastName: formData.get('lastName') as string,
       country: formData.get('country') as string,
       phone: formData.get('phone') as string,
-      role: (formData.get('role') as any) || 'patient',
+      role,
     }
 
     console.log('[SIGNUP] Données reçues:', { email: data.email, phone: data.phone })
@@ -138,7 +141,9 @@ export async function signup(formData: FormData) {
     }
 
     // Vérification de l'unicité de l'email via RPC
-    const { data: emailExists, error: emailCheckError } = await supabase.rpc('check_email_exists', { email_to_check: normalizedEmail } as any)
+    const { data: emailExists, error: emailCheckError } = await supabase.rpc('check_email_exists', {
+      email_to_check: normalizedEmail
+    } as never)
 
     // FAIL CLOSED: If RPC fails, block signup
     if (emailCheckError) {
@@ -152,7 +157,9 @@ export async function signup(formData: FormData) {
 
     // Vérification de l'unicité du téléphone via RPC
     if (normalizedPhone) {
-      const { data: phoneExists, error: phoneCheckError } = await supabase.rpc('check_phone_exists', { phone_to_check: normalizedPhone } as any)
+      const { data: phoneExists, error: phoneCheckError } = await supabase.rpc('check_phone_exists', {
+        phone_to_check: normalizedPhone
+      } as never)
 
       // FAIL CLOSED: If RPC fails, block signup
       if (phoneCheckError) {
@@ -235,7 +242,16 @@ export async function updateProfile(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Non autorisé' }
 
-  const data = {
+  interface ProfileUpdate {
+    first_name: string;
+    last_name: string;
+    phone: string;
+    country: string;
+    city: string;
+    allergies: string;
+  }
+
+  const data: ProfileUpdate = {
     first_name: formData.get('firstName') as string,
     last_name: formData.get('lastName') as string,
     phone: formData.get('phone') as string,
@@ -244,7 +260,7 @@ export async function updateProfile(formData: FormData) {
     allergies: formData.get('allergies') as string,
   }
 
-  const { error } = await (supabase as any).from('profiles').update(data).eq('id', user.id)
+  const { error } = await supabase.from('profiles').update(data as never).eq('id', user.id)
   if (error) return { error: 'Erreur mise à jour: ' + error.message }
 
   revalidatePath('/patient/profile')
@@ -253,13 +269,9 @@ export async function updateProfile(formData: FormData) {
 
 export async function signInWithOAuth(provider: 'google' | 'apple') {
   try {
-    console.log(`[OAUTH] Début connexion ${provider}`)
     const supabase = await createClient()
     const origin = (await headers()).get('origin')
     const redirectTo = origin ? `${origin}/auth/callback` : undefined
-
-    console.log(`[OAUTH] Origin:`, origin)
-    console.log(`[OAUTH] RedirectTo:`, redirectTo)
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
@@ -270,31 +282,21 @@ export async function signInWithOAuth(provider: 'google' | 'apple') {
     })
 
     if (error) {
-      console.error(`[OAUTH] Erreur Supabase ${provider}:`, error)
       return { error: parseSupabaseError(error, 'oauth').userFriendly }
     }
 
-    console.log(`[OAUTH] URL de redirection générée:`, data.url)
-
     if (data.url) {
-      console.log(`[OAUTH] Retour de l'URL au client pour redirection`)
-      // IMPORTANT: On retourne l'URL au lieu de redirect() car cette fonction
-      // est appelée depuis le client (RegisterForm/LoginForm)
-      // Le redirect() côté serveur ne fonctionne pas dans ce contexte
       return { url: data.url }
     } else {
-      console.error(`[OAUTH] Pas d'URL de redirection !`)
       return { error: 'Impossible de générer le lien de connexion' }
     }
   } catch (error) {
-    console.error('[OAUTH] Erreur catch:', error)
     return { error: 'Une erreur est survenue lors de la connexion' }
   }
 }
 
 export async function resendConfirmationEmail(email: string) {
   try {
-    console.log('[RESEND] Envoi email de confirmation à:', email)
     const supabase = await createClient()
     const origin = (await headers()).get('origin')
 
@@ -328,12 +330,15 @@ export async function completeOAuthProfile(formData: FormData) {
       return { error: 'Non autorisé' }
     }
 
+    const rawOAuthRole = formData.get('role') as string | null
+    const oauthRole = (rawOAuthRole as 'patient' | 'medecin_referent' | 'clinique' | null) || 'patient'
+
     const data = {
       firstName: formData.get('firstName') as string,
       lastName: formData.get('lastName') as string,
       country: formData.get('country') as string,
       phone: formData.get('phone') as string,
-      role: (formData.get('role') as any) || 'patient',
+      role: oauthRole,
     }
 
     console.log('[COMPLETE OAUTH PROFILE] Données reçues:', data)
@@ -364,7 +369,7 @@ export async function completeOAuthProfile(formData: FormData) {
       {
         phone_to_check: normalizedPhone,
         user_id_to_exclude: user.id
-      } as any
+      } as never
     )
 
     if (phoneCheckError) {
@@ -378,16 +383,27 @@ export async function completeOAuthProfile(formData: FormData) {
     }
 
     // Mettre à jour le profil
-    const { error: updateError } = await (supabase as any)
+    interface OAuthProfileUpdate {
+      first_name: string;
+      last_name: string;
+      country: string;
+      phone: string;
+      role: 'patient' | 'medecin_referent' | 'clinique';
+      updated_at: string;
+    }
+
+    const profileUpdate: OAuthProfileUpdate = {
+      first_name: data.firstName,
+      last_name: data.lastName,
+      country: data.country,
+      phone: normalizedPhone,
+      role: data.role,
+      updated_at: new Date().toISOString(),
+    }
+
+    const { error: updateError } = await supabase
       .from('profiles')
-      .update({
-        first_name: data.firstName,
-        last_name: data.lastName,
-        country: data.country,
-        phone: normalizedPhone,
-        role: data.role,
-        updated_at: new Date().toISOString(),
-      })
+      .update(profileUpdate as never)
       .eq('id', user.id)
 
     if (updateError) {
@@ -438,13 +454,16 @@ export async function logout() {
       return { error: 'Erreur lors de la déconnexion. Veuillez réessayer.' }
     }
 
-    console.log('[LOGOUT] ✓ Déconnexion réussie - redirection vers accueil')
-    
-    // Nettoyer le cache et rediriger vers l'accueil
+    console.log('[LOGOUT] ✓ Déconnexion réussie')
+
     revalidatePath('/', 'layout')
     redirect('/')
-  } catch (error) {
-    console.error('[LOGOUT] Erreur inattendue:', error)
+  } catch (error: unknown) {
+    // redirect() lance une exception Next.js (digest: NEXT_REDIRECT) - c'est normal
+    if (error && typeof error === 'object' && 'digest' in error && typeof error.digest === 'string' && error.digest.startsWith('NEXT_REDIRECT')) {
+      throw error
+    }
+    console.error('[LOGOUT] Erreur:', error)
     return { error: 'Une erreur est survenue lors de la déconnexion.' }
   }
 }

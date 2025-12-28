@@ -98,7 +98,7 @@ function AuthCodeErrorContent() {
           {/* Info */}
           <div className="border-t pt-3">
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Les liens de confirmation expirent après 24 heures. Vous pouvez demander un nouvel email depuis la page d'inscription.
+              Les liens de confirmation expirent après 24 heures. Vous pouvez demander un nouvel email depuis la page d&apos;inscription.
             </p>
           </div>
         </CardContent>

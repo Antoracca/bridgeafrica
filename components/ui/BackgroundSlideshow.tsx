@@ -18,17 +18,24 @@ const images = [
 
 export function BackgroundSlideshow() {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length)
-    }, 7000) // Un peu plus lent pour plus de douceur
-
-    return () => clearInterval(interval)
+    setIsMounted(true)
   }, [])
 
+  useEffect(() => {
+    if (!isMounted) return
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length)
+    }, 7000)
+
+    return () => clearInterval(interval)
+  }, [isMounted])
+
   return (
-    <div className="absolute inset-0 overflow-hidden bg-zinc-900">
+    <div className="absolute inset-0 overflow-hidden bg-zinc-900" suppressHydrationWarning>
       {images.map((src, index) => (
         <div
           key={src}
@@ -45,7 +52,7 @@ export function BackgroundSlideshow() {
           />
         </div>
       ))}
-      
+
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/30 pointer-events-none" />
     </div>
   )
