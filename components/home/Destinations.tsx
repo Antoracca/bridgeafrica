@@ -97,7 +97,7 @@ export function Destinations() {
               Le Pont Médical <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Intercontinental</span>
             </h2>
             <p className="text-slate-600 text-base sm:text-lg md:text-xl xl:text-2xl 2xl:text-3xl px-4">
-              Connexions en temps réel entre l'Afrique et les pôles d'excellence médicale mondiaux
+              Connexions en temps réel entre l&apos;Afrique et les pôles d&apos;excellence médicale mondiaux
             </p>
           </motion.div>
         </div>
