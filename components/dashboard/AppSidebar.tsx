@@ -4,6 +4,7 @@ import * as React from "react"
 import { usePathname } from "next/navigation"
 import { logout } from "@/lib/actions/auth"
 import { toast } from "sonner"
+import { useLoading } from "@/contexts/LoadingContext"
 import {
   Activity,
   Calendar,
@@ -123,6 +124,7 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
   const pathname = usePathname()
   const [isLoggingOut, setIsLoggingOut] = React.useState(false)
+  const { showLoader, hideLoader } = useLoading()
   const isMedecin = pathname?.startsWith("/medecin")
   const isClinique = pathname?.startsWith("/clinique")
 
@@ -149,13 +151,20 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
 
   const handleLogout = async () => {
     setIsLoggingOut(true)
+    showLoader("Déconnexion en cours...")
+
     try {
       const result = await logout()
       if (result?.error) {
+        hideLoader()
         toast.error("Erreur", { description: result.error })
         setIsLoggingOut(false)
+      } else {
+        // Succès - le loader restera actif pendant la redirection
+        showLoader("Déconnexion réussie!")
       }
     } catch (error) {
+      hideLoader()
       toast.error("Erreur", { description: "Impossible de se déconnecter." })
       setIsLoggingOut(false)
     }

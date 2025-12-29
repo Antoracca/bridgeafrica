@@ -26,6 +26,7 @@ import { PasswordStrengthIndicator } from '@/components/ui/password-strength-ind
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
 import { validateEmailDomain } from '@/lib/utils/validation'
+import { useLoading } from '@/contexts/LoadingContext'
 
 const formSchema = z.object({
   firstName: z.string().min(2, { message: "Le prénom doit contenir au moins 2 caractères" }),
@@ -73,6 +74,7 @@ function RegisterFormContent() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [currentStep, setCurrentStep] = useState(1) // Étape 1 ou 2
+  const { showLoader, hideLoader } = useLoading()
 
   // Gestion des erreurs OAuth depuis l'URL
   const [urlError, setUrlError] = useState<string | null>(() => {
@@ -243,6 +245,8 @@ function RegisterFormContent() {
     }
 
     startTransition(async () => {
+      showLoader("Création de votre compte...")
+
       try {
         // IMPORTANT: Utiliser le client BROWSER pour que le code PKCE soit stocké dans les cookies du navigateur
         const supabase = createClient()
@@ -264,6 +268,8 @@ function RegisterFormContent() {
         })
 
         if (authError) {
+          hideLoader()
+
           // Gestion des erreurs
           if (authError.message?.includes('already registered') || authError.message?.includes('already exists')) {
             setIsEmailAvailable(false)
@@ -292,13 +298,16 @@ function RegisterFormContent() {
 
         // Inscription réussie - email de confirmation envoyé
         if (authData.user && !authData.session) {
+          showLoader("Redirection vers la confirmation...")
           router.push(`/check-email?email=${encodeURIComponent(values.email)}`)
         } else if (authData.session) {
           // Session active (auto-confirm activé ou autre config)
+          showLoader("Compte créé! Redirection...")
           router.push('/patient')
         }
 
       } catch (error) {
+        hideLoader()
         toast.error("Erreur inattendue", {
           description: error instanceof Error ? error.message : "Une erreur technique s'est produite. Veuillez réessayer.",
           duration: 5000,
@@ -309,18 +318,23 @@ function RegisterFormContent() {
 
   const handleSocialLogin = (provider: 'google' | 'apple') => {
     startTransition(async () => {
+        showLoader(`Inscription avec ${provider === 'google' ? 'Google' : 'Apple'}...`)
+
         const result = await signInWithOAuth(provider)
 
         if (result?.error) {
+          hideLoader()
+
           if (result.error.includes('existe déjà')) {
             toast.error('Un compte existe déjà avec cet email. Veuillez vous connecter avec votre compte Google sur la page de connexion.')
           } else {
             toast.error(result.error)
           }
         } else if (result?.url) {
-          // Redirection côté client vers Google/Apple
+          // Redirection côté client vers Google/Apple - le loader reste actif
           window.location.href = result.url
         } else {
+          hideLoader()
           toast.error('Une erreur est survenue lors de la connexion')
         }
     })

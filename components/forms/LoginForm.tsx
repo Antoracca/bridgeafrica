@@ -21,6 +21,7 @@ import { Eye, EyeOff, Loader2, AlertCircle, CheckCircle, XCircle, Mail } from 'l
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import Link from 'next/link'
 import { useDebounce } from '@/hooks/use-debounce'
+import { useLoading } from '@/contexts/LoadingContext'
 
 const formSchema = z.object({
   email: z.string().email({
@@ -37,6 +38,7 @@ function LoginFormContent() {
   const [showPassword, setShowPassword] = useState(false)
   const [isShaking, setIsShaking] = useState(false)
   const searchParams = useSearchParams()
+  const { showLoader, hideLoader } = useLoading()
   const [urlError, setUrlError] = useState<string | null>(() => {
     const err = searchParams.get('error')
     return err ? decodeURIComponent(err) : null
@@ -108,8 +110,10 @@ function LoginFormContent() {
       triggerHapticFeedback()
       return
     }
-    
+
     startTransition(async () => {
+      showLoader("Connexion en cours...")
+
       const formData = new FormData()
       formData.append('email', values.email)
       formData.append('password', values.password)
@@ -117,8 +121,11 @@ function LoginFormContent() {
       const result = await login(formData)
 
       if (result?.error) {
+        hideLoader()
+
         // Cas spécifique email non confirmé
         if (result.code === 'email_not_confirmed' && result.email) {
+          showLoader("Envoi du lien de confirmation...")
           // ENVOI AUTOMATIQUE du lien de confirmation
           await resendConfirmationEmail(result.email)
 
@@ -147,6 +154,9 @@ function LoginFormContent() {
           })
           triggerHapticFeedback()
         }
+      } else {
+        // Succès - le loader sera caché par la navigation automatique
+        showLoader("Connexion réussie! Redirection...")
       }
     })
   }
@@ -154,9 +164,14 @@ function LoginFormContent() {
   const handleSocialLogin = (provider: 'google' | 'apple') => {
     setUrlError(null)
     startTransition(async () => {
+      showLoader(`Connexion avec ${provider === 'google' ? 'Google' : 'Apple'}...`)
       console.log(`[LOGIN] Connexion OAuth ${provider}`)
       const result = await signInWithOAuth(provider)
       console.log(`[LOGIN] Résultat OAuth:`, result)
+
+      if (result?.error) {
+        hideLoader()
+      }
 
       if (result?.error) {
         toast.error(`Erreur connexion ${provider}`, {
