@@ -23,9 +23,16 @@ export default async function DashboardLayout({
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
+  // Charger le profil avec l'avatar
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('avatar_url, first_name, last_name')
+    .eq('id', user?.id || '')
+    .single()
+
   return (
     <SidebarProvider>
-      <AppSidebar user={user} />
+      <AppSidebar user={user} avatarUrl={profile?.avatar_url || null} />
       <SidebarInset>
         {/* Header du Dashboard */}
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 backdrop-blur-sm bg-background/80 sticky top-0 z-10 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">

@@ -245,19 +245,25 @@ export async function updateProfile(formData: FormData) {
   interface ProfileUpdate {
     first_name: string;
     last_name: string;
-    phone: string;
+    phone?: string | null;
     country: string;
-    city: string;
-    allergies: string;
+    city?: string | null;
+    allergies?: string | null;
+    blood_type?: string | null;
+    medical_history?: string | null;
+    notification_preference?: string | null;
   }
 
   const data: ProfileUpdate = {
     first_name: formData.get('firstName') as string,
     last_name: formData.get('lastName') as string,
-    phone: formData.get('phone') as string,
+    phone: formData.get('phone') as string || null,
     country: formData.get('country') as string,
-    city: formData.get('city') as string,
-    allergies: formData.get('allergies') as string,
+    city: formData.get('city') as string || null,
+    allergies: formData.get('allergies') as string || null,
+    blood_type: formData.get('bloodType') as string || null,
+    medical_history: formData.get('medicalHistory') as string || null,
+    notification_preference: formData.get('notificationPreference') as string || null,
   }
 
   const { error } = await supabase.from('profiles').update(data as never).eq('id', user.id)
@@ -265,6 +271,132 @@ export async function updateProfile(formData: FormData) {
 
   revalidatePath('/patient/profile')
   return { success: true }
+}
+
+export async function uploadProfilePicture(formData: FormData) {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
+      return { error: 'Non autorisé' }
+    }
+
+    const file = formData.get('file') as File
+    if (!file) {
+      return { error: 'Aucun fichier fourni' }
+    }
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      return { error: 'Le fichier doit être une image' }
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      return { error: 'L\'image ne doit pas dépasser 5 MB' }
+    }
+
+    // Generate unique filename
+    const fileExt = file.name.split('.').pop()
+    const fileName = `${user.id}-${Date.now()}.${fileExt}`
+    const filePath = `avatars/${fileName}`
+
+    // Delete old avatar if exists
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('avatar_url')
+      .eq('id', user.id)
+      .single<{ avatar_url: string | null }>()
+
+    if (profile?.avatar_url) {
+      const oldPath = profile.avatar_url.split('/').pop()
+      if (oldPath) {
+        await supabase.storage
+          .from('profile-pictures')
+          .remove([`avatars/${oldPath}`])
+      }
+    }
+
+    // Upload new avatar
+    const { error: uploadError } = await supabase.storage
+      .from('profile-pictures')
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: true
+      })
+
+    if (uploadError) {
+      console.error('Upload error:', uploadError)
+      return { error: 'Erreur lors de l\'upload: ' + uploadError.message }
+    }
+
+    // Get public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from('profile-pictures')
+      .getPublicUrl(filePath)
+
+    // Update profile with new avatar URL
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({ avatar_url: publicUrl } as never)
+      .eq('id', user.id)
+
+    if (updateError) {
+      return { error: 'Erreur lors de la mise à jour du profil: ' + updateError.message }
+    }
+
+    revalidatePath('/patient/profile')
+    return { success: true, url: publicUrl }
+  } catch (error) {
+    console.error('Unexpected error:', error)
+    return { error: 'Erreur inattendue lors de l\'upload' }
+  }
+}
+
+export async function deleteProfilePicture() {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
+      return { error: 'Non autorisé' }
+    }
+
+    // Récupérer l'URL actuelle de l'avatar
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('avatar_url')
+      .eq('id', user.id)
+      .single<{ avatar_url: string | null }>()
+
+    if (profile?.avatar_url) {
+      // Extraire le nom du fichier depuis l'URL
+      const oldPath = profile.avatar_url.split('/').pop()
+      if (oldPath) {
+        // Supprimer le fichier du Storage
+        await supabase.storage
+          .from('profile-pictures')
+          .remove([`avatars/${oldPath}`])
+      }
+    }
+
+    // Supprimer l'URL de la base de données
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({ avatar_url: null } as never)
+      .eq('id', user.id)
+
+    if (updateError) {
+      return { error: 'Erreur lors de la suppression: ' + updateError.message }
+    }
+
+    revalidatePath('/patient/profile')
+    return { success: true }
+  } catch (error) {
+    console.error('Delete avatar error:', error)
+    return { error: 'Erreur inattendue lors de la suppression' }
+  }
 }
 
 export async function signInWithOAuth(provider: 'google' | 'apple') {

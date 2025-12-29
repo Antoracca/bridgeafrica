@@ -11,22 +11,24 @@ export const metadata: Metadata = {
 export default async function SettingsProfilePage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  
+
   const { data: profile } = await supabase
     .from('profiles')
-    .select('*')
+    .select('first_name, last_name, phone, country, city, allergies, blood_type, medical_history, notification_preference, avatar_url')
     .eq('id', user?.id || '')
     .single()
 
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium">Mon Profil</h3>
-        <p className="text-sm text-muted-foreground">
-          Ces informations sont essentielles pour votre dossier d&apos;évacuation.
+        <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+          Mon Profil
+        </h3>
+        <p className="text-sm text-slate-600 mt-1">
+          Gérez vos informations personnelles et médicales en toute sécurité
         </p>
       </div>
-      <Separator />
+      <Separator className="bg-gradient-to-r from-blue-600/20 to-cyan-600/20 h-0.5" />
       <PatientProfileForm profile={profile as any} email={user?.email} />
     </div>
   )

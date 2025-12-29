@@ -21,7 +21,7 @@ export function Footer() {
                 <span className="text-2xl font-bold tracking-tight">Medi<span className="text-blue-500">Bridge</span></span>
             </div>
             <p className="text-slate-400 leading-relaxed text-sm">
-              La première plateforme digitale connectant les patients d'Afrique subsaharienne à l'excellence médicale internationale. Sécurité, transparence et accompagnement humain.
+              La première plateforme digitale connectant les patients d&apos;Afrique subsaharienne à l&apos;excellence médicale internationale. Sécurité, transparence et accompagnement humain.
             </p>
             <div className="flex gap-4">
               {[Facebook, Twitter, Instagram, Linkedin].map((Icon, i) => (
