@@ -162,8 +162,8 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
   }
 
   return (
-    <Sidebar collapsible="icon" {...props} className="border-r border-slate-100">
-      <SidebarHeader className="border-b border-slate-100 bg-gradient-to-br from-blue-50 to-cyan-50/50">
+    <Sidebar collapsible="icon" {...props} className="border-r border-slate-300 bg-white/95 backdrop-blur-sm overflow-x-hidden w-full max-w-[280px]">
+      <SidebarHeader className="border-b border-slate-300 bg-white w-full">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" className="hover:bg-white/80 transition-all">
@@ -181,12 +181,12 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
         </SidebarMenu>
       </SidebarHeader>
 
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+      <SidebarContent className="bg-white overflow-x-hidden w-full">
+        <SidebarGroup className="w-full">
+          <SidebarGroupLabel className="text-xs font-bold text-slate-700 uppercase tracking-wider px-2 bg-white w-full">
             Navigation Principale
           </SidebarGroupLabel>
-          <SidebarGroupContent>
+          <SidebarGroupContent className="bg-white w-full overflow-x-hidden">
             <SidebarMenu>
               {navMain.map((item) => {
                 const isActive = pathname === item.url
@@ -201,17 +201,17 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
                           ${isActive
                             ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold shadow-md hover:shadow-lg"
                             : item.highlight
-                            ? "bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-600 font-medium hover:from-blue-100 hover:to-cyan-100 border border-blue-200"
-                            : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                            ? "bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-800 font-semibold hover:from-blue-100 hover:to-cyan-100 border border-blue-300"
+                            : "text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
                           }
                         `}
                     >
-                      <a href={item.url} className="flex items-center gap-2 w-full">
+                      <a href={item.url} className="flex items-center gap-2 w-full min-w-0">
                         <item.icon
-                          className={`${isActive ? "text-white" : item.highlight ? "text-blue-600" : "text-slate-500"}`}
-                          strokeWidth={isActive ? 2.5 : 2}
+                          className={`${isActive ? "text-white" : item.highlight ? "text-blue-700" : "text-slate-700"} shrink-0`}
+                          strokeWidth={isActive ? 2.5 : 2.5}
                         />
-                        <span>{item.title}</span>
+                        <span className="font-semibold truncate flex-1 min-w-0">{item.title}</span>
                         {item.badge && item.badge > 0 && (
                           <Badge
                             className={`ml-auto text-[10px] px-1.5 py-0 h-5 min-w-5 flex items-center justify-center font-bold ${
@@ -236,25 +236,25 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
           <>
             <SidebarSeparator className="mx-4 my-2" />
 
-            <SidebarGroup>
-              <SidebarGroupLabel className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                <Sparkles className="w-3 h-3" />
+            <SidebarGroup className="w-full">
+              <SidebarGroupLabel className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5 px-2 bg-white w-full">
+                <Sparkles className="w-3 h-3 text-slate-600" />
                 Bientôt Disponible
               </SidebarGroupLabel>
-              <SidebarGroupContent>
+              <SidebarGroupContent className="bg-white w-full overflow-x-hidden">
                 <SidebarMenu>
                   {navComing.map((item) => (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton
                           asChild
                           tooltip={`${item.title} (Bientôt)`}
-                          className="opacity-60 hover:opacity-100 text-slate-500 hover:bg-slate-50 transition-all"
+                          className="text-slate-700 hover:bg-slate-100 transition-all font-semibold bg-white hover:text-slate-900"
                           onClick={(e) => handleComingSoon(e, item.title)}
                       >
-                        <a href={item.url} className="flex items-center gap-2">
-                          <item.icon className="text-slate-400" />
-                          <span className="text-sm">{item.title}</span>
-                          <Badge variant="outline" className="ml-auto text-[9px] bg-slate-50 text-slate-400 px-1.5 py-0 border-slate-200">
+                        <a href={item.url} className="flex items-center gap-2 w-full min-w-0">
+                          <item.icon className="text-slate-600 shrink-0" strokeWidth={2.5} />
+                          <span className="text-sm font-semibold truncate flex-1 min-w-0">{item.title}</span>
+                          <Badge variant="outline" className="ml-auto text-[9px] bg-slate-100 text-slate-700 px-1.5 py-0 border-slate-400 font-bold shrink-0">
                             Bientôt
                           </Badge>
                         </a>
@@ -269,24 +269,23 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
 
         <SidebarSeparator className="mx-4 my-2" />
 
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+        <SidebarGroup className="w-full">
+          <SidebarGroupLabel className="text-xs font-bold text-slate-700 uppercase tracking-wider px-2 bg-white w-full">
             Préférences
           </SidebarGroupLabel>
-          <SidebarGroupContent>
+          <SidebarGroupContent className="bg-white w-full overflow-x-hidden">
             <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     asChild
                     tooltip="Notifications"
-                    onClick={(e) => handleComingSoon(e, "Notifications")}
-                    className="text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
                   >
-                    <a href="#" className="flex items-center gap-2 relative">
-                      <Bell className="text-slate-500" />
-                      <span>Notifications</span>
-                      <Badge className="ml-auto text-[10px] px-1.5 py-0 h-5 min-w-5 flex items-center justify-center font-bold bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-sm">
-                        5
+                    <a href={isMedecin ? "/medecin/notifications" : isClinique ? "/clinique/notifications" : "/patient/notifications"} className="flex items-center gap-2 relative w-full min-w-0">
+                      <Bell className="text-slate-700 shrink-0" strokeWidth={2.5} />
+                      <span className="truncate flex-1 min-w-0">Notifications</span>
+                      <Badge className="ml-auto text-[10px] px-1.5 py-0 h-5 min-w-5 flex items-center justify-center font-bold bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-sm shrink-0">
+                        3
                       </Badge>
                     </a>
                   </SidebarMenuButton>
@@ -295,11 +294,11 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
                   <SidebarMenuButton
                     asChild
                     tooltip="Mon Profil"
-                    className="text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
                   >
-                    <a href={isMedecin ? "/medecin/profile" : isClinique ? "/clinique/profile" : "/patient/profile"}>
-                      <User className="text-slate-500" />
-                      <span>Mon Profil</span>
+                    <a href={isMedecin ? "/medecin/profile" : isClinique ? "/clinique/profile" : "/patient/profile"} className="flex items-center gap-2 w-full min-w-0">
+                      <User className="text-slate-700 shrink-0" strokeWidth={2.5} />
+                      <span className="truncate flex-1 min-w-0">Mon Profil</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -307,11 +306,11 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
                   <SidebarMenuButton
                     asChild
                     tooltip="Paramètres"
-                    className="text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
                   >
-                    <a href={isMedecin ? "/medecin/settings" : isClinique ? "/clinique/settings" : "/patient/settings"}>
-                      <Settings className="text-slate-500" />
-                      <span>Paramètres</span>
+                    <a href={isMedecin ? "/medecin/settings" : isClinique ? "/clinique/settings" : "/patient/settings"} className="flex items-center gap-2 w-full min-w-0">
+                      <Settings className="text-slate-700 shrink-0" strokeWidth={2.5} />
+                      <span className="truncate flex-1 min-w-0">Paramètres</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -319,12 +318,11 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
                   <SidebarMenuButton
                     asChild
                     tooltip="Centre d'aide"
-                    onClick={(e) => handleComingSoon(e, "Centre d'aide")}
-                    className="text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
                   >
-                    <a href="#">
-                      <HelpCircle className="text-slate-500" />
-                      <span>Centre d'Aide</span>
+                    <a href={isMedecin ? "/medecin/help" : isClinique ? "/clinique/help" : "/patient/help"} className="flex items-center gap-2 w-full min-w-0">
+                      <HelpCircle className="text-slate-700 shrink-0" strokeWidth={2.5} />
+                      <span className="truncate flex-1 min-w-0">Centre d'Aide</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -333,18 +331,18 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-slate-100 bg-slate-50/50">
-        <SidebarMenu>
+      <SidebarFooter className="border-t border-slate-300 bg-white w-full overflow-x-hidden">
+        <SidebarMenu className="w-full">
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
               tooltip="Retour à l'accueil"
-              className="hover:bg-white transition-all text-slate-600 hover:text-blue-600"
+              className="hover:bg-slate-100 transition-all text-slate-800 hover:text-blue-600 font-semibold bg-white"
             >
-              <a href="/" className="flex items-center gap-2">
-                <Home className="text-slate-500" />
-                <span className="font-medium">Retour Accueil</span>
-                <ChevronRight className="ml-auto w-4 h-4 opacity-50" />
+              <a href="/" className="flex items-center gap-2 w-full min-w-0">
+                <Home className="text-slate-700 shrink-0" strokeWidth={2.5} />
+                <span className="font-semibold truncate flex-1 min-w-0">Retour Accueil</span>
+                <ChevronRight className="ml-auto w-4 h-4 text-slate-600 shrink-0" />
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -353,7 +351,7 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className="data-[state=open]:bg-white data-[state=open]:shadow-md border border-slate-200 rounded-xl hover:bg-white hover:shadow-sm transition-all bg-white/50"
+                  className="data-[state=open]:bg-white data-[state=open]:shadow-md border border-slate-200 rounded-xl hover:bg-white hover:shadow-sm transition-all bg-white"
                 >
                   <Avatar className="h-9 w-9 rounded-xl bg-gradient-to-br from-blue-100 to-cyan-100 text-blue-600 border-2 border-white shadow-sm">
                     {avatarUrl && <AvatarImage src={avatarUrl} alt={displayName} />}

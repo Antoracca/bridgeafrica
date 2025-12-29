@@ -8,7 +8,8 @@
       "Bash(npx supabase:*)",
       "Bash(cat:*)",
       "Bash(npx tsc:*)",
-      "WebFetch(domain:fr.usembassy.gov)"
+      "WebFetch(domain:fr.usembassy.gov)",
+      "Bash(npx shadcn@latest add:*)"
     ],
     "deny": [],
     "ask": []

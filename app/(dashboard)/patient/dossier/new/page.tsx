@@ -8,17 +8,17 @@ export const metadata: Metadata = {
 
 export default function NewCasePage() {
   return (
-    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+    <div className="flex-1 space-y-4 p-4 md:p-6 lg:p-8 pt-4 md:pt-6">
       <div className="flex items-center justify-between space-y-2">
         <div>
-            <h2 className="text-3xl font-bold tracking-tight">Nouveau Dossier Médical</h2>
-            <p className="text-muted-foreground">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Nouveau Dossier Médical</h2>
+            <p className="text-muted-foreground text-sm md:text-base mt-1">
             Remplissez ce formulaire avec précision pour faciliter l&apos;analyse par nos médecins partenaires.
             </p>
         </div>
       </div>
       
-      <div className="grid gap-4 grid-cols-1 lg:grid-cols-3">
+      <div className="grid gap-4 md:gap-6 grid-cols-1 lg:grid-cols-3">
         {/* Colonne Principale : Le Formulaire */}
         <div className="lg:col-span-2">
             <MedicalCaseForm />
@@ -26,9 +26,9 @@ export default function NewCasePage() {
 
         {/* Colonne Latérale : Aide & Infos */}
         <div className="space-y-4">
-            <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
-                <h3 className="font-semibold leading-none tracking-tight mb-4">Besoin d&apos;aide ?</h3>
-                <div className="space-y-4 text-sm text-muted-foreground">
+            <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-4 md:p-6">
+                <h3 className="font-semibold leading-none tracking-tight mb-3 md:mb-4 text-base md:text-lg">Besoin d&apos;aide ?</h3>
+                <div className="space-y-3 md:space-y-4 text-sm text-muted-foreground">
                     <p>
                         <strong>Diagnostic :</strong> Soyez le plus précis possible. Si vous avez un compte rendu médical, copiez la conclusion.
                     </p>
@@ -47,8 +47,8 @@ export default function NewCasePage() {
                 </div>
             </div>
 
-            <div className="rounded-lg border bg-blue-50/50 text-blue-900 border-blue-100 p-6 dark:bg-blue-900/20 dark:text-blue-100 dark:border-blue-900">
-                <h3 className="font-semibold leading-none tracking-tight mb-2">Note Importante</h3>
+            <div className="rounded-lg border bg-blue-50/50 text-blue-900 border-blue-100 p-4 md:p-6 dark:bg-blue-900/20 dark:text-blue-100 dark:border-blue-900">
+                <h3 className="font-semibold leading-none tracking-tight mb-2 text-base md:text-lg">Note Importante</h3>
                 <p className="text-sm">
                     Toutes les informations transmises sont chiffrées et soumises au secret médical. Seuls les médecins accrédités y auront accès.
                 </p>

@@ -19,12 +19,12 @@ export default async function SettingsProfilePage() {
     .single()
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <div>
-        <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+        <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
           Mon Profil
         </h3>
-        <p className="text-sm text-slate-600 mt-1">
+        <p className="text-sm md:text-base text-slate-600 mt-1">
           Gérez vos informations personnelles et médicales en toute sécurité
         </p>
       </div>
