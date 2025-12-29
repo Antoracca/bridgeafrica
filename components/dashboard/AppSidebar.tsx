@@ -307,10 +307,9 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
                   <SidebarMenuButton
                     asChild
                     tooltip="Paramètres"
-                    onClick={(e) => handleComingSoon(e, "Paramètres")}
                     className="text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                   >
-                    <a href="#">
+                    <a href={isMedecin ? "/medecin/settings" : isClinique ? "/clinique/settings" : "/patient/settings"}>
                       <Settings className="text-slate-500" />
                       <span>Paramètres</span>
                     </a>
@@ -376,7 +375,7 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
                 sideOffset={8}
               >
                 <DropdownMenuLabel className="p-0 font-normal">
-                  <div className="flex items-center gap-3 px-2 py-3 text-left bg-gradient-to-br from-blue-50 to-cyan-50 rounded-t-xl border-b border-slate-100">
+                  <div className="flex items-center gap-3 px-3 py-3 text-left bg-gradient-to-br from-blue-50 to-cyan-50 rounded-t-xl">
                     <Avatar className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-600 text-white border-2 border-white shadow-md">
                       {avatarUrl && <AvatarImage src={avatarUrl} alt={displayName} />}
                       <AvatarFallback className="rounded-xl font-bold">
@@ -389,25 +388,6 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
                     </div>
                   </div>
                 </DropdownMenuLabel>
-                <div className="p-1">
-                  <DropdownMenuItem
-                    asChild
-                    className="cursor-pointer rounded-lg hover:bg-blue-50 focus:bg-blue-50"
-                  >
-                    <a href={isMedecin ? "/medecin/profile" : isClinique ? "/clinique/profile" : "/patient/profile"} className="flex items-center">
-                      <User className="mr-2 h-4 w-4 text-blue-600" />
-                      <span className="text-slate-700">Mon Profil</span>
-                    </a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={(e) => handleComingSoon(e, "Paramètres")}
-                    className="cursor-pointer rounded-lg hover:bg-slate-50 focus:bg-slate-50"
-                  >
-                    <Settings className="mr-2 h-4 w-4 text-slate-600" />
-                    <span className="text-slate-700">Paramètres</span>
-                  </DropdownMenuItem>
-                </div>
-                <DropdownMenuSeparator />
                 <div className="p-1">
                   <DropdownMenuItem
                     onClick={handleLogout}
