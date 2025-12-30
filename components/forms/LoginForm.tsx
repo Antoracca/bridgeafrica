@@ -155,8 +155,9 @@ function LoginFormContent() {
           triggerHapticFeedback()
         }
       } else {
-        // Succès - le loader sera caché par la navigation automatique
-        showLoader("Connexion réussie! Redirection...")
+        // Succès - cacher le loader immédiatement
+        // La redirection automatique se fera via le middleware
+        hideLoader()
       }
     })
   }

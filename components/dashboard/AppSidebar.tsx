@@ -160,8 +160,8 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
         toast.error("Erreur", { description: result.error })
         setIsLoggingOut(false)
       } else {
-        // Succès - le loader restera actif pendant la redirection
-        showLoader("Déconnexion réussie!")
+        // Succès - cacher le loader
+        hideLoader()
       }
     } catch (error) {
       hideLoader()

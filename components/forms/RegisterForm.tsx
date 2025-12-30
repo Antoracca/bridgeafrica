@@ -298,13 +298,14 @@ function RegisterFormContent() {
 
         // Inscription réussie - email de confirmation envoyé
         if (authData.user && !authData.session) {
-          showLoader("Redirection vers la confirmation...")
           router.push(`/check-email?email=${encodeURIComponent(values.email)}`)
+          // Le loader se cachera automatiquement avec le timeout
         } else if (authData.session) {
           // Session active (auto-confirm activé ou autre config)
-          showLoader("Compte créé! Redirection...")
           router.push('/patient')
+          // Le loader se cachera automatiquement avec le timeout
         }
+        hideLoader()
 
       } catch (error) {
         hideLoader()
