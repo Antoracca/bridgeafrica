@@ -106,6 +106,33 @@ function DevelopmentPlaceholder({
   )
 }
 
+// Sparkline micro-graph component
+const Sparkline = ({ data, color = "blue" }: { data: number[], color?: string }) => {
+  const max = Math.max(...data)
+  const min = Math.min(...data)
+  const range = max - min || 1
+
+  const points = data.map((value, index) => {
+    const x = (index / (data.length - 1)) * 100
+    const y = 100 - ((value - min) / range) * 100
+    return `${x},${y}`
+  }).join(' ')
+
+  return (
+    <svg viewBox="0 0 100 100" className="w-full h-12" preserveAspectRatio="none">
+      <polyline
+        points={points}
+        fill="none"
+        stroke={`var(--${color}-600)`}
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={`text-${color}-600`}
+      />
+    </svg>
+  )
+}
+
 // Main Dashboard Content Component
 function DashboardContent({ user, stats }: { user: User, stats: Stats }) {
   const isMobile = useIsMobile()
@@ -230,36 +257,9 @@ function DashboardContent({ user, stats }: { user: User, stats: Stats }) {
     { id: 1, name: "Radiographie genou gauche", type: "Image médicale", date: "12 Jan 2025", status: "Reçu", icon: FileText },
     { id: 2, name: "IRM complète", type: "Image médicale", date: "12 Jan 2025", status: "Reçu", icon: FileText },
     { id: 3, name: "Devis Clinique El Manar", type: "Document financier", date: "18 Jan 2025", status: "Reçu", icon: FileText },
-    { id: 4, name: "Passeport (copie)", type: "Document d'identité", date: "27 Jan 2025", status: "En attente", icon: AlertCircle },
+    { id: 4, name: "Passeport (copie)", type: "Document d&apos;identité", date: "27 Jan 2025", status: "En attente", icon: AlertCircle },
     { id: 5, name: "Certificat médical voyage", type: "Document médical", date: "30 Jan 2025", status: "En attente", icon: Clock },
   ]
-
-  // Sparkline micro-graph component
-  const Sparkline = ({ data, color = "blue" }: { data: number[], color?: string }) => {
-    const max = Math.max(...data)
-    const min = Math.min(...data)
-    const range = max - min || 1
-
-    const points = data.map((value, index) => {
-      const x = (index / (data.length - 1)) * 100
-      const y = 100 - ((value - min) / range) * 100
-      return `${x},${y}`
-    }).join(' ')
-
-    return (
-      <svg viewBox="0 0 100 100" className="w-full h-12" preserveAspectRatio="none">
-        <polyline
-          points={points}
-          fill="none"
-          stroke={`var(--${color}-600)`}
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className={`text-${color}-600`}
-        />
-      </svg>
-    )
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 p-4 md:p-6 lg:p-8">

@@ -20,6 +20,7 @@ export default async function PatientCasesPage() {
     .select('*')
     .eq('patient_id', user?.id || '')
     .order('created_at', { ascending: false })
+    .returns<any[]>()
 
   return (
     <div className="flex flex-1 flex-col gap-4 md:gap-6">
@@ -41,7 +42,7 @@ export default async function PatientCasesPage() {
 
       {cases && cases.length > 0 ? (
         <div className="grid gap-3 md:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {cases.map((c: any) => (
+          {cases.map((c) => (
             <CaseCard
               key={c.id}
               id={c.id}

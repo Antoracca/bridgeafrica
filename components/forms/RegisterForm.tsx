@@ -504,11 +504,11 @@ function RegisterFormContent() {
                       <FormLabel className="text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Numéro de téléphone <span className="text-red-500">*</span></FormLabel>
                       <div className="relative w-full">
                         <FormControl>
-                          <PhoneInput
-                            international
-                            defaultCountry={selectedCountry as any} // eslint-disable-line @typescript-eslint/no-explicit-any
-                            value={field.value}
-                            onChange={(value) => {
+                                                                      <PhoneInput
+                                                                        international
+                                                                        defaultCountry={selectedCountry as any}
+                                                                        value={field.value}
+                                                                            onChange={(value) => {
                               field.onChange(value || '')
                               setPhoneToCheck(value || '')
                             }}

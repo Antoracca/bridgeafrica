@@ -62,7 +62,7 @@ export default async function CaseDetailPage({
         clinic:assigned_clinic_id (clinic_name, clinic_address)
     `)
     .eq('id', id)
-    .single() as { data: any, error: any }
+    .single<any>()
 
   if (error || !caseData) {
     return notFound()
@@ -75,7 +75,7 @@ export default async function CaseDetailPage({
     .eq('case_id', id)
     .order('created_at', { ascending: false })
     .limit(1)
-    .single() as { data: any }
+    .single<any>()
 
   const status = statusConfig[caseData.status] || { label: caseData.status, color: "bg-gray-500" }
 

@@ -32,7 +32,7 @@ export function CaseActions({ caseId }: CaseActionsProps) {
             </div>
 
             <Button 
-                onClick={() => handleStatusChange('under_review', 'En cours d\'examen')}
+                onClick={() => handleStatusChange('under_review', 'En cours d&apos;examen')}
                 disabled={isPending}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                 size="lg"

@@ -7,7 +7,7 @@ import { useMemo, useState, useEffect } from "react"
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false })
 
 interface LottieAnimationProps {
-  animationData: any
+  animationData: unknown
   className?: string
   loop?: boolean
 }

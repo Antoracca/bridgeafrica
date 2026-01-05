@@ -1,6 +1,5 @@
 import { Metadata } from "next"
 import Link from "next/link"
-import { redirect } from "next/navigation"
 import { 
   Activity, 
   Users, 
@@ -28,7 +27,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { StatsCard } from "@/components/dashboard/StatsCard"
-import { createClient } from "@/lib/supabase/server"
 
 export const metadata: Metadata = {
   title: "Espace Médecin | MediBridge Africa",
@@ -100,7 +98,7 @@ export default function DoctorDashboardPage() {
           icon={Users} 
         />
         <StatsCard 
-          title="Taux d'acceptation" 
+          title="Taux d&apos;acceptation" 
           value="92%" 
           description="Dossiers validés ce mois" 
           icon={Activity} 

@@ -309,11 +309,11 @@ export function CompleteProfileForm() {
                   </FormLabel>
                   <p className="text-xs text-muted-foreground mb-2">WhatsApp recommandé pour les notifications</p>
                   <FormControl>
-                    <PhoneInput
-                      international
-                      defaultCountry={selectedCountry as any} // eslint-disable-line @typescript-eslint/no-explicit-any
-                      value={field.value}
-                      onChange={(value) => field.onChange(value || '')}
+                                                                <PhoneInput
+                                                                  international
+                                                                  defaultCountry={selectedCountry as any}
+                                                                  value={field.value}
+                                                                onChange={(value) => field.onChange(value || '')}
                       disabled={isPending}
                       className="flex h-10 w-full rounded-md border border-input bg-muted/30 px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
                     />

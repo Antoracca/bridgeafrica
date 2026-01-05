@@ -22,7 +22,7 @@ export default async function DashboardLayout({
     .from('profiles')
     .select('avatar_url, first_name, last_name')
     .eq('id', user?.id || '')
-    .single()
+    .single<{ avatar_url: string | null, first_name: string | null, last_name: string | null }>()
 
   return (
     <SidebarProvider>

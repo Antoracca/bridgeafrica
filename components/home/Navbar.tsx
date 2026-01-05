@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion'
 import { Menu, X, Stethoscope, User, LogOut, LogIn, ChevronDown, Building2, HeartPulse, Activity, ArrowRight, MapPin, Globe, Eye, Scissors, Brain, Baby, Bone, ShieldCheck, Plane, Languages, FileText } from 'lucide-react'
@@ -28,7 +29,7 @@ const specialties = [
   { name: 'Dentaire', icon: HeartPulse, desc: 'Implants, Facettes, Blanchiment' },
   { name: 'PMA / Fertilité', icon: Baby, desc: 'FIV, Insémination, Préservation' },
   { name: 'Ophtalmologie', icon: Eye, desc: 'Lasik, Cataracte, Cornée' },
-  { name: 'Chirurgie de l\'Obésité', icon: Activity, desc: 'Sleeve, Bypass, Ballon' },
+  { name: 'Chirurgie de l&apos;Obésité', icon: Activity, desc: 'Sleeve, Bypass, Ballon' },
   { name: 'Oncologie', icon: Activity, desc: 'Chimiothérapie, Radiothérapie' },
   { name: 'Orthopédie', icon: Bone, desc: 'Prothèses Hanche/Genou, Arthroscopie' },
   { name: 'Neurologie', icon: Brain, desc: 'Chirurgie du rachis, Hernie discale' },
@@ -253,7 +254,7 @@ export function Navbar() {
                         <div>
                            <h3 className="font-bold text-slate-900 text-lg mb-2">Explorez le monde</h3>
                            <p className="text-xs text-slate-500 leading-relaxed mb-6">
-                              Nous avons sélectionné les meilleures destinations médicales pour vous offrir l'excellence à prix juste.
+                              Nous avons sélectionné les meilleures destinations médicales pour vous offrir l&apos;excellence à prix juste.
                            </p>
                         </div>
                         <Button variant="outline" className="w-full border-blue-200 text-blue-600 hover:bg-blue-50">
@@ -264,10 +265,11 @@ export function Navbar() {
                         {destinations.map((dest) => (
                            <Link key={dest.name} href="#" className="group block p-2 rounded-xl hover:bg-slate-50 transition-all">
                               <div className="flex items-center gap-3 mb-2">
-                                 <img 
+                                 <Image 
                                     src={`https://flagcdn.com/w40/${dest.code}.png`} 
-                                    srcSet={`https://flagcdn.com/w80/${dest.code}.png 2x`}
                                     alt={`Drapeau ${dest.name}`}
+                                    width={32}
+                                    height={24}
                                     className="w-8 h-auto rounded-md shadow-sm object-cover"
                                  />
                                  <span className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors text-sm">{dest.name}</span>
@@ -297,7 +299,7 @@ export function Navbar() {
                  <div className="flex gap-12">
                     <div className="w-1/4 pr-8 border-r border-slate-100 flex flex-col justify-between">
                         <div>
-                           <h3 className="text-xl font-bold text-slate-900 mb-2">Réseau d'Excellence</h3>
+                           <h3 className="text-xl font-bold text-slate-900 mb-2">Réseau d&apos;Excellence</h3>
                            <p className="text-slate-500 text-sm mb-6">
                               +150 cliniques accréditées JCI et ISO. Nous garantissons la qualité des soins et votre sécurité.
                            </p>
@@ -422,7 +424,7 @@ export function Navbar() {
                          <Button variant="outline" className="w-full justify-start gap-2"><User size={18} /> Se connecter</Button>
                        </Link>
                        <Link href="/register" onClick={() => setMobileMenuOpen(false)}>
-                         <Button className="w-full bg-blue-600 shadow-lg shadow-blue-600/20">S'inscrire (Espace Santé)</Button>
+                         <Button className="w-full bg-blue-600 shadow-lg shadow-blue-600/20">S&apos;inscrire (Espace Santé)</Button>
                        </Link>
                      </>
                    )}

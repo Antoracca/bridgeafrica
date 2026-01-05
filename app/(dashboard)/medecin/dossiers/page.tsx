@@ -20,6 +20,7 @@ export default async function DoctorCasesPage() {
     `)
     .in('status', ['submitted', 'under_review'])
     .order('created_at', { ascending: false })
+    .returns<any[]>()
 
   return (
     <div className="flex flex-1 flex-col gap-4">
@@ -36,7 +37,7 @@ export default async function DoctorCasesPage() {
 
       {cases && cases.length > 0 ? (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {cases.map((c: any) => (
+          {cases.map((c) => (
             <CaseCard
               key={c.id}
               id={c.id}

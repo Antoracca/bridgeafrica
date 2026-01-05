@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     // This includes users who registered but haven't confirmed their email yet
     const { data: emailExists, error } = await supabase.rpc('check_email_exists', {
       email_to_check: normalizedEmail
-    } as any) // eslint-disable-line @typescript-eslint/no-explicit-any
+    } as any)
 
     if (error) {
       console.error('[VERIFY-EMAIL] RPC error:', error)

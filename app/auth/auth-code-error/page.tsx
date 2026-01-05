@@ -34,14 +34,14 @@ function AuthCodeErrorContent() {
       case 'access_denied':
         return {
           title: 'Accès refusé',
-          message: 'L\'authentification a été refusée. Veuillez réessayer.',
+          message: 'L&apos;authentification a été refusée. Veuillez réessayer.',
           action: 'Recommencer',
           actionRoute: '/login',
         }
       default:
         return {
-          title: 'Erreur d\'authentification',
-          message: errorDescription || 'Une erreur s\'est produite lors de la vérification.',
+          title: 'Erreur d&apos;authentification',
+          message: errorDescription || 'Une erreur s&apos;est produite lors de la vérification.',
           action: 'Retour',
           actionRoute: '/login',
         }

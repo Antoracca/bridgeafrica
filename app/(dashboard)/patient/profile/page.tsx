@@ -29,7 +29,7 @@ export default async function SettingsProfilePage() {
         </p>
       </div>
       <Separator className="bg-gradient-to-r from-blue-600/20 to-cyan-600/20 h-0.5" />
-      <PatientProfileForm profile={profile as any} email={user?.email} />
+      <PatientProfileForm profile={profile || {}} email={user?.email} />
     </div>
   )
 }

@@ -44,7 +44,7 @@ export default async function MedicalReviewPage({
         patient:patient_id (first_name, last_name, birth_date, country, city, medical_history)
     `)
     .eq('id', id)
-    .single() as { data: any, error: any }
+    .single<any>()
 
   if (error || !caseData) {
     return notFound()

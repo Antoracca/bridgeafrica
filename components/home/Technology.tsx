@@ -3,10 +3,9 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
-  Brain, FileText, CheckCircle, Loader2, Plane, 
-  Hotel, Activity, Play, SignalHigh, Wifi, Battery, 
-  ChevronLeft, Home, MessageSquare, FolderOpen, 
-  Search, ScanLine, Fingerprint, ArrowRight, ShieldCheck, 
+  Brain, FileText, CheckCircle, Activity, SignalHigh, Wifi, Battery, 
+  Home, MessageSquare, FolderOpen, 
+  ScanLine, ArrowRight, ShieldCheck, 
   Stethoscope, Building2, Lock, FileCheck
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -369,7 +368,7 @@ const TechSimulator = () => {
                    </div>
                    <h2 className="text-2xl font-bold mb-2">Dossier Transmis !</h2>
                    <p className="text-green-100 text-xs mb-8">
-                       L'équipe médicale de la Clinique Pasteur a bien reçu votre dossier complet. Votre coordinateur vous contacte sous 2h.
+                     L&apos;équipe médicale de la Clinique Pasteur a bien reçu votre dossier complet. Votre coordinateur vous contacte sous 2h.
                    </p>
               </motion.div>
             )}
@@ -421,12 +420,12 @@ export function Technology() {
              </div>
              
              <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
-               L'excellence médicale <br/>
+               L&apos;excellence médicale <br/>
                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">à portée de main.</span>
              </h2>
              
              <p className="text-base md:text-lg text-slate-400 leading-relaxed max-w-xl">
-               Plus qu'une simple application, MediBridge orchestre votre parcours de soins avec une précision chirurgicale. De la numérisation sécurisée à la validation par nos médecins experts.
+               Plus qu&apos;une simple application, MediBridge orchestre votre parcours de soins avec une précision chirurgicale. De la numérisation sécurisée à la validation par nos médecins experts.
              </p>
 
              <ul className="space-y-3 md:space-y-4 text-slate-300">

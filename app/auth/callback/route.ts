@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     if (error_description?.includes('already registered')) {
       return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent('Un compte existe déjà avec cet email. Veuillez vous connecter.')}`)
     }
-    return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(error_description || 'Erreur d\'authentification')}`)
+    return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(error_description || 'Erreur d&apos;authentification')}`)
   }
 
   if (!code) {
@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
 
   if (exchangeError) {
     if (exchangeError.message.includes('PKCE') || exchangeError.message.includes('code verifier')) {
-      return redirectWithCookies(`${origin}/login?error=${encodeURIComponent('Veuillez ouvrir le lien de confirmation dans le même navigateur que celui utilisé pour l\'inscription, ou demandez un nouveau lien.')}&pkce_error=true`)
+      return redirectWithCookies(`${origin}/login?error=${encodeURIComponent('Veuillez ouvrir le lien de confirmation dans le même navigateur que celui utilisé pour l&apos;inscription, ou demandez un nouveau lien.')}&pkce_error=true`)
     }
 
     return redirectWithCookies(`${origin}/login?error=${encodeURIComponent('Le lien de vérification a expiré. Veuillez en demander un nouveau.')}`)
