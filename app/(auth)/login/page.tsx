@@ -54,13 +54,13 @@ export default function LoginPage() {
       </div>
 
       {/* Contenu principal - tout sur un écran mobile */}
-      <div className="relative z-20 flex h-screen items-center justify-center px-4 py-16 sm:px-6 lg:p-8 lg:min-h-0">
-        <div className="w-full max-w-105 mx-auto flex flex-col justify-center space-y-4 lg:space-y-4">
+      <div className="relative z-20 flex min-h-screen lg:min-h-0 h-full items-center justify-center px-4 py-8 sm:px-6 lg:p-8 overflow-y-auto">
+        <div className="w-full max-w-[420px] mx-auto flex flex-col justify-center space-y-4 my-auto">
 
           {/* Animation Lottie - réduite */}
           <LottieAnimation
             animationData={DoctorAnimation}
-            className="w-30 h-30 sm:w-36 sm:h-36 lg:w-48 lg:h-48 mx-auto -mb-2 lg:-mb-4"
+            className="w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 mx-auto -mb-2 lg:-mb-4"
           />
 
           {/* Header compact */}

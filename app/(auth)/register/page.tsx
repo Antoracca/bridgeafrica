@@ -53,13 +53,13 @@ export default function RegisterPage() {
       </div>
 
       {/* Contenu principal - avec padding pour que la page respire */}
-      <div className="relative z-20 flex min-h-screen items-center justify-center px-2 py-12 sm:px-4 lg:p-8 overflow-y-auto">
-        <div className="w-full max-w-none mx-auto flex flex-col justify-center space-y-3 lg:space-y-4 my-auto lg:max-w-115">
+      <div className="relative z-20 flex min-h-screen lg:min-h-0 h-full items-center justify-center px-4 py-8 sm:px-6 lg:p-8 overflow-y-auto">
+        <div className="w-full max-w-[460px] mx-auto flex flex-col justify-center space-y-3 lg:space-y-4 my-auto">
 
           {/* Animation Lottie - compacte avec espace */}
           <LottieAnimation
             animationData={OnlineDoctorAnimation}
-            className="w-24 h-24 lg:w-48 lg:h-48 mx-auto -mb-1 lg:mb-0"
+            className="w-20 h-20 sm:w-28 sm:h-28 lg:w-36 lg:h-36 mx-auto -mb-1 lg:mb-0"
             loop={false}
           />
 
