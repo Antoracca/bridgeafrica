@@ -34,7 +34,7 @@ const destinations = [
     id: 3,
     country: 'Germany',
     city: 'Berlin',
-    image: 'https://images.unsplash.com/photo-1560930950-5cc20e8cbe3c?auto=format&fit=crop&q=80&w=1200',
+    image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=1200',
     flag: 'de',
     specialties: ['Orthopedics', 'Neurosurgery', 'Rehabilitation'],
     description: 'Leading the world in precision medical engineering, orthopedic surgeries, and rigorous rehabilitation.',
@@ -115,18 +115,21 @@ export function Destinations() {
                 return (
                   <motion.div
                     key={dest.id}
-                    className={`relative p-5 rounded-2xl cursor-pointer transition-all duration-300 border ${isActive
+                    className={`relative p-5 rounded-2xl cursor-pointer transition-all duration-300 border overflow-hidden group ${isActive
                       ? 'bg-slate-900 border-blue-500/50 shadow-[0_0_30px_-5px_rgba(59,130,246,0.3)]'
-                      : 'bg-slate-900/50 border-slate-800 hover:border-slate-700'
+                      : 'bg-slate-900/50 border-slate-800 hover:bg-slate-800/80 hover:border-slate-700'
                       }`}
                     onClick={() => setActiveDest(idx)}
                     whileHover={{ scale: 1.02 }}
                   >
                     {isActive && (
-                      <motion.div
-                        layoutId="activeIndicator"
-                        className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-blue-500 to-cyan-400 rounded-l-2xl"
-                      />
+                      <>
+                        <motion.div
+                          layoutId="activeIndicator"
+                          className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-blue-500 to-cyan-400 rounded-l-2xl z-10"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent pointer-events-none" />
+                      </>
                     )}
                     <div className="flex items-center gap-4">
                       <Image
@@ -147,12 +150,20 @@ export function Destinations() {
                 )
               })}
 
-              <Link href="/liste-pays" className="mt-4 block">
-                <Button variant="outline" className="w-full bg-slate-900/50 border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white h-14 rounded-2xl font-bold transition-all group">
-                  Voir toutes les destinations
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5, duration: 0.5 }}
+                className="mt-6 block"
+              >
+                <Link href="/liste-pays" className="block">
+                  <Button variant="outline" className="w-full bg-slate-900/60 border-slate-700 text-slate-300 hover:bg-blue-600 hover:border-blue-500 hover:text-white h-16 rounded-2xl font-bold transition-all duration-300 group shadow-lg">
+                    <span className="text-lg tracking-wide">Découvrir toutes les destinations</span>
+                    <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                  </Button>
+                </Link>
+              </motion.div>
             </div>
           </div>
 
