@@ -112,7 +112,7 @@ export function Destinations() {
               </span>
             </h2>
             <p className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto font-medium leading-relaxed">
-              Une infrastructure digitale qui connecte instantanément les patients africains aux pôles d'excellence médicale mondiaux.
+              Une infrastructure digitale qui connecte instantanément les patients africains aux pôles d&apos;excellence médicale mondiaux.
             </p>
           </motion.div>
         </div>
@@ -298,7 +298,7 @@ export function Destinations() {
         <div className="flex justify-center mb-16 lg:hidden">
           <Link href="/liste-pays" className="w-full max-w-sm">
             <Button size="lg" className="w-full bg-white text-slate-900 rounded-2xl font-bold text-lg h-14 shadow-lg active:scale-95 transition-all">
-              Voir la carte complète
+              Voir toutes les destinations
             </Button>
           </Link>
         </div>

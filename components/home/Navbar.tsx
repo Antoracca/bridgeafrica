@@ -257,13 +257,15 @@ export function Navbar() {
                               Nous avons sélectionné les meilleures destinations médicales pour vous offrir l&apos;excellence à prix juste.
                            </p>
                         </div>
-                        <Button variant="outline" className="w-full border-blue-200 text-blue-600 hover:bg-blue-50">
-                           <Globe size={16} className="mr-2"/> Voir toutes
-                        </Button>
+                        <Link href="/liste-pays">
+                           <Button variant="outline" className="w-full border-blue-200 text-blue-600 hover:bg-blue-50">
+                              <Globe size={16} className="mr-2"/> Voir toutes les destinations
+                           </Button>
+                        </Link>
                     </div>
                     <div className="flex-1 grid grid-cols-5 gap-y-8 gap-x-6">
                         {destinations.map((dest) => (
-                           <Link key={dest.name} href="#" className="group block p-2 rounded-xl hover:bg-slate-50 transition-all">
+                           <Link key={dest.name} href="/liste-pays" className="group block p-2 rounded-xl hover:bg-slate-50 transition-all">
                               <div className="flex items-center gap-3 mb-2">
                                  <Image 
                                     src={`https://flagcdn.com/w40/${dest.code}.png`} 
