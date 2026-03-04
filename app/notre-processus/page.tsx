@@ -51,7 +51,7 @@ const processSteps = [
         id: "04",
         title: "Conciergerie Médicale VIP",
         subtitle: "Voyagez l'esprit tranquille",
-        description: "Une fois la destination choisie, notre équipe "Care" prend le relais. Gestion des visas médicaux, réservation des vols, hébergement adapté, interprète dédié et transferts aéroport-clinique-hôtel en véhicule privé.",
+        description: "Une fois la destination choisie, notre équipe 'Care' prend le relais. Gestion des visas médicaux, réservation des vols, hébergement adapté, interprète dédié et transferts aéroport-clinique-hôtel en véhicule privé.",
         icon: PlaneTakeoff,
         highlights: ["Fast-track consulaire (Visa)", "Hébergement médicalisé", "Interprète et chauffeur privé"],
         color: "from-violet-500 to-fuchsia-600",
