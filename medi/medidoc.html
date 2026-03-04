@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mémorandum d'Investissement - MediBridge Africa</title>
+    <style>
+        /* --- CONFIGURATION GÉNÉRALE --- */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Lato:wght@400;700&display=swap');
+
+        :root {
+            --primary: #1e293b; /* Gris très sombre / Bleu nuit */
+            --accent: #0ea5e9; /* Bleu Tech */
+            --success: #10b981; /* Vert Validation */
+            --text: #334155;
+            --bg-grey: #f1f5f9;
+        }
+
+        body {
+            background-color: #525659; /* Fond gris pour l'éditeur */
+            font-family: 'Lato', sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- FEUILLE A4 STANDARD (Écran) --- */
+        .page {
+            background: white;
+            width: 210mm;
+            min-height: 297mm; 
+            padding: 25mm; 
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            box-sizing: border-box;
+            position: relative;
+            page-break-after: always;
+        }
+
+        /* --- TYPOGRAPHIE --- */
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+            color: var(--primary);
+            text-transform: uppercase;
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            color: var(--primary);
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: 11pt;
+            line-height: 1.5;
+            text-align: justify;
+            margin-bottom: 12px;
+        }
+
+        ul {
+            margin: 0 0 15px 0;
+            padding-left: 20px;
+        }
+
+        li {
+            font-size: 11pt;
+            line-height: 1.5;
+            margin-bottom: 5px;
+        }
+
+        /* --- ÉLÉMENTS GRAPHIQUES --- */
+        .box {
+            background-color: var(--bg-grey);
+            border-left: 5px solid var(--primary);
+            padding: 15px 20px;
+            margin: 20px 0;
+            font-style: italic;
+        }
+
+        /* Tableaux Propres */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 10pt;
+        }
+        th {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px;
+            text-align: left;
+            text-transform: uppercase;
+            font-size: 9pt;
+        }
+        td {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 10px;
+        }
+        tr:nth-child(even) { background-color: #f8fafc; }
+        .total-row {
+            background-color: #e2e8f0 !important;
+            font-weight: bold;
+        }
+
+        /* --- PAGE DE GARDE --- */
+        .cover-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .cover-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 40pt;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        .cover-logo span { color: var(--accent); }
+        
+        .cover-title {
+            font-size: 26pt;
+            font-weight: 300;
+            margin: 40px 0;
+            padding-left: 20px;
+            border-left: 10px solid var(--accent);
+            line-height: 1.2;
+        }
+
+        .cover-contact {
+            margin-top: auto;
+            border-top: 2px solid var(--accent);
+            padding-top: 20px;
+        }
+
+        /* --- BOUTON PRINT --- */
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        /* --- GESTION IMPRESSION STRICTE (FIXE LES PROBLÈMES) --- */
+        @media print {
+            /* Supprime les en-têtes/pieds de page automatiques du navigateur */
+            @page {
+                margin: 0;
+                size: A4;
+            }
+
+            body {
+                background: white;
+                margin: 0;
+                padding: 0;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .page {
+                width: 210mm;
+                height: 297mm; /* Force la hauteur exacte A4 */
+                margin: 0;
+                padding: 25mm; /* Garde la marge interne du design */
+                box-shadow: none;
+                page-break-after: always;
+                border: none;
+                overflow: hidden; /* Évite les débordements */
+            }
+
+            /* Cache le bouton */
+            .print-btn { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="print-btn" onclick="window.print()">IMPRIMER LE DOSSIER (PDF)</button>
+
+    <!-- PAGE 1 : COUVERTURE -->
+    <div class="page">
+        <div class="cover-container" style="height: 240mm;"> <!-- Hauteur forcée pour centrage visuel -->
+            <div style="margin-top: auto; margin-bottom: auto;">
+                <div class="cover-logo">MediBridge<span>Africa</span></div>
+                <div style="letter-spacing: 4px; text-transform: uppercase; color: var(--accent); font-weight: bold;">
+                    Secure Medical Evacuation
+                </div>
+
+                <div class="cover-title">
+                    Mémorandum<br>
+                    d'Investissement<br>
+                    <strong>2026</strong>
+                </div>
+
+                <p style="font-size: 14pt; color: #555;">
+                    La plateforme numérique de référence pour l'optimisation des parcours de soins <strong>Afrique Subsaharienne — Maroc</strong>.
+                </p>
+            </div>
+
+            <div class="cover-contact">
+                <table style="border: none; margin: 0;">
+                    <tr style="background: none;">
+                        <td style="border: none; padding: 0;">
+                            <strong>DOCUMENT CONFIDENTIEL</strong><br>
+                            Janvier 2026
+                        </td>
+                        <td style="border: none; padding: 0; text-align: right;">
+                            <strong>Koueni Antoni Lucien</strong><br>
+                            CEO Fondateur<br>
+                            a.koueni@hestim.ma<br>
+                            <a href="https://bridgeafrica-five.vercel.app/" style="color: var(--accent); text-decoration: none; font-size: 10pt;">Voir la Démo (Lien)</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 2 : OPPORTUNITÉ -->
+    <div class="page">
+        <div style="text-align: right; color: var(--accent); font-weight: bold; font-size: 10pt; margin-bottom: 20px;">01 | ANALYSE DE MARCHÉ</div>
+        
+        <h1>Executive Summary</h1>
+        <p><strong>MediBridge Africa</strong> est une réponse structurelle à la défaillance du marché des évacuations sanitaires (EVASAN) entre l'Afrique Subsaharienne et les pôles d'excellence marocains. Notre plateforme SaaS agit comme Tiers de Confiance, connectant médecins locaux, patients et cliniques.</p>
+        
+        <div class="box">
+            "Notre mission est de transformer une épreuve logistique angoissante en un parcours de soin fluide, transparent et sécurisé."
+        </div>
+
+        <h2>1. Le Contexte de Marché</h2>
+        <p>L'Afrique de l'Ouest et Centrale (Gabon, Côte d'Ivoire, Mali, Sénégal, etc.) fait face à une explosion de la demande pour des soins tertiaires (Oncologie, Cardio, Neurochirurgie). Face à des plateaux techniques locaux saturés, le Maroc s'est imposé comme le hub médical de référence, offrant une qualité européenne à des coûts 40% inférieurs.</p>
+
+        <h2>2. Les Problèmes (Pain Points)</h2>
+        <p>Malgré la demande, le parcours actuel est chaotique :</p>
+        <ul>
+            <li><strong>Opacité Financière :</strong> Le marché est dominé par des intermédiaires informels. Le patient paie souvent 30% de plus que le prix réel.</li>
+            <li><strong>Lenteur Administrative :</strong> Obtenir un devis et une attestation pour le visa médical prend 7 à 10 jours. C'est inacceptable en cas d'urgence.</li>
+            <li><strong>Absence de Données :</strong> Le médecin traitant local perd toute visibilité sur son patient une fois celui-ci parti.</li>
+        </ul>
+
+        <h2>3. La Solution MediBridge</h2>
+        <p>Nous digitalisons 100% de la chaîne de valeur :</p>
+        <ul>
+            <li><strong>Pour le Patient :</strong> Un guichet unique. Devis certifié en 48h, assistance Visa et Logement.</li>
+            <li><strong>Pour le Médecin :</strong> Une App mobile pour transférer le dossier médical en sécurité et suivre le patient.</li>
+            <li><strong>Pour la Clinique :</strong> Un apport de patients qualifiés et solvables, sans effort commercial.</li>
+        </ul>
+    </div>
+
+    <!-- PAGE 3 : MODÈLE ÉCONOMIQUE -->
+    <div class="page">
+        <div style="text-align: right; color: var(--accent); font-weight: bold; font-size: 10pt; margin-bottom: 20px;">02 | MODÈLE ÉCONOMIQUE</div>
+
+        <h1>Business Model</h1>
+        <p>Notre modèle est hybride (B2B et B2C), assurant une diversification des revenus et une rentabilité rapide.</p>
+
+        <h2>1. Sources de Revenus</h2>
+        
+        <h3>A. Commission Apporteur (Flux Principal - 70%)</h3>
+        <p>Nous facturons aux cliniques partenaires une commission sur le chiffre d'affaires médical généré. C'est un coût d'acquisition client pour eux, totalement transparent pour le patient.</p>
+        <ul>
+            <li>Taux de commission : <strong>10% à 15%</strong>.</li>
+            <li>Panier moyen soins : 5 000 €.</li>
+            <li><strong>Revenu net : ~750 € / patient.</strong></li>
+        </ul>
+
+        <h3>B. Frais de Gestion (Flux Secondaire - 20%)</h3>
+        <p>Frais fixes payés par le patient pour l'ouverture de dossier, la numérisation et la conciergerie.</p>
+        <ul>
+            <li><strong>Tarif : ~200 € / dossier.</strong></li>
+        </ul>
+
+        <h3>C. Services Logistiques (Flux Complémentaire - 10%)</h3>
+        <p>Marge négociée sur l'hébergement (hôtels, appartements de convalescence) et le transport VIP.</p>
+
+        <h2>2. Stratégie d'Acquisition : "Prescriber-First"</h2>
+        <div class="box">
+            <strong>Le constat :</strong> Faire de la publicité vers le grand public coûte trop cher et manque de cible.
+        </div>
+        <p><strong>Notre stratégie :</strong> Nous ciblons le prescripteur de confiance : <strong>le Médecin Local</strong>. 
+        Nous recrutons des "Médecins Ambassadeurs" dans les hôpitaux de référence en Afrique Subsaharienne. En utilisant MediBridge, ils gagnent du temps et gardent le lien avec leur patient. C'est notre levier de croissance virale.</p>
+    </div>
+
+    <!-- PAGE 4 : CHIFFRES CLÉS -->
+    <div class="page">
+        <div style="text-align: right; color: var(--accent); font-weight: bold; font-size: 10pt; margin-bottom: 20px;">03 | PROJECTIONS FINANCIÈRES</div>
+
+        <h1>Plan Financier (Année 1)</h1>
+        <p>Prévisions basées sur une montée en charge progressive et l'ouverture de 2 corridors (Afrique Centrale et Afrique de l'Ouest).</p>
+
+        <h2>1. Compte de Résultat Prévisionnel</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Période</th>
+                    <th>Volume Patients</th>
+                    <th>Chiffre d'Affaires</th>
+                    <th>Charges</th>
+                    <th>Résultat Net</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Trimestre 1</strong></td>
+                    <td>9 (3/mois)</td>
+                    <td>9 000 €</td>
+                    <td>7 500 €</td>
+                    <td><strong>+ 1 500 €</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Trimestre 2</strong></td>
+                    <td>24 (8/mois)</td>
+                    <td>24 000 €</td>
+                    <td>12 000 €</td>
+                    <td><strong>+ 12 000 €</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Trimestre 3</strong></td>
+                    <td>45 (15/mois)</td>
+                    <td>45 000 €</td>
+                    <td>18 000 €</td>
+                    <td><strong>+ 27 000 €</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Trimestre 4</strong></td>
+                    <td>75 (25/mois)</td>
+                    <td>75 000 €</td>
+                    <td>22 000 €</td>
+                    <td><strong>+ 53 000 €</strong></td>
+                </tr>
+                <tr class="total-row">
+                    <td>TOTAL AN 1</td>
+                    <td>~153 Patients</td>
+                    <td>153 000 €</td>
+                    <td>59 500 €</td>
+                    <td>93 500 €</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>2. Comprendre ce tableau (Hypothèses)</h2>
+        <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; font-size: 10.5pt;">
+            <p>Ce tableau montre la rentabilité de l'entreprise sur sa première année. Voici comment lire ces chiffres :</p>
+            
+            <ul style="margin-bottom: 0;">
+                <li><strong>Le Volume (Volume Patients) :</strong> Nous restons prudents. Nous visons seulement 3 patients par mois au lancement (phase de test), pour monter progressivement à 25 patients/mois en fin d'année une fois le réseau établi. C'est très peu par rapport à la demande réelle (plusieurs milliers), ce qui rend cet objectif <em>très réaliste</em>.</li>
+                
+                <li><strong>Le Chiffre d'Affaires (CA) :</strong> C'est l'argent qui entre dans l'entreprise. 
+                <br><em>Calcul : Volume Patients x 1 000 € (notre revenu moyen par dossier).</em></li>
+                
+                <li><strong>Les Charges :</strong> Ce sont nos coûts de fonctionnement.
+                <br>Elles sont faibles au début (le fondateur gère tout), puis augmentent car nous embauchons des commerciaux et investissons en marketing pour gérer l'afflux de patients.</li>
+                
+                <li><strong>Le Résultat Net (Bénéfice) :</strong> C'est ce qui reste dans la poche de l'entreprise.
+                <br><em>Le projet est rentable dès le 1er trimestre</em> car nous n'avons pas de "stocks" ni de machines coûteuses à acheter. C'est la force du modèle numérique.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- PAGE 5 : INVESTISSEMENT -->
+    <div class="page">
+        <div style="text-align: right; color: var(--accent); font-weight: bold; font-size: 10pt; margin-bottom: 20px;">04 | OFFRE D'INVESTISSEMENT</div>
+
+        <h1>Proposition & Besoin</h1>
+        
+        <div style="text-align: center; border: 3px solid var(--accent); padding: 30px; margin: 30px 0; border-radius: 10px; background-color: #f0f9ff;">
+            <h2 style="margin-top: 0; color: var(--primary);">BESOIN DE FINANCEMENT (SEED)</h2>
+            <div style="font-size: 40pt; font-weight: 800; color: var(--accent); margin: 10px 0;">40 000 €</div>
+            <div style="font-size: 14pt; color: #666;">(Environ 26 Millions FCFA)</div>
+        </div>
+
+        <h2>Utilisation des Fonds (Use of Proceeds)</h2>
+        <ul>
+            <li><strong>35% - Développement Tech :</strong> Finalisation de l'application médecin sécurisée et du dashboard clinique.</li>
+            <li><strong>30% - Business Development :</strong> Frais de déplacement (Zone Subsaharienne / Maroc) pour signature des partenariats et frais juridiques.</li>
+            <li><strong>20% - Marketing de Lancement :</strong> Branding, site web, kits de communication pour les médecins.</li>
+            <li><strong>15% - Réserve de Trésorerie :</strong> Fonds de roulement pour les 6 premiers mois.</li>
+        </ul>
+
+        <h2>L'Offre à l'Investisseur</h2>
+        <p>Pour accompagner cette phase d'amorçage, nous proposons deux véhicules d'investissement au choix :</p>
+        
+        <table style="margin-top: 20px;">
+            <tr>
+                <td style="width: 50%; background-color: #f8fafc; vertical-align: top;">
+                    <h3 style="margin-top: 0; color: var(--accent);">OPTION A : EQUITY</h3>
+                    <p>Prise de participation au capital de la société.</p>
+                    <p style="font-size: 14pt; font-weight: bold;">10% à 15% des parts</p>
+                </td>
+                <td style="width: 50%; background-color: #f8fafc; vertical-align: top; border-left: 5px solid white;">
+                    <h3 style="margin-top: 0; color: var(--accent);">OPTION B : ROYALTIES</h3>
+                    <p>Redevance sur le Chiffre d'Affaires trimestriel.</p>
+                    <p style="font-size: 14pt; font-weight: bold;">5% du CA jusqu'à x2 ROI</p>
+                </td>
+            </tr>
+        </table>
+
+        <div style="margin-top: 50px; text-align: center; color: #888; font-size: 10pt;">
+            <hr style="border: 0; border-top: 1px solid #ddd; margin-bottom: 20px;">
+            <p><strong>MediBridge Africa</strong> - Tous droits réservés 2026.<br>
+            Le présent document est strictement confidentiel.</p>
+            <p style="margin-top: 10px;">
+                <strong>Koueni Antoni Lucien</strong> | a.koueni@hestim.ma<br>
+                <a href="https://bridgeafrica-five.vercel.app/" style="color: #0ea5e9; text-decoration: none;">https://bridgeafrica-five.vercel.app/</a>
+            </p>
+        </div>
+    </div>
+
+</body>
+</html>
