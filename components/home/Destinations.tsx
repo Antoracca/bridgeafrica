@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plane, MapPin, ArrowRight } from 'lucide-react'
+import { Plane, MapPin, ArrowRight, Activity, ShieldCheck, HeartPulse } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { LottieAnimation } from '@/components/ui/LottieAnimation'
 import WorldAnimation from '@/public/world.json'
@@ -57,9 +57,6 @@ export function Destinations() {
   const [activeConnection, setActiveConnection] = useState(0)
   const [currentGroup, setCurrentGroup] = useState(0)
 
-  const sources = currentGroup === 0 ? sourcesGroup1 : sourcesGroup2
-  const destinations = currentGroup === 0 ? destinationsGroup1 : destinationsGroup2
-
   // Rotation des groupes de pays toutes les 5 secondes
   useEffect(() => {
     const groupInterval = setInterval(() => {
@@ -67,6 +64,9 @@ export function Destinations() {
     }, 5000)
     return () => clearInterval(groupInterval)
   }, [])
+
+  const sources = currentGroup === 0 ? sourcesGroup1 : sourcesGroup2
+  const destinations = currentGroup === 0 ? destinationsGroup1 : destinationsGroup2
 
   // Animation des connexions
   useEffect(() => {
@@ -77,74 +77,72 @@ export function Destinations() {
   }, [sources.length, destinations.length])
 
   return (
-    <section className="py-16 md:py-24 bg-slate-50 relative overflow-hidden">
-      {/* Background grid pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
+    <section className="py-24 md:py-32 bg-slate-900 relative overflow-hidden">
+      {/* Premium Background Elements */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.08)_0%,transparent_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px]" />
 
-      {/* Gradient orbs */}
-      <div className="absolute top-20 left-10 w-80 h-80 bg-blue-200/30 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-cyan-200/30 rounded-full blur-3xl" />
+      {/* Dynamic Glows */}
+      <motion.div
+        animate={{ opacity: [0.2, 0.4, 0.2] }}
+        transition={{ duration: 5, repeat: Infinity }}
+        className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/30 rounded-full blur-[150px]"
+      />
+      <motion.div
+        animate={{ opacity: [0.2, 0.4, 0.2] }}
+        transition={{ duration: 7, repeat: Infinity, delay: 1 }}
+        className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-cyan-600/30 rounded-full blur-[150px]"
+      />
 
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center max-w-3xl mx-auto mb-12">
+      <div className="container mx-auto px-4 relative z-10 2xl:max-w-7xl">
+        <div className="text-center max-w-4xl mx-auto mb-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">
-              Le Pont Médical <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Intercontinental</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-blue-400 text-sm font-bold mb-6">
+              <Activity size={16} /> Réseau Médical Mondial
+            </div>
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-6 tracking-tight">
+              Le Pont Médical <br className="hidden md:block" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 animate-gradient-x">
+                Intercontinental
+              </span>
             </h2>
-            <p className="text-slate-600 text-lg md:text-xl">
-              Connexions en temps réel entre l&apos;Afrique et les pôles d&apos;excellence médicale mondiaux
+            <p className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto font-medium leading-relaxed">
+              Une infrastructure digitale qui connecte instantanément les patients africains aux pôles d'excellence médicale mondiaux.
             </p>
           </motion.div>
         </div>
 
+        {/* ... Mobile view kept mostly same but with dark theme colors ... */}
         {/* Mobile View - Stacked Layout */}
-        <div className="lg:hidden space-y-8">
-          {/* ... (Code mobile conservé car il fonctionne bien) ... */}
-          <div className="space-y-8">
+        <div className="lg:hidden space-y-12 mb-16">
+          <div className="space-y-8 relative">
+
+            {/* Sources */}
             <div>
-              <div className="flex flex-col items-center mb-5">
-                <h3 className="text-sm font-extrabold text-slate-800 mb-2 tracking-tight">Depuis l&apos;Afrique</h3>
-                <div className="h-1 w-16 bg-gradient-to-r from-blue-600 to-blue-400 rounded-full"></div>
+              <div className="flex flex-col items-center justify-center mb-6">
+                <span className="px-4 py-1.5 rounded-full bg-slate-800 text-slate-300 text-xs font-bold uppercase tracking-widest border border-slate-700 shadow-sm">Départ</span>
               </div>
-              <div className="relative h-[180px]">
+              <div className="relative h-[200px]">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={`mobile-sources-${currentGroup}`}
                     className="absolute inset-0"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.05 }}
+                    transition={{ duration: 0.4 }}
                   >
-                    <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
+                    <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto">
                       {sources.map((country, idx) => (
-                        <motion.div
-                          key={`${currentGroup}-mobile-${country.name}`}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: idx * 0.1 }}
-                          className="relative group"
-                        >
-                          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-blue-600/5 rounded-2xl blur-sm" />
-                          <div className="relative bg-white/90 backdrop-blur-xl p-3 rounded-2xl shadow-lg border border-blue-100 flex items-center gap-2.5">
-                            <div className="relative">
-                              <div className="absolute inset-0 bg-blue-400/20 rounded-lg blur" />
-                              <Image
-                                src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`}
-                                alt={country.name}
-                                width={36}
-                                height={27}
-                                className="relative rounded-lg shadow-sm border border-white/50"
-                              />
-                            </div>
-                            <span className="font-bold text-slate-800 text-xs">{country.name}</span>
-                          </div>
-                        </motion.div>
+                        <div key={`${currentGroup}-mobile-${country.name}`} className="bg-slate-800/80 backdrop-blur-md p-3.5 rounded-2xl border border-slate-700/50 shadow-lg flex items-center gap-3">
+                          <Image src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`} alt={country.name} width={36} height={27} className="rounded-md shadow-sm" />
+                          <span className="font-bold text-white text-sm">{country.name}</span>
+                        </div>
                       ))}
                     </div>
                   </motion.div>
@@ -152,236 +150,196 @@ export function Destinations() {
               </div>
             </div>
 
-            {/* Globe central mobile */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              viewport={{ once: true }}
-              className="flex flex-col items-center py-4"
-            >
-              <div className="relative w-48 h-48">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-40 h-40 rounded-full bg-gradient-to-br from-blue-500/10 via-blue-600/10 to-cyan-600/10 backdrop-blur-sm flex items-center justify-center shadow-2xl shadow-blue-500/20">
-                    <LottieAnimation
-                      animationData={WorldAnimation}
-                      className="w-32 h-32"
-                    />
-                  </div>
-                </div>
+            {/* Globe Mobile */}
+            <div className="flexjustify-center relative py-4 flex flex-col items-center">
+              {/* Vertical connection line */}
+              <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-px bg-gradient-to-b from-blue-500/20 via-cyan-500/50 to-blue-500/20 -z-10 hidden sm:block delay-100" />
+              <div className="w-56 h-56 rounded-full bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 flex items-center justify-center shadow-2xl shadow-blue-500/10">
+                <LottieAnimation animationData={WorldAnimation} className="w-48 h-48 opacity-90 filter hue-rotate-15" />
               </div>
-              <div className="mt-6">
-                <Link href="/liste-pays">
-                  <Button className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all group">
-                    <span className="font-semibold text-sm">Consulter la liste des pays éligibles</span>
-                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
-              </div>
-            </motion.div>
+            </div>
 
+            {/* Destinations */}
             <div>
-              <div className="flex flex-col items-center mb-5">
-                <h3 className="text-sm font-extrabold text-slate-800 mb-2 tracking-tight">Destinations Principales</h3>
-                <div className="h-1 w-20 bg-gradient-to-r from-cyan-600 to-cyan-400 rounded-full"></div>
+              <div className="flex flex-col items-center justify-center mb-6">
+                <span className="px-4 py-1.5 rounded-full bg-blue-900/50 text-blue-300 text-xs font-bold uppercase tracking-widest border border-blue-800/50 shadow-sm">Arrivée</span>
               </div>
               <div className="relative h-[200px]">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={`mobile-destinations-${currentGroup}`}
                     className="absolute inset-0"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.05 }}
+                    transition={{ duration: 0.4 }}
                   >
-                    <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
+                    <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto">
                       {destinations.map((country, idx) => (
-                        <motion.div
-                          key={`${currentGroup}-mobile-dest-${country.name}`}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: idx * 0.1 }}
-                          className="relative group"
-                        >
-                          <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-cyan-600/5 rounded-2xl blur-sm" />
-                          <div className="relative bg-white/90 backdrop-blur-xl p-3 rounded-2xl shadow-lg border border-cyan-100">
-                            <div className="flex items-center gap-2 mb-1.5">
-                              <div className="relative">
-                                <div className="absolute inset-0 bg-cyan-400/20 rounded-lg blur" />
-                                <Image
-                                  src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`}
-                                  alt={country.name}
-                                  width={36}
-                                  height={27}
-                                  className="relative rounded-lg shadow-sm border border-white/50"
-                                />
-                              </div>
-                              <span className="font-bold text-slate-900 text-xs">{country.name}</span>
-                            </div>
-                            <div className="text-[10px] text-slate-500 flex items-center gap-1 ml-1">
-                              <MapPin size={10} className="text-cyan-600" />
-                              <span>{country.city}</span>
-                            </div>
+                        <div key={`${currentGroup}-mobile-dest-${country.name}`} className="bg-slate-800/80 backdrop-blur-md p-3.5 rounded-2xl border border-blue-900/50 shadow-lg flex flex-col">
+                          <div className="flex justify-between items-start mb-2">
+                            <Image src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`} alt={country.name} width={28} height={21} className="rounded-md shadow-sm" />
+                            <MapPin size={14} className="text-cyan-400" />
                           </div>
-                        </motion.div>
+                          <div>
+                            <div className="font-bold text-white text-sm leading-tight">{country.name}</div>
+                            <div className="text-[11px] text-slate-400 mt-0.5">{country.city}</div>
+                          </div>
+                        </div>
                       ))}
                     </div>
                   </motion.div>
                 </AnimatePresence>
               </div>
             </div>
+
           </div>
         </div>
 
-        {/* Desktop View - Grid Layout (Fixed Responsiveness) */}
-        <div className="hidden lg:block relative h-[600px] xl:h-[700px]">
-            {/* SVG Connections Layer */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1 }}>
-              <defs>
-                <linearGradient id="activeLineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.2"><animate attributeName="stopOpacity" values="0.2;0.6;0.2" dur="2s" repeatCount="indefinite" /></stop>
-                  <stop offset="50%" stopColor="#06b6d4" stopOpacity="1"><animate attributeName="stopOpacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite" /></stop>
-                  <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.2"><animate attributeName="stopOpacity" values="0.2;0.6;0.2" dur="2s" repeatCount="indefinite" /></stop>
-                </linearGradient>
-                <linearGradient id="inactiveLineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#cbd5e1" stopOpacity="0.1" />
-                  <stop offset="50%" stopColor="#94a3b8" stopOpacity="0.3" />
-                  <stop offset="100%" stopColor="#cbd5e1" stopOpacity="0.1" />
-                </linearGradient>
-                <filter id="connectionGlow">
-                  <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-                  <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                </filter>
-              </defs>
-              {sources.map((source, sIdx) =>
-                destinations.map((dest, dIdx) => {
-                  const isActive = (sIdx * destinations.length + dIdx) === activeConnection
-                  return (
-                    <g key={`connection-${source.name}-${dest.name}`}>
+        {/* Desktop View - Advanced Glassmorphism & SVG Connections */}
+        <div className="hidden lg:block relative h-[600px] xl:h-[700px] rounded-[3rem] bg-slate-800/30 backdrop-blur-3xl border border-slate-700/50 shadow-2xl mb-16 overflow-hidden">
+          {/* SVG Connections Layer */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
+            <defs>
+              <linearGradient id="activeLineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.1" />
+                <stop offset="50%" stopColor="#22d3ee" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.1" />
+              </linearGradient>
+              <linearGradient id="inactiveLineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#475569" stopOpacity="0.2" />
+                <stop offset="50%" stopColor="#64748b" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#475569" stopOpacity="0.2" />
+              </linearGradient>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                <feMerge><feMergeNode in="coloredBlur" /><feMergeNode in="SourceGraphic" /></feMerge>
+              </filter>
+            </defs>
+            {sources.map((source, sIdx) =>
+              destinations.map((dest, dIdx) => {
+                const isActive = (sIdx * destinations.length + dIdx) === activeConnection
+                return (
+                  <g key={`connection-${source.name}-${dest.name}`}>
+                    <motion.path
+                      d={`M ${source.position.x}% ${source.position.y}% Q 50% 50%, ${dest.position.x}% ${dest.position.y}%`}
+                      stroke="url(#inactiveLineGradient)" strokeWidth="1.5" fill="none" strokeDasharray="4,8"
+                      initial={{ opacity: 0 }} animate={{ opacity: isActive ? 0 : 0.5 }}
+                    />
+                    {isActive && (
                       <motion.path
                         d={`M ${source.position.x}% ${source.position.y}% Q 50% 50%, ${dest.position.x}% ${dest.position.y}%`}
-                        stroke="url(#inactiveLineGradient)" strokeWidth="2" fill="none" strokeDasharray="8,6"
-                        initial={{ opacity: 0 }} animate={{ opacity: isActive ? 0 : 0.2 }}
+                        stroke="url(#activeLineGradient)" strokeWidth="3" fill="none" filter="url(#glow)"
+                        initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 1.5, ease: "easeInOut" }}
                       />
-                      {isActive && (
-                        <motion.path
-                          d={`M ${source.position.x}% ${source.position.y}% Q 50% 50%, ${dest.position.x}% ${dest.position.y}%`}
-                          stroke="url(#activeLineGradient)" strokeWidth="3" fill="none" filter="url(#connectionGlow)"
-                          initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 1 }}
-                        />
-                      )}
-                    </g>
-                  )
-                })
-              )}
-            </svg>
+                    )}
+                  </g>
+                )
+              })
+            )}
+          </svg>
 
-            {/* Grid Container for Layout */}
-            <div className="grid grid-cols-12 h-full items-center relative z-10">
-                
-                {/* Left: Source Countries (Col 1-3) */}
-                <div className="col-span-3 h-full relative">
-                    <AnimatePresence mode="wait">
-                       <motion.div key={currentGroup} className="absolute inset-0 flex flex-col justify-center gap-6 pl-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                          <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Départ Afrique</h3>
-                          {sources.map((country, idx) => (
-                             <motion.div
-                               key={`${currentGroup}-${country.name}`}
-                               initial={{ x: -20, opacity: 0 }}
-                               animate={{ x: 0, opacity: 1 }}
-                               transition={{ delay: idx * 0.1 }}
-                               whileHover={{ scale: 1.05 }}
-                               className="bg-white/80 backdrop-blur-md p-3 rounded-xl shadow-md border border-blue-100 flex items-center gap-3 w-fit cursor-default"
-                             >
-                                <Image src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`} alt={country.name} width={32} height={24} className="rounded shadow-sm" />
-                                <span className="font-bold text-slate-800 text-sm">{country.name}</span>
-                             </motion.div>
-                          ))}
-                       </motion.div>
-                    </AnimatePresence>
-                </div>
+          {/* Grid Container for Layout */}
+          <div className="grid grid-cols-12 h-full items-center relative z-10 px-8">
 
-                {/* Center: Globe (Col 4-9) */}
-                <div className="col-span-6 flex flex-col items-center justify-center relative">
-                    <div className="relative w-[400px] h-[400px] xl:w-[500px] xl:h-[500px] flex items-center justify-center">
-                        <div className="absolute inset-0 rounded-full border border-blue-200/30 animate-spin-slow"></div>
-                        <div className="w-full h-full rounded-full bg-gradient-to-b from-blue-50/50 to-cyan-50/50 backdrop-blur-sm flex items-center justify-center shadow-2xl shadow-blue-200/50">
-                           <LottieAnimation animationData={WorldAnimation} className="w-[80%] h-[80%]" />
-                        </div>
-                    </div>
-                    <div className="mt-8">
-                       <Link href="/liste-pays">
-                          <Button size="lg" className="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full shadow-lg hover:shadow-xl transition-all text-white px-8">
-                             Voir toutes les destinations
-                          </Button>
-                       </Link>
-                    </div>
-                </div>
-
-                {/* Right: Destinations (Col 10-12) */}
-                <div className="col-span-3 h-full relative">
-                    <AnimatePresence mode="wait">
-                       <motion.div key={currentGroup} className="absolute inset-0 flex flex-col justify-center gap-6 items-end pr-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                          <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 text-right">Arrivée Monde</h3>
-                          {destinations.map((country, idx) => (
-                             <motion.div
-                               key={`${currentGroup}-${country.name}`}
-                               initial={{ x: 20, opacity: 0 }}
-                               animate={{ x: 0, opacity: 1 }}
-                               transition={{ delay: idx * 0.1 }}
-                               whileHover={{ scale: 1.05 }}
-                               className="bg-white/80 backdrop-blur-md p-3 rounded-xl shadow-md border border-cyan-100 flex items-center justify-between gap-3 w-[200px] cursor-default"
-                             >
-                                <div className="text-right flex-1">
-                                   <div className="font-bold text-slate-800 text-sm">{country.name}</div>
-                                   <div className="text-xs text-slate-500 flex items-center justify-end gap-1">
-                                      <MapPin size={10} className="text-cyan-600"/> {country.city}
-                                   </div>
-                                </div>
-                                <Image src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`} alt={country.name} width={32} height={24} className="rounded shadow-sm" />
-                             </motion.div>
-                          ))}
-                       </motion.div>
-                    </AnimatePresence>
-                </div>
-
+            {/* Left: Source Countries (Col 1-3) */}
+            <div className="col-span-3 h-full relative border-r border-slate-700/50 backdrop-blur-sm">
+              <AnimatePresence mode="wait">
+                <motion.div key={currentGroup} className="absolute inset-0 flex flex-col justify-center gap-6" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.5 }}>
+                  <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                    <Plane size={14} className="text-slate-500 rotate-45" /> Départ
+                  </h3>
+                  {sources.map((country, idx) => (
+                    <motion.div key={`${currentGroup}-${country.name}`} whileHover={{ x: 10 }} className="bg-slate-900/50 backdrop-blur-xl p-3.5 rounded-2xl border border-slate-700 hover:border-blue-500/50 hover:bg-slate-800 transition-all flex items-center gap-4 w-[220px] shadow-lg">
+                      <Image src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`} alt={country.name} width={36} height={27} className="rounded border border-slate-600 shadow-sm" />
+                      <span className="font-bold text-white text-base">{country.name}</span>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </AnimatePresence>
             </div>
+
+            {/* Center: Globe (Col 4-9) */}
+            <div className="col-span-6 flex flex-col items-center justify-center relative">
+              <div className="relative w-[450px] h-[450px] xl:w-[550px] xl:h-[550px] flex items-center justify-center">
+                <div className="absolute inset-0 rounded-full border border-blue-500/20 animate-[spin_60s_linear_infinite]" />
+                <div className="w-full h-full rounded-full flex items-center justify-center filter drop-shadow-[0_0_30px_rgba(6,182,212,0.2)]">
+                  <LottieAnimation animationData={WorldAnimation} className="w-[85%] h-[85%] opacity-90 filter hue-rotate-15 contrast-125 saturate-150" />
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Destinations (Col 10-12) */}
+            <div className="col-span-3 h-full relative border-l border-slate-700/50 backdrop-blur-sm">
+              <AnimatePresence mode="wait">
+                <motion.div key={currentGroup} className="absolute inset-0 flex flex-col justify-center items-end gap-6" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: 0.5 }}>
+                  <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center justify-end gap-2 w-full pr-2">
+                    <MapPin size={14} className="text-slate-500" /> Arrivée
+                  </h3>
+                  {destinations.map((country, idx) => (
+                    <motion.div key={`${currentGroup}-${country.name}`} whileHover={{ x: -10 }} className="bg-slate-900/50 backdrop-blur-xl p-3.5 rounded-2xl border border-cyan-900/50 hover:border-cyan-400/50 hover:bg-slate-800 transition-all flex items-center justify-between gap-4 w-[240px] shadow-lg">
+                      <div className="text-right flex-1">
+                        <div className="font-bold text-white text-base">{country.name}</div>
+                        <div className="text-xs text-slate-400 font-medium">{country.city}</div>
+                      </div>
+                      <div className="relative">
+                        <Image src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`} alt={country.name} width={36} height={27} className="rounded border border-slate-600 shadow-sm relative z-10" />
+                      </div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+          </div>
         </div>
 
-        {/* Stats & Services Scroll */}
-        <div className="mt-12 space-y-8">
-           {/* Stats */}
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-              {[
-                { label: 'Pays connectés', value: '10+', color: 'text-blue-600' },
-                { label: 'Prises en charge', value: '1000+', color: 'text-cyan-600' },
-                { label: 'Satisfaction', value: '98%', color: 'text-emerald-600' },
-              ].map((stat, i) => (
-                <div key={i} className="bg-white rounded-2xl p-6 text-center shadow-sm border border-slate-100">
-                   <div className={`text-3xl font-extrabold ${stat.color} mb-1`}>{stat.value}</div>
-                   <div className="text-sm text-slate-500 font-medium">{stat.label}</div>
-                </div>
-              ))}
-           </div>
+        {/* Floating Button for Map center Mobile */}
+        <div className="flex justify-center mb-16 lg:hidden">
+          <Link href="/liste-pays" className="w-full max-w-sm">
+            <Button size="lg" className="w-full bg-white text-slate-900 rounded-2xl font-bold text-lg h-14 shadow-lg active:scale-95 transition-all">
+              Voir la carte complète
+            </Button>
+          </Link>
+        </div>
 
-           {/* Services Ticker */}
-           <div className="overflow-hidden bg-slate-900 py-4 rounded-2xl relative">
-              <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-slate-900 to-transparent z-10"></div>
-              <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-slate-900 to-transparent z-10"></div>
-              <motion.div
-                className="flex gap-12 whitespace-nowrap"
-                animate={{ x: [0, -1000] }}
-                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-              >
-                {[...services, ...services, ...services].map((service, idx) => (
-                  <span key={idx} className="text-slate-300 font-medium text-sm flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                    {service}
-                  </span>
-                ))}
-              </motion.div>
-           </div>
+        {/* Premium Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-16">
+          {[
+            { label: 'Pays Connectés', value: '15+', icon: <Plane className="text-blue-400" size={24} /> },
+            { label: 'Cliniques Partenaires', value: '300+', icon: <ShieldCheck className="text-teal-400" size={24} /> },
+            { label: 'Patients Traités', value: '5K+', icon: <HeartPulse className="text-rose-400" size={24} /> },
+          ].map((stat, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} viewport={{ once: true }}
+              className="bg-slate-800/40 backdrop-blur-md rounded-[2rem] p-8 text-center border border-slate-700/50 hover:bg-slate-800/80 transition-colors"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-slate-900/80 mx-auto flex items-center justify-center mb-6 shadow-inner border border-slate-700/50">
+                {stat.icon}
+              </div>
+              <div className="text-4xl font-extrabold text-white mb-2">{stat.value}</div>
+              <div className="text-sm text-slate-400 font-semibold uppercase tracking-wider">{stat.label}</div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Continuous Services Ticker */}
+        <div className="relative overflow-hidden bg-slate-900/80 border-y border-slate-800 py-6 -mx-4 md:rounded-3xl md:mx-0">
+          <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-slate-900 to-transparent z-10 hidden md:block" />
+          <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-slate-900 to-transparent z-10 hidden md:block" />
+          <motion.div
+            className="flex gap-16 whitespace-nowrap px-10"
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+          >
+            {[...services, ...services, ...services, ...services].map((service, idx) => (
+              <span key={idx} className="text-slate-400 font-black text-lg tracking-wide uppercase flex items-center gap-4">
+                <span className="w-2 h-2 bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
+                {service}
+              </span>
+            ))}
+          </motion.div>
         </div>
 
       </div>
