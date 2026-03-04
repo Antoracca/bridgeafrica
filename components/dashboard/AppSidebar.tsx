@@ -54,23 +54,17 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar"
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 
-// Fonction utilitaire pour les liens en développement
-const handleComingSoon = (e: React.MouseEvent, title: string) => {
-  e.preventDefault()
-  toast.info("🚀 Bientôt disponible", {
-    description: `La fonctionnalité "${title}" est en cours de développement et sera disponible très prochainement.`
-  })
-}
+// Fonction utilitaire pour navigation (plus besoin de coming soon)
 
 // Configuration des menus par rôle
 const navConfig = {
@@ -86,15 +80,11 @@ const navConfig = {
       { title: "Mon Voyage", url: "/patient?view=voyage", icon: Plane, active: true },
       { title: "Téléconsultation", url: "/patient?view=teleconsultation", icon: Video, active: true },
       { title: "Historique Médical", url: "/patient?view=historique", icon: ClipboardList, active: true },
+      { title: "Mes Prescriptions", url: "/patient?view=prescriptions", icon: Pill, active: true },
+      { title: "Résultats Laboratoire", url: "/patient?view=laboratoire", icon: Microscope, active: true },
+      { title: "Assurances Voyage", url: "/patient?view=assurances", icon: ShieldCheck, active: true },
     ],
-    coming: [
-      { title: "Mes Prescriptions", url: "#", icon: Pill, active: false },
-      { title: "Résultats Laboratoire", url: "#", icon: Microscope, active: false },
-      { title: "Assurances Voyage", url: "#", icon: ShieldCheck, active: false },
-      { title: "Pharmacies Partenaires", url: "#", icon: MapPin, active: false },
-      { title: "Programme Fidélité", url: "#", icon: Star, active: false },
-      { title: "Parrainage", url: "#", icon: Users2, active: false },
-    ]
+    coming: []
   },
   medecin: {
     main: [
@@ -117,8 +107,8 @@ const navConfig = {
 }
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-    user?: any
-    avatarUrl?: string | null
+  user?: any
+  avatarUrl?: string | null
 }
 
 export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
@@ -202,17 +192,17 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
-                        asChild
-                        tooltip={item.title}
-                        isActive={isActive}
-                        className={`
+                      asChild
+                      tooltip={item.title}
+                      isActive={isActive}
+                      className={`
                           relative transition-all duration-200
                           ${isActive
-                            ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold shadow-md hover:shadow-lg"
-                            : item.highlight
+                          ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold shadow-md hover:shadow-lg"
+                          : item.highlight
                             ? "bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-800 font-semibold hover:from-blue-100 hover:to-cyan-100 border border-blue-300"
                             : "text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
-                          }
+                        }
                         `}
                     >
                       <a href={item.url} className="flex items-center gap-2 w-full min-w-0">
@@ -223,11 +213,10 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
                         <span className="font-semibold truncate flex-1 min-w-0">{item.title}</span>
                         {item.badge && item.badge > 0 && (
                           <Badge
-                            className={`ml-auto text-[10px] px-1.5 py-0 h-5 min-w-5 flex items-center justify-center font-bold ${
-                              isActive
+                            className={`ml-auto text-[10px] px-1.5 py-0 h-5 min-w-5 flex items-center justify-center font-bold ${isActive
                                 ? "bg-white/20 text-white border-white/30"
                                 : "bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-0 shadow-sm"
-                            }`}
+                              }`}
                           >
                             {item.badge}
                           </Badge>
@@ -241,40 +230,7 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {navComing.length > 0 && (
-          <>
-            <SidebarSeparator className="mx-4 my-2" />
 
-            <SidebarGroup className="w-full">
-              <SidebarGroupLabel className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5 px-2 bg-white w-full">
-                <Sparkles className="w-3 h-3 text-slate-600" />
-                Bientôt Disponible
-              </SidebarGroupLabel>
-              <SidebarGroupContent className="bg-white w-full overflow-x-hidden">
-                <SidebarMenu>
-                  {navComing.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton
-                          asChild
-                          tooltip={`${item.title} (Bientôt)`}
-                          className="text-slate-700 hover:bg-slate-100 transition-all font-semibold bg-white hover:text-slate-900"
-                          onClick={(e) => handleComingSoon(e, item.title)}
-                      >
-                        <a href={item.url} className="flex items-center gap-2 w-full min-w-0">
-                          <item.icon className="text-slate-600 shrink-0" strokeWidth={2.5} />
-                          <span className="text-sm font-semibold truncate flex-1 min-w-0">{item.title}</span>
-                          <Badge variant="outline" className="ml-auto text-[9px] bg-slate-100 text-slate-700 px-1.5 py-0 border-slate-400 font-bold shrink-0">
-                            Bientôt
-                          </Badge>
-                        </a>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </>
-        )}
 
         <SidebarSeparator className="mx-4 my-2" />
 
@@ -284,57 +240,57 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
           </SidebarGroupLabel>
           <SidebarGroupContent className="bg-white w-full overflow-x-hidden">
             <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    asChild
-                    tooltip="Notifications"
-                    className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
-                  >
-                    <a href={isMedecin ? "/medecin/notifications" : isClinique ? "/clinique/notifications" : "/patient/notifications"} className="flex items-center gap-2 relative w-full min-w-0">
-                      <Bell className="text-slate-700 shrink-0" strokeWidth={2.5} />
-                      <span className="truncate flex-1 min-w-0">Notifications</span>
-                      <Badge className="ml-auto text-[10px] px-1.5 py-0 h-5 min-w-5 flex items-center justify-center font-bold bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-sm shrink-0">
-                        3
-                      </Badge>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    asChild
-                    tooltip="Mon Profil"
-                    className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
-                  >
-                    <a href={isMedecin ? "/medecin/profile" : isClinique ? "/clinique/profile" : "/patient/profile"} className="flex items-center gap-2 w-full min-w-0">
-                      <User className="text-slate-700 shrink-0" strokeWidth={2.5} />
-                      <span className="truncate flex-1 min-w-0">Mon Profil</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    asChild
-                    tooltip="Paramètres"
-                    className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
-                  >
-                    <a href={isMedecin ? "/medecin/settings" : isClinique ? "/clinique/settings" : "/patient/settings"} className="flex items-center gap-2 w-full min-w-0">
-                      <Settings className="text-slate-700 shrink-0" strokeWidth={2.5} />
-                      <span className="truncate flex-1 min-w-0">Paramètres</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    asChild
-                    tooltip="Centre d'aide"
-                    className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
-                  >
-                    <a href={isMedecin ? "/medecin/help" : isClinique ? "/clinique/help" : "/patient/help"} className="flex items-center gap-2 w-full min-w-0">
-                      <HelpCircle className="text-slate-700 shrink-0" strokeWidth={2.5} />
-                      <span className="truncate flex-1 min-w-0">Centre d'Aide</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  tooltip="Notifications"
+                  className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
+                >
+                  <a href={isMedecin ? "/medecin/notifications" : isClinique ? "/clinique/notifications" : "/patient/notifications"} className="flex items-center gap-2 relative w-full min-w-0">
+                    <Bell className="text-slate-700 shrink-0" strokeWidth={2.5} />
+                    <span className="truncate flex-1 min-w-0">Notifications</span>
+                    <Badge className="ml-auto text-[10px] px-1.5 py-0 h-5 min-w-5 flex items-center justify-center font-bold bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-sm shrink-0">
+                      3
+                    </Badge>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  tooltip="Mon Profil"
+                  className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
+                >
+                  <a href={isMedecin ? "/medecin/profile" : isClinique ? "/clinique/profile" : "/patient/profile"} className="flex items-center gap-2 w-full min-w-0">
+                    <User className="text-slate-700 shrink-0" strokeWidth={2.5} />
+                    <span className="truncate flex-1 min-w-0">Mon Profil</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  tooltip="Paramètres"
+                  className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
+                >
+                  <a href={isMedecin ? "/medecin/settings" : isClinique ? "/clinique/settings" : "/patient/settings"} className="flex items-center gap-2 w-full min-w-0">
+                    <Settings className="text-slate-700 shrink-0" strokeWidth={2.5} />
+                    <span className="truncate flex-1 min-w-0">Paramètres</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  tooltip="Centre d'aide"
+                  className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
+                >
+                  <a href={isMedecin ? "/medecin/help" : isClinique ? "/clinique/help" : "/patient/help"} className="flex items-center gap-2 w-full min-w-0">
+                    <HelpCircle className="text-slate-700 shrink-0" strokeWidth={2.5} />
+                    <span className="truncate flex-1 min-w-0">Centre d'Aide</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
