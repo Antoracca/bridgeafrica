@@ -145,40 +145,40 @@ const CustomVisual = ({ type }: { type: string }) => {
 const steps = [
   {
     id: "01",
-    title: "Analyse Expertisée",
-    description: "Évaluation complète par notre comité médical. Nous analysons votre dossier clinique, vos besoins spécifiques et vos contraintes budgétaires pour définir le profil exact de l'établissement requis.",
-    icon: Brain,
-    features: ["Audit du dossier médical", "Étude de faisabilité", "Définition du cahier des charges"],
-    visualType: "audit",
+    title: "Numérisation & Chiffrement HDS",
+    description: "Dès votre inscription, votre dossier médical est numérisé et stocké dans notre coffre-fort hautement sécurisé. Vos données sont chiffrées de bout-en-bout (AES-256) sur des serveurs certifiés Hébergeur de Données de Santé (HDS).",
+    icon: Search,
+    features: ["Chiffrement Militaire AES-256", "Certification HDS Européenne", "Contrôle strict des accès"],
+    visualType: "search",
     color: "from-blue-600 to-indigo-600",
     bgColor: "bg-blue-50"
   },
   {
     id: "02",
-    title: "Recherche Intelligente",
-    description: "Nos algorithmes et nos experts scrutent un réseau de plus de 300 établissements certifiés (JCI, HAS) à travers le monde pour identifier les pôles d'excellence correspondant à votre pathologie.",
-    icon: Search,
-    features: ["Filtrage multi-critères", "Vérification des accréditations", "Analyse des taux de réussite"],
-    visualType: "search",
+    title: "Double Validation : IA + Experts",
+    description: "Notre intelligence artificielle propriétaire pré-analyse votre dossier puis le transmet à notre comité médical expert. Cette double validation garantit une précision absolue dans l'identification de vos besoins cliniques.",
+    icon: Brain,
+    features: ["Pré-Analyse Algorithmique", "Validation par Comité Médical", "Identification du parcours optimal"],
+    visualType: "audit",
     color: "from-cyan-500 to-blue-500",
     bgColor: "bg-cyan-50"
   },
   {
     id: "03",
-    title: "Décision Transparente",
-    description: "Nous vous présentons une sélection d'options viables, documentées par des données objectives. Vous comparez les devis, les délais et les infrastructures en toute transparence, sans frais cachés.",
+    title: "Transmission Directe aux Hôpitaux",
+    description: "Une fois le plan validé, MediBridge transmet instantanément et de manière chiffrée votre dossier clinique aux services hospitaliers partenaires pertinents, garantissant une prise en charge prioritaire et sans délai.",
     icon: Target,
-    features: ["Comparatif détaillé", "Transparence tarifaire", "Consultation pré-départ avec le chirurgien"],
+    features: ["Connexion sécurisée aux cliniques", "Génération rapide de devis", "Réseau premium JCI/HAS"],
     visualType: "data",
     color: "from-emerald-500 to-teal-500",
     bgColor: "bg-emerald-50"
   },
   {
     id: "04",
-    title: "Accompagnement Suprême",
-    description: "Déléguez la logistique. De la réservation des vols et de l'hôtel jusqu'aux transferts VIP et au suivi post-opératoire une fois rentré chez vous, notre équipe veille sur chaque étape.",
+    title: "Orchestration Logistique Totale",
+    description: "Plus qu'une application médicale, MediBridge orchestre l'ensemble de votre séjour avec une précision chirurgicale : téléconsultation, visas, vols, transferts VIP et suivi post-opératoire.",
     icon: HeartHandshake,
-    features: ["Conciergerie médicale", "Transferts privés", "Suivi post-opératoire continu"],
+    features: ["Conciergerie VIP experte", "Téléconsultations chiffrées", "Suivi post-opératoire"],
     visualType: "supp",
     color: "from-purple-600 to-fuchsia-600",
     bgColor: "bg-purple-50"
@@ -205,16 +205,16 @@ export function HowItWorks() {
         >
           <div className="inline-flex items-center gap-3 mb-6 px-4 py-2 rounded-full bg-slate-50 border border-slate-100 shadow-sm">
             <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
-            <span className="text-sm font-bold tracking-[0.15em] uppercase text-slate-700">Méthodologie Certifiée</span>
+            <span className="text-sm font-bold tracking-[0.15em] uppercase text-slate-700">Technologie MediBridge</span>
           </div>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15] mb-8">
             L'excellence médicale, <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-cyan-500">
-              étape par étape.
+              à portée de main.
             </span>
           </h2>
-          <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed max-w-2xl mx-auto">
-            Un processus rigoureux en 4 étapes, conçu pour éliminer l'incertitude du voyage médical. Zéro compromis sur la qualité, zéro stress logistique.
+          <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed max-w-3xl mx-auto relative z-20">
+            Plus qu'une simple application, MediBridge orchestre votre parcours de soins avec une précision chirurgicale. De la numérisation sécurisée à la validation par nos médecins experts.
           </p>
         </motion.div>
 
