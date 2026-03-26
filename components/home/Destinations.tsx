@@ -184,7 +184,7 @@ export function Destinations() {
                     src={destinations[activeDest].image}
                     alt={destinations[activeDest].city}
                     fill
-                    className="object-cover transition-transform duration-10000 group-hover:scale-110"
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
                     priority
                   />
 

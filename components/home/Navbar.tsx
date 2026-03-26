@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
-import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Stethoscope, User, LogOut, LogIn, ChevronDown, Building2, HeartPulse, Activity, ArrowRight, MapPin, Globe, Eye, Scissors, Brain, Baby, Bone, ShieldCheck, Plane, Languages, FileText } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
@@ -56,12 +56,14 @@ export function Navbar() {
 
   const [user, setUser] = useState<{ id: string; role: string } | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const { scrollY } = useScroll()
   const router = useRouter()
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    setIsScrolled(latest > 50)
-  })
+  // Listener scroll natif passif — beaucoup plus léger que useScroll de Framer Motion
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 50)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   const scrollToSection = (id: string) => {
     setMobileMenuOpen(false)
@@ -72,6 +74,7 @@ export function Navbar() {
   }
 
   useEffect(() => {
+    // Client créé une seule fois par montage, pas à chaque render
     const supabase = createClient()
     const checkUser = async () => {
       try {

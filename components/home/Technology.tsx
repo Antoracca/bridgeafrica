@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Brain, FileText, CheckCircle, Activity, SignalHigh, Wifi, Battery, 
@@ -9,6 +9,7 @@ import {
   Stethoscope, Building2, Lock, FileCheck
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
 
 // --- UTILS ---
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
@@ -16,13 +17,29 @@ const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 // --- COMPOSANT SIMULATEUR ---
 const TechSimulator = () => {
   const [step, setStep] = useState<string>('dashboard')
-  
+  const containerRef = useRef<HTMLDivElement>(null)
+  const isVisible = useRef(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { isVisible.current = entry.isIntersecting },
+      { threshold: 0.1 }
+    )
+    if (containerRef.current) observer.observe(containerRef.current)
+    return () => observer.disconnect()
+  }, [])
+
   // Séquence principale améliorée et ralentie
   useEffect(() => {
     let isMounted = true
-    
+
     const sequence = async () => {
       while(isMounted) {
+        // Pause si hors écran pour ne pas consommer le CPU inutilement
+        if (!isVisible.current) {
+          await wait(500)
+          continue
+        }
         // 1. DASHBOARD (4s) - Point de départ
         setStep('dashboard')
         await wait(4000)
@@ -66,7 +83,7 @@ const TechSimulator = () => {
 
   return (
     // AJUSTEMENT MOBILE: Scale down sur mobile, taille normale sur desktop
-    <div className="relative w-full max-w-[280px] md:max-w-[380px] mx-auto perspective-1000 transform scale-90 md:scale-100 origin-top">
+    <div ref={containerRef} className="relative w-full max-w-[280px] md:max-w-[380px] mx-auto perspective-1000 transform scale-90 md:scale-100 origin-top">
       {/* CADRE IPHONE 15 PRO */}
       <div className="relative bg-black rounded-[2.5rem] md:rounded-[3.5rem] shadow-2xl border-[4px] md:border-[6px] border-[#1a1a1a] ring-1 ring-white/20 overflow-hidden h-[600px] md:h-[800px] flex flex-col">
         
@@ -254,8 +271,8 @@ const TechSimulator = () => {
                <motion.div key="expert" initial={{x: 100}} animate={{x: 0}} exit={{x: -100}} className="h-full bg-white pt-14 px-6 flex flex-col">
                    <div className="flex items-center justify-center mb-6">
                        <div className="relative">
-                           <div className="w-20 h-20 rounded-full bg-slate-100 border-2 border-white shadow-xl overflow-hidden">
-                               <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Doctor" className="w-full h-full object-cover"/>
+                           <div className="w-20 h-20 rounded-full bg-slate-100 border-2 border-white shadow-xl overflow-hidden relative">
+                               <Image src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Doctor" fill className="object-cover"/>
                            </div>
                            <div className="absolute bottom-0 right-0 w-6 h-6 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
                                <CheckCircle size={12} className="text-white"/>

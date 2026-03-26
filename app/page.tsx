@@ -1,14 +1,16 @@
+import dynamic from 'next/dynamic'
 import { Navbar } from '@/components/home/Navbar'
 import { Hero } from '@/components/home/Hero'
-import { Destinations } from '@/components/home/Destinations'
-import { HowItWorks } from '@/components/home/HowItWorks'
-import { TopClinics } from '@/components/home/TopClinics'
-import { TopDoctors } from '@/components/home/TopDoctors'
-import { Technology } from '@/components/home/Technology'
-import { Packages } from '@/components/home/Packages'
-import { Footer } from '@/components/home/Footer'
 import { Button } from '@/components/ui/button'
 import { HeartPulse, CheckCircle } from 'lucide-react'
+
+const Destinations = dynamic(() => import('@/components/home/Destinations').then(m => ({ default: m.Destinations })))
+const HowItWorks   = dynamic(() => import('@/components/home/HowItWorks').then(m => ({ default: m.HowItWorks })))
+const TopClinics   = dynamic(() => import('@/components/home/TopClinics').then(m => ({ default: m.TopClinics })))
+const TopDoctors   = dynamic(() => import('@/components/home/TopDoctors').then(m => ({ default: m.TopDoctors })))
+const Technology   = dynamic(() => import('@/components/home/Technology').then(m => ({ default: m.Technology })))
+const Packages     = dynamic(() => import('@/components/home/Packages').then(m => ({ default: m.Packages })))
+const Footer       = dynamic(() => import('@/components/home/Footer').then(m => ({ default: m.Footer })))
 
 export default function Home() {
   return (

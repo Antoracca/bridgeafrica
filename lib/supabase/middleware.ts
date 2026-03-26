@@ -2,6 +2,16 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
+  const pathname = request.nextUrl.pathname
+
+  // Routes protégées seulement — les routes publiques passent directement sans appel Supabase
+  const protectedPaths = ['/dashboard', '/patient', '/medecin', '/clinique', '/admin']
+  const isProtected = protectedPaths.some(path => pathname.startsWith(path))
+
+  if (!isProtected) {
+    return NextResponse.next({ request: { headers: request.headers } })
+  }
+
   const response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -25,14 +35,10 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  // Vérifier la session utilisateur
+  // Vérifier la session utilisateur (uniquement pour routes protégées)
   const {
     data: { user },
   } = await supabase.auth.getUser()
-
-  // Protection des routes dashboard
-  const protectedPaths = ['/dashboard', '/patient', '/medecin', '/clinique']
-  const isProtected = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path))
 
   if (isProtected && !user) {
     // Si pas d'utilisateur connecté, rediriger vers login

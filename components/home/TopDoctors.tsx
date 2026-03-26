@@ -264,20 +264,9 @@ export function TopDoctors() {
           className="mt-8 md:mt-16 text-center px-4"
         >
           <Link href="/register?role=medecin">
-            <motion.div
-              animate={{ y: [0, -8, 0] }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              whileHover={{ scale: 1.05, y: 0 }}
-              className="inline-block"
-            >
-              <Button variant="outline" className="w-full sm:w-auto rounded-full border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-4 sm:px-8 sm:py-6 h-auto text-sm sm:text-lg font-bold shadow-lg whitespace-normal text-center leading-tight">
-                Vous êtes médecin ? Devenez partenaire
-              </Button>
-            </motion.div>
+            <Button variant="outline" className="w-full sm:w-auto rounded-full border-blue-600 text-blue-600 hover:bg-blue-50 hover:scale-105 px-6 py-4 sm:px-8 sm:py-6 h-auto text-sm sm:text-lg font-bold shadow-lg whitespace-normal text-center leading-tight transition-transform">
+              Vous êtes médecin ? Devenez partenaire
+            </Button>
           </Link>
         </motion.div>
       </div>

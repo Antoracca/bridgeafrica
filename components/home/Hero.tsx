@@ -5,7 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Search, MapPin, Plane, Brain, Star, ChevronRight, CheckCircle2, ShieldCheck, Stethoscope, Activity } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import dynamic from 'next/dynamic'
-import { DotLottieReact } from '@lottiefiles/dotlottie-react'
+import Image from 'next/image'
+
+const DotLottieReact = dynamic(
+  () => import('@lottiefiles/dotlottie-react').then(m => m.DotLottieReact),
+  { ssr: false, loading: () => <div className="w-full h-full rounded-full bg-slate-50 animate-pulse" /> }
+)
 
 const FADE_UP_ANIMATION_VARIANTS = {
   hidden: { opacity: 0, y: 30 },
@@ -117,24 +122,9 @@ export function Hero() {
       <div className="absolute inset-0 bg-white -z-20" />
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:40px_40px] opacity-60 -z-10" />
 
-      {/* Animated Orbs - Subtle and clean */}
-      <motion.div
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.15, 0.3, 0.15],
-          rotate: [0, 90, 0]
-        }}
-        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-        className="absolute top-[-10%] right-[-5%] w-[800px] h-[800px] bg-gradient-to-tr from-blue-100 to-teal-50 rounded-full blur-[120px] -z-10 pointer-events-none"
-      />
-      <motion.div
-        animate={{
-          scale: [1, 1.5, 1],
-          opacity: [0.1, 0.2, 0.1],
-        }}
-        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-gradient-to-tr from-indigo-50 to-blue-50 rounded-full blur-[100px] -z-10 pointer-events-none"
-      />
+      {/* Static Orbs - decorative background, no animation */}
+      <div className="absolute top-[-10%] right-[-5%] w-[800px] h-[800px] bg-gradient-to-tr from-blue-100 to-teal-50 rounded-full blur-[120px] opacity-20 -z-10 pointer-events-none" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-gradient-to-tr from-indigo-50 to-blue-50 rounded-full blur-[100px] opacity-15 -z-10 pointer-events-none" />
 
       <div className="container mx-auto px-4 md:px-6 relative z-10 grid xl:grid-cols-12 gap-12 items-center">
 
@@ -161,7 +151,7 @@ export function Hero() {
                   "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80",
                   "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80"
                 ].map((img, i) => (
-                  <img key={i} src={img} alt={`Patient ${i}`} className="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm" />
+                  <Image key={i} src={img} alt={`Patient ${i}`} width={40} height={40} className="rounded-full border-2 border-white object-cover shadow-sm" />
                 ))}
               </div>
               <div className="text-sm font-medium text-slate-700 flex items-center gap-1.5">
@@ -255,12 +245,8 @@ export function Hero() {
 
         {/* === RIGHT VISUAL COMPOSITION (Lottie Animation) === */}
         <div className="hidden xl:flex col-span-5 relative h-[700px] w-full items-center justify-center">
-          {/* Background decorative circles */}
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border-[1.5px] border-dashed border-slate-200 rounded-full opacity-40 pointer-events-none"
-          />
+          {/* Background decorative circles - CSS spin (GPU-composited, no JS) */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border-[1.5px] border-dashed border-slate-200 rounded-full opacity-40 pointer-events-none animate-[spin_60s_linear_infinite]" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] bg-gradient-to-tr from-blue-50/50 to-cyan-50/50 rounded-full pointer-events-none" />
 
           <AnimatePresence mode="wait">

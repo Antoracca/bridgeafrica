@@ -1,6 +1,7 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
 import { Star, CheckCircle, ArrowRight, Users, TrendingUp, Award, MapPin, Calendar, Sparkles, Shield, Heart, Zap, Activity, Building2, Plane, Globe, Stethoscope } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
@@ -270,16 +271,19 @@ const ClinicCard = ({ clinic, featured = false }: { clinic: typeof clinics[0], f
 }
 
 export function TopClinics() {
+  const bannerRef = useRef(null)
+  const isBannerVisible = useInView(bannerRef, { margin: "200px 0px 200px 0px" })
+
   return (
     <section className="bg-white relative overflow-hidden">
       {/* Bandeau défilant en haut */}
-      <div className="relative bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 py-4 md:py-5 xl:py-6 2xl:py-7 overflow-hidden">
+      <div ref={bannerRef} className="relative bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 py-4 md:py-5 xl:py-6 2xl:py-7 overflow-hidden">
         <div className="absolute inset-0 bg-white/5 backdrop-blur-sm" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px)] bg-[size:40px_40px]" />
 
         <motion.div
           className="flex gap-8 md:gap-12 xl:gap-16 2xl:gap-20 whitespace-nowrap relative z-10"
-          animate={{ x: [0, -3000] }}
+          animate={isBannerVisible ? { x: [0, -3000] } : false}
           transition={{
             duration: 50,
             repeat: Infinity,
@@ -451,19 +455,9 @@ export function TopClinics() {
           </Link>
 
           <Link href="/register?role=clinique" className="w-full sm:w-auto">
-            <motion.div
-              animate={{ y: [0, -8, 0] }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              whileHover={{ scale: 1.05, y: 0 }}
-            >
-              <Button variant="outline" className="w-full sm:w-auto rounded-full border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-4 sm:px-8 sm:py-5 h-auto text-sm sm:text-base font-bold whitespace-normal text-center leading-tight shadow-lg">
-                Vous représentez une clinique ? <br className="hidden sm:block md:hidden"/> Devenez partenaire
-              </Button>
-            </motion.div>
+            <Button variant="outline" className="w-full sm:w-auto rounded-full border-blue-600 text-blue-600 hover:bg-blue-50 hover:scale-105 px-6 py-4 sm:px-8 sm:py-5 h-auto text-sm sm:text-base font-bold whitespace-normal text-center leading-tight shadow-lg transition-transform">
+              Vous représentez une clinique ? <br className="hidden sm:block md:hidden"/> Devenez partenaire
+            </Button>
           </Link>
         </motion.div>
         </div>

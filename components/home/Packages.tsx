@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { CheckCircle, Clock, ShieldCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import Image from 'next/image'
 
 const packages = [
   {
@@ -106,6 +107,7 @@ const packages = [
 
 export function Packages() {
   const scrollRef = useRef<HTMLDivElement>(null)
+  const scrollThrottleRef = useRef<NodeJS.Timeout | null>(null)
   const [autoScroll, setAutoScroll] = useState(true)
   const [activeIndex, setActiveIndex] = useState(0)
 
@@ -137,17 +139,21 @@ export function Packages() {
     return () => clearInterval(interval)
   }, [autoScroll, activeIndex])
 
-  // Détection manuelle du scroll pour mettre à jour l'index actif
+  // Détection manuelle du scroll pour mettre à jour l'index actif — throttlé à 50ms
   const handleScroll = () => {
-     if (scrollRef.current) {
+    if (scrollThrottleRef.current) return
+    scrollThrottleRef.current = setTimeout(() => {
+      scrollThrottleRef.current = null
+      if (scrollRef.current) {
         const container = scrollRef.current
         const center = container.scrollLeft + (container.clientWidth / 2)
         const cardWidth = container.children[0].clientWidth + 16
         const newIndex = Math.floor(center / cardWidth)
         if (newIndex !== activeIndex && newIndex >= 0 && newIndex < packages.length) {
-           setActiveIndex(newIndex)
+          setActiveIndex(newIndex)
         }
-     }
+      }
+    }, 50)
   }
 
   return (
@@ -191,7 +197,7 @@ export function Packages() {
                  >
                     {/* Image Compacte */}
                     <div className="relative h-[150px] shrink-0">
-                       <img src={pkg.image} alt={pkg.title} className="w-full h-full object-cover" />
+                       <Image src={pkg.image} alt={pkg.title} fill className="object-cover" />
                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                        {pkg.highlight && (
                           <span className="absolute top-3 right-3 bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-md">
@@ -252,10 +258,11 @@ export function Packages() {
             >
               <div className="relative overflow-hidden w-full h-[220px]">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 opacity-80 group-hover:opacity-90 transition-opacity"></div>
-                <img 
-                  src={pkg.image} 
-                  alt={pkg.title} 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                <Image
+                  src={pkg.image}
+                  alt={pkg.title}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute top-4 left-4 z-20 flex gap-2">
                      <div className="bg-white/95 backdrop-blur-md text-slate-900 text-[10px] font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">

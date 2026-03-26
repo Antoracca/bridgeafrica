@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 import { Brain, Search, Target, HeartHandshake, CheckCircle2, Activity, Globe, PieChart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -8,13 +9,17 @@ import { ArrowRight } from "lucide-react";
 
 // --- CUSTOM HIGH-END PRESTIGE VISUALS (Replaces Lottie) ---
 const CustomVisual = ({ type }: { type: string }) => {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { margin: "0px 0px -100px 0px" })
+  const repeat = isInView ? Infinity : 0
+
   if (type === "audit") {
     return (
-      <div className="relative w-full h-full flex items-center justify-center">
+      <div ref={ref} className="relative w-full h-full flex items-center justify-center">
         {/* Abstract dashboard UI */}
         <motion.div
           animate={{ y: [0, -10, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 4, repeat, ease: "easeInOut" }}
           className="absolute w-40 h-48 bg-white/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-100/50 backdrop-blur-sm z-10 flex flex-col p-4"
         >
           <div className="w-full flex items-center gap-2 mb-4">
@@ -25,21 +30,21 @@ const CustomVisual = ({ type }: { type: string }) => {
           <div className="flex-1 w-full bg-slate-50 rounded-lg mb-3 overflow-hidden relative">
             <motion.div
               animate={{ height: ["0%", "100%", "70%", "100%"] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              transition={{ duration: 3, repeat, ease: "easeInOut" }}
               className="absolute bottom-0 left-0 w-full bg-blue-100"
             />
             <Activity className="absolute inset-0 m-auto text-blue-500 w-8 h-8 z-10" />
           </div>
           <div className="w-full h-2 bg-slate-100 rounded-full mb-2">
-            <motion.div className="h-full bg-indigo-500 rounded-full" animate={{ width: ["0%", "100%"] }} transition={{ duration: 2, repeat: Infinity }} />
+            <motion.div className="h-full bg-indigo-500 rounded-full" animate={{ width: ["0%", "100%"] }} transition={{ duration: 2, repeat }} />
           </div>
           <div className="w-2/3 h-2 bg-slate-100 rounded-full" />
         </motion.div>
 
         {/* Decorative elements behind */}
         <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          animate={{ rotate: isInView ? 360 : 0 }}
+          transition={{ duration: 20, repeat, ease: "linear" }}
           className="absolute w-64 h-64 border-[3px] border-dashed border-blue-200 rounded-full -z-10"
         />
       </div>
@@ -48,10 +53,10 @@ const CustomVisual = ({ type }: { type: string }) => {
 
   if (type === "search") {
     return (
-      <div className="relative w-full h-full flex items-center justify-center">
+      <div ref={ref} className="relative w-full h-full flex items-center justify-center">
         <motion.div
           animate={{ scale: [1, 1.1, 1] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 3, repeat, ease: "easeInOut" }}
           className="relative z-10 w-32 h-32 rounded-full bg-white shadow-2xl flex items-center justify-center border-4 border-cyan-50"
         >
           <Globe className="w-16 h-16 text-cyan-500" />
@@ -59,7 +64,7 @@ const CustomVisual = ({ type }: { type: string }) => {
           {/* Scanning ring */}
           <motion.div
             animate={{ scale: [1, 2], opacity: [0.8, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+            transition={{ duration: 2, repeat, ease: "easeOut" }}
             className="absolute inset-0 border-2 border-cyan-400 rounded-full"
           />
         </motion.div>
@@ -68,11 +73,11 @@ const CustomVisual = ({ type }: { type: string }) => {
         {[0, 1, 2].map((i) => (
           <motion.div
             key={i}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 8, repeat: Infinity, ease: "linear", delay: i * 2 }}
+            animate={{ rotate: isInView ? 360 : 0 }}
+            transition={{ duration: 8, repeat, ease: "linear", delay: i * 2 }}
             className="absolute w-56 h-56 rounded-full border border-slate-100"
           >
-            <div className={`absolute -top-2 left-1/2 w-4 h-4 rounded-full bg-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)]`} />
+            <div className="absolute -top-2 left-1/2 w-4 h-4 rounded-full bg-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
           </motion.div>
         ))}
       </div>
@@ -81,14 +86,14 @@ const CustomVisual = ({ type }: { type: string }) => {
 
   if (type === "data") {
     return (
-      <div className="relative w-full h-full flex items-center justify-center">
+      <div ref={ref} className="relative w-full h-full flex items-center justify-center">
         <div className="relative z-10 flex gap-4 items-end h-40">
           {[40, 70, 45, 90, 60].map((height, i) => (
             <motion.div
               key={i}
               initial={{ height: 0 }}
-              animate={{ height: `${height}%` }}
-              transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse", delay: i * 0.2 }}
+              animate={{ height: isInView ? `${height}%` : 0 }}
+              transition={{ duration: 1.5, repeat, repeatType: "reverse", delay: i * 0.2 }}
               className="w-10 bg-gradient-to-t from-emerald-500 to-teal-300 rounded-t-lg shadow-lg relative group"
             >
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-emerald-200 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -97,8 +102,8 @@ const CustomVisual = ({ type }: { type: string }) => {
         </div>
 
         <motion.div
-          animate={{ rotate: -360 }}
-          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+          animate={{ rotate: isInView ? -360 : 0 }}
+          transition={{ duration: 30, repeat, ease: "linear" }}
           className="absolute w-72 h-72 border border-slate-200 rounded-full flex items-center justify-center -z-10"
         >
           <PieChart className="w-full h-full text-emerald-50 opacity-50 p-10" />
@@ -109,10 +114,10 @@ const CustomVisual = ({ type }: { type: string }) => {
 
   if (type === "supp") {
     return (
-      <div className="relative w-full h-full flex items-center justify-center">
+      <div ref={ref} className="relative w-full h-full flex items-center justify-center">
         <motion.div
           animate={{ y: [0, -15, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 4, repeat, ease: "easeInOut" }}
           className="relative z-10 bg-white p-6 rounded-3xl shadow-2xl flex flex-col items-center gap-4 border border-purple-50"
         >
           <div className="w-20 h-20 bg-purple-100 flex items-center justify-center rounded-full mb-2">
@@ -126,8 +131,8 @@ const CustomVisual = ({ type }: { type: string }) => {
         {[0, 1, 2, 3].map((i) => (
           <motion.div
             key={i}
-            animate={{ y: [-10, 10, -10], opacity: [0.3, 1, 0.3], scale: [0.8, 1.2, 0.8] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
+            animate={isInView ? { y: [-10, 10, -10], opacity: [0.3, 1, 0.3], scale: [0.8, 1.2, 0.8] } : {}}
+            transition={{ duration: 3, repeat, ease: "easeInOut", delay: i * 0.5 }}
             className={`absolute ${i === 0 ? 'top-10 left-10' : i === 1 ? 'top-20 right-10' : i === 2 ? 'bottom-20 left-16' : 'bottom-10 right-20'}`}
           >
             <Star className="text-purple-300 w-6 h-6 fill-current" />
