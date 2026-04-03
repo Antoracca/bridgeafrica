@@ -1,18 +1,20 @@
+import dynamic from 'next/dynamic'
 import { Navbar } from '@/components/home/Navbar'
 import { Hero } from '@/components/home/Hero'
-import { Destinations } from '@/components/home/Destinations'
-import { HowItWorks } from '@/components/home/HowItWorks'
-import { TopClinics } from '@/components/home/TopClinics'
-import { TopDoctors } from '@/components/home/TopDoctors'
-import { Technology } from '@/components/home/Technology'
-import { Packages } from '@/components/home/Packages'
-import { Footer } from '@/components/home/Footer'
 import { Button } from '@/components/ui/button'
 import { HeartPulse, CheckCircle } from 'lucide-react'
 
+const Destinations = dynamic(() => import('@/components/home/Destinations').then(m => ({ default: m.Destinations })))
+const HowItWorks   = dynamic(() => import('@/components/home/HowItWorks').then(m => ({ default: m.HowItWorks })))
+const TopClinics   = dynamic(() => import('@/components/home/TopClinics').then(m => ({ default: m.TopClinics })))
+const TopDoctors   = dynamic(() => import('@/components/home/TopDoctors').then(m => ({ default: m.TopDoctors })))
+const Technology   = dynamic(() => import('@/components/home/Technology').then(m => ({ default: m.Technology })))
+const Packages     = dynamic(() => import('@/components/home/Packages').then(m => ({ default: m.Packages })))
+const Footer       = dynamic(() => import('@/components/home/Footer').then(m => ({ default: m.Footer })))
+
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white font-sans selection:bg-blue-100 selection:text-blue-900">
+    <main className="min-h-screen bg-white font-sans selection:bg-brand-teal-pale selection:text-brand-navy">
       <Navbar />
       
       {/* 1. Hero Section */}
@@ -40,18 +42,18 @@ export default function Home() {
       <section className="py-24 bg-white relative overflow-hidden">
          {/* Accents de couleur subtils en fond */}
          <div className="absolute top-0 left-0 w-full h-full bg-slate-50/50"></div>
-         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-50 rounded-full blur-[100px] translate-x-1/3 -translate-y-1/3"></div>
+         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-teal-pale rounded-full blur-[100px] translate-x-1/3 -translate-y-1/3"></div>
          
-         <div className="container mx-auto px-4 relative z-10">
+         <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-14 relative z-10">
             <div className="max-w-5xl mx-auto text-center">
-               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-sm font-bold mb-8">
-                  <HeartPulse size={16} className="text-blue-600" />
+               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-teal-pale border border-brand-teal-border text-brand-teal-dark text-sm font-bold mb-8">
+                  <HeartPulse size={16} className="text-brand-teal" />
                   Votre santé est notre priorité
                </div>
                
                <h2 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-8 tracking-tight leading-tight">
                   Prêt à bénéficier des meilleurs <br/>
-                  <span className="text-blue-600 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">soins internationaux ?</span>
+                  <span className="text-brand-teal text-transparent bg-clip-text bg-gradient-to-r from-brand-navy to-brand-teal-dark">soins internationaux ?</span>
                </h2>
                
                <p className="text-lg md:text-xl text-slate-600 mb-12 max-w-2xl mx-auto leading-relaxed">
@@ -59,7 +61,7 @@ export default function Home() {
                </p>
                
                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-10 h-16 rounded-full shadow-xl shadow-blue-200 w-full sm:w-auto font-bold transition-all hover:scale-105 active:scale-95">
+                  <Button size="lg" className="bg-brand-teal hover:bg-brand-teal-dark text-white text-lg px-10 h-16 rounded-full shadow-xl shadow-brand-teal-border w-full sm:w-auto font-bold transition-all hover:scale-105 active:scale-95">
                      Créer mon dossier gratuit
                   </Button>
                   <Button size="lg" variant="outline" className="bg-white border-slate-200 text-black hover:bg-slate-50 hover:border-slate-300 text-lg px-10 h-16 rounded-full w-full sm:w-auto font-bold transition-all hover:scale-105 active:scale-95 shadow-sm">

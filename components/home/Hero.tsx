@@ -5,7 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Search, MapPin, Plane, Brain, Star, ChevronRight, CheckCircle2, ShieldCheck, Stethoscope, Activity } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import dynamic from 'next/dynamic'
-import { DotLottieReact } from '@lottiefiles/dotlottie-react'
+import Image from 'next/image'
+
+const DotLottieReact = dynamic(
+  () => import('@lottiefiles/dotlottie-react').then(m => m.DotLottieReact),
+  { ssr: false, loading: () => <div className="w-full h-full rounded-full bg-slate-50 animate-pulse" /> }
+)
 
 const FADE_UP_ANIMATION_VARIANTS = {
   hidden: { opacity: 0, y: 30 },
@@ -35,7 +40,7 @@ export function Hero() {
         },
         {
           icon: <Plane size={24} strokeWidth={2.5} />,
-          color: 'from-blue-100 to-blue-50 text-blue-600',
+          color: 'from-brand-teal-pale/50 to-white text-brand-teal',
           title: 'Pack Complet',
           desc: 'Soins + Vol + Hôtel',
           position: 'bottom-32 -right-4',
@@ -111,30 +116,15 @@ export function Hero() {
   }, [words.length])
 
   return (
-    <section className="relative min-h-[95vh] flex items-center justify-center overflow-hidden pt-28 pb-20 bg-white" suppressHydrationWarning>
+    <section className="relative min-h-[95vh] flex items-center justify-center overflow-hidden pt-32 pb-20 bg-white" suppressHydrationWarning>
 
       {/* Dynamic Backgrounds - Pure White Vibe */}
       <div className="absolute inset-0 bg-white -z-20" />
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:40px_40px] opacity-60 -z-10" />
 
-      {/* Animated Orbs - Subtle and clean */}
-      <motion.div
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.15, 0.3, 0.15],
-          rotate: [0, 90, 0]
-        }}
-        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-        className="absolute top-[-10%] right-[-5%] w-[800px] h-[800px] bg-gradient-to-tr from-blue-100 to-teal-50 rounded-full blur-[120px] -z-10 pointer-events-none"
-      />
-      <motion.div
-        animate={{
-          scale: [1, 1.5, 1],
-          opacity: [0.1, 0.2, 0.1],
-        }}
-        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-gradient-to-tr from-indigo-50 to-blue-50 rounded-full blur-[100px] -z-10 pointer-events-none"
-      />
+      {/* Static Orbs - decorative background, no animation */}
+      <div className="absolute top-[-10%] right-[-5%] w-[800px] h-[800px] bg-gradient-to-tr from-brand-teal-pale to-white rounded-full blur-[120px] opacity-20 -z-10 pointer-events-none" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-gradient-to-tr from-brand-teal-pale/30 to-white rounded-full blur-[100px] opacity-15 -z-10 pointer-events-none" />
 
       <div className="container mx-auto px-4 md:px-6 relative z-10 grid xl:grid-cols-12 gap-12 items-center">
 
@@ -153,27 +143,12 @@ export function Hero() {
               },
             }}
           >
-            {/* Trust Badge */}
-            <motion.div variants={FADE_UP_ANIMATION_VARIANTS} className="flex items-center justify-center xl:justify-start gap-4 mb-10 w-fit mx-auto xl:mx-0 bg-white/80 backdrop-blur-md px-5 py-2.5 rounded-full border border-slate-100 shadow-sm">
-              <div className="flex -space-x-4">
-                {[
-                  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80",
-                  "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80",
-                  "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80"
-                ].map((img, i) => (
-                  <img key={i} src={img} alt={`Patient ${i}`} className="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm" />
-                ))}
-              </div>
-              <div className="text-sm font-medium text-slate-700 flex items-center gap-1.5">
-                <div className="flex text-amber-400">
-                  <Star size={14} fill="currentColor" />
-                  <Star size={14} fill="currentColor" />
-                  <Star size={14} fill="currentColor" />
-                  <Star size={14} fill="currentColor" />
-                  <Star size={14} fill="currentColor" />
-                </div>
-                <span className="text-slate-900 font-bold ml-1">4.9/5</span> (1000+ avis)
-              </div>
+            {/* EVASAN Label (Minimaliste & Pro) */}
+            <motion.div variants={FADE_UP_ANIMATION_VARIANTS} className="flex items-center justify-center xl:justify-start gap-3 mb-8 w-fit mx-auto xl:mx-0">
+              <span className="h-px w-6 lg:w-8 bg-brand-teal rounded-full"></span>
+              <span className="text-[12px] sm:text-[13px] font-bold text-slate-400 uppercase tracking-[0.2em]">
+                Expertise & Évacuation Sanitaire (EVASAN)
+              </span>
             </motion.div>
 
             {/* Main Headline */}
@@ -187,7 +162,7 @@ export function Hero() {
                     animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
                     exit={{ y: -20, opacity: 0, filter: 'blur(10px)' }}
                     transition={{ type: "spring", stiffness: 200, damping: 20, duration: 0.5 }}
-                    className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-500 col-start-1 row-start-1"
+                    className="text-transparent bg-clip-text bg-gradient-to-r from-brand-navy via-brand-teal to-brand-teal-light col-start-1 row-start-1"
                   >
                     {words[currentWordIndex]}
                   </motion.span>
@@ -197,16 +172,16 @@ export function Hero() {
 
             <motion.p variants={FADE_UP_ANIMATION_VARIANTS} className="text-lg sm:text-xl text-slate-600 mb-10 leading-relaxed max-w-2xl mx-auto xl:mx-0 font-medium">
               Votre santé mérite les meilleurs experts mondiaux. De la consultation au voyage, nous organisons tout pour vous avec
-              <span className="text-blue-600 font-bold bg-blue-50 px-2.5 py-1 rounded-md mx-1.5 shadow-sm border border-blue-100">0 tracas</span>.
+              <span className="text-brand-teal font-bold bg-brand-teal-pale px-2.5 py-1 rounded-md mx-1.5 shadow-sm border border-brand-teal-border">0 tracas</span>.
             </motion.p>
 
             {/* Interactive Search Bar */}
             <motion.div variants={FADE_UP_ANIMATION_VARIANTS} className="relative w-full max-w-2xl mx-auto xl:mx-0 group mb-12 cursor-text">
-              <div className="absolute -inset-1.5 bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-400 rounded-[1.25rem] blur opacity-20 group-hover:opacity-40 transition duration-700"></div>
+              <div className="absolute -inset-2 bg-gradient-to-r from-brand-teal-pale via-brand-teal-light to-brand-teal-pale rounded-[1.5rem] blur-xl opacity-30 group-hover:opacity-60 transition duration-700"></div>
 
-              <div className="relative bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 p-2 flex flex-col sm:flex-row gap-2 transition-all duration-300 z-10">
-                <div className="flex-1 flex items-center gap-3 px-5 h-14 sm:h-auto bg-slate-50/80 rounded-xl border border-slate-100/50 focus-within:bg-white focus-within:ring-2 ring-blue-500/20 transition-all">
-                  <Search className="text-blue-500 w-5 h-5 flex-shrink-0" />
+              <div className="relative bg-white/60 backdrop-blur-2xl rounded-2xl shadow-2xl shadow-slate-200/30 border border-white/80 p-2.5 flex flex-col sm:flex-row gap-2 transition-all duration-500 z-10 group-hover:bg-white/80">
+                <div className="flex-1 flex items-center gap-3 px-5 h-14 sm:h-auto bg-slate-50/50 rounded-xl border border-white/50 focus-within:bg-white focus-within:border-brand-teal-light focus-within:ring-4 ring-brand-teal-pale/50 transition-all">
+                  <Search className="text-brand-teal w-5 h-5 flex-shrink-0" />
                   <input
                     type="text"
                     value={searchQuery}
@@ -216,12 +191,12 @@ export function Hero() {
                     suppressHydrationWarning
                   />
                 </div>
-                <Button className="w-full sm:w-auto relative group/btn rounded-xl bg-slate-900 hover:bg-slate-800 text-white px-8 h-14 text-base font-bold shadow-lg transition-all animate-none overflow-hidden">
+                <Button className="w-full sm:w-auto relative group/btn rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-white px-8 h-14 text-base font-bold shadow-lg transition-all animate-none overflow-hidden hover:scale-[1.02]">
                   <span className="relative z-10 flex items-center gap-2">
                     Explorer
                     <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1.5 transition-transform duration-300" />
                   </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-500 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-brand-teal-dark to-brand-teal opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></div>
                 </Button>
               </div>
 
@@ -229,24 +204,24 @@ export function Hero() {
               <div className="mt-5 flex flex-wrap justify-center xl:justify-start gap-2 items-center relative z-20">
                 <span className="text-sm font-semibold text-slate-400 mr-2">Populaire :</span>
                 {['Greffe Capillaire', 'Dentisterie', 'FIV'].map((tag) => (
-                  <span key={tag} className="px-4 py-1.5 bg-white text-slate-600 text-sm font-semibold rounded-full border border-slate-200 shadow-sm cursor-pointer hover:border-blue-300 hover:text-blue-600 hover:shadow-md hover:bg-blue-50 transition-all">
+                  <span key={tag} className="px-4 py-1.5 bg-white text-slate-600 text-sm font-semibold rounded-full border border-slate-200 shadow-sm cursor-pointer hover:border-brand-teal-light hover:text-brand-teal hover:shadow-md hover:bg-brand-teal-pale transition-all">
                     {tag}
                   </span>
                 ))}
               </div>
             </motion.div>
 
-            {/* Premium Stats */}
-            <motion.div variants={FADE_UP_ANIMATION_VARIANTS} className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-8 border-t border-slate-100">
+            {/* Engagements / Valeurs (Remplacement des fausses stats) */}
+            <motion.div variants={FADE_UP_ANIMATION_VARIANTS} className="grid grid-cols-2 lg:grid-cols-4 gap-y-6 gap-x-4 pt-10 border-t border-slate-100 mt-8">
               {[
-                { val: '300+', label: 'Cliniques certifiées' },
-                { val: '-70%', label: "D'économies" },
-                { val: '24/7', label: 'Assistance dédiée' },
-                { val: 'JCI', label: 'Standards mondiaux' },
-              ].map((stat, i) => (
-                <div key={i} className="text-center xl:text-left">
-                  <div className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-slate-900 to-slate-600 mb-1">{stat.val}</div>
-                  <div className="text-[11px] sm:text-xs text-slate-500 font-bold uppercase tracking-wider">{stat.label}</div>
+                { title: 'Validation', desc: 'Comité médical expert' },
+                { title: 'Sérénité', desc: 'Logistique EVASAN' },
+                { title: 'Sécurité', desc: 'Données de santé (HDS)' },
+                { title: 'Sur-mesure', desc: 'Accompagnement premium' },
+              ].map((item, i) => (
+                <div key={i} className="flex flex-col border-l-2 border-slate-200 hover:border-brand-teal transition-colors duration-300 pl-4 py-1">
+                  <div className="text-[15px] sm:text-[17px] font-extrabold text-slate-900 mb-1 leading-none">{item.title}</div>
+                  <div className="text-[11px] sm:text-[13px] text-slate-500 font-semibold leading-snug">{item.desc}</div>
                 </div>
               ))}
             </motion.div>
@@ -255,13 +230,9 @@ export function Hero() {
 
         {/* === RIGHT VISUAL COMPOSITION (Lottie Animation) === */}
         <div className="hidden xl:flex col-span-5 relative h-[700px] w-full items-center justify-center">
-          {/* Background decorative circles */}
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border-[1.5px] border-dashed border-slate-200 rounded-full opacity-40 pointer-events-none"
-          />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] bg-gradient-to-tr from-blue-50/50 to-cyan-50/50 rounded-full pointer-events-none" />
+          {/* Background decorative circles - CSS spin (GPU-composited, no JS) */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border-[1.5px] border-dashed border-slate-200 rounded-full opacity-40 pointer-events-none animate-[spin_60s_linear_infinite]" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] bg-gradient-to-tr from-brand-teal-pale/30 to-white/50 rounded-full pointer-events-none" />
 
           <AnimatePresence mode="wait">
             <motion.div

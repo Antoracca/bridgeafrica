@@ -9,7 +9,13 @@
       "Bash(cat:*)",
       "Bash(npx tsc:*)",
       "WebFetch(domain:fr.usembassy.gov)",
-      "Bash(npx shadcn@latest add:*)"
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill /F /PID 23156 /T)",
+      "Bash(cmd.exe /c \"taskkill /F /PID 23156 /T\" 2>&1)",
+      "Bash(cmd.exe /c \"taskkill /F /PID 23156\")",
+      "Bash(cmd.exe /c \"netstat -ano | findstr :3000\")",
+      "Bash(cmd.exe /c \"taskkill /F /IM node.exe /T 2>&1 & netstat -ano | findstr \\\\\":3000 :3001 :3002 :5000 :8080\\\\\" 2>&1\")"
     ],
     "deny": [],
     "ask": []

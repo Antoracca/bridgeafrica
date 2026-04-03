@@ -1,473 +1,263 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { Star, CheckCircle, ArrowRight, Users, TrendingUp, Award, MapPin, Calendar, Sparkles, Shield, Heart, Zap, Activity, Building2, Plane, Globe, Stethoscope } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
+import { useState, useCallback, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ChevronLeft, ChevronRight, Pause, Play, ArrowRight } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 
-const clinics = [
-  {
-    id: 1,
-    name: 'Clinique Internationale Rabat',
-    country: 'Maroc',
-    countryCode: 'ma',
-    city: 'Rabat',
-    specialties: ['Oncologie', 'Cardiologie', 'Orthopédie'],
-    rating: 4.9,
-    reviews: 847,
-    price: '3500',
-    image: 'https://images.unsplash.com/photo-1632833239869-a37e3a5806d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-    patients: '15k',
-    successRate: 98,
-    experience: 25,
-    certifications: ['ISO 9001', 'JCI'],
-    featured: true,
-  },
-  {
-    id: 2,
-    name: 'Acibadem Hospital',
-    country: 'Turquie',
-    countryCode: 'tr',
-    city: 'Istanbul',
-    specialties: ['Greffe Capillaire', 'Esthétique', 'Dentaire'],
-    rating: 4.9,
-    reviews: 1240,
-    price: '2800',
-    image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-    patients: '20k',
-    successRate: 99,
-    experience: 18,
-    certifications: ['JCI', 'ISO 15189'],
-  },
-  {
-    id: 3,
-    name: 'Clinique Pasteur',
-    country: 'Tunisie',
-    countryCode: 'tn',
-    city: 'Tunis',
-    specialties: ['Bariatrique', 'Digestif', 'Général'],
-    rating: 4.8,
-    reviews: 652,
-    price: '4200',
-    image: 'https://images.unsplash.com/photo-1538108149393-fbbd81895907?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-    patients: '8k',
-    successRate: 96,
-    experience: 30,
-    certifications: ['ISO 9001'],
-  },
-  {
-    id: 4,
-    name: 'Hôpital Américain Paris',
-    country: 'France',
-    countryCode: 'fr',
-    city: 'Paris',
-    specialties: ['Neurologie', 'Cardiovasculaire', 'Oncologie'],
-    rating: 5.0,
-    reviews: 523,
-    price: '8500',
-    image: 'https://images.unsplash.com/photo-1596541223130-5d31a73fb6c6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-    patients: '12k',
-    successRate: 99,
-    experience: 40,
-    certifications: ['JCI', 'HAS', 'ISO 9001'],
-  },
-  {
-    id: 5,
-    name: 'Memorial Hospital',
-    country: 'Turquie',
-    countryCode: 'tr',
-    city: 'Ankara',
-    specialties: ['Transplantation', 'Oncologie', 'Cardiologie'],
-    rating: 4.9,
-    reviews: 891,
-    price: '5200',
-    image: 'https://images.unsplash.com/photo-1512678080530-7760d81faba6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-    patients: '18k',
-    successRate: 97,
-    experience: 22,
-    certifications: ['JCI', 'ISO 15189'],
-  },
-  {
-    id: 6,
-    name: 'Clinique Atlas',
-    country: 'Maroc',
-    countryCode: 'ma',
-    city: 'Casablanca',
-    specialties: ['Ophtalmologie', 'Laser', 'Chirurgie'],
-    rating: 4.7,
-    reviews: 435,
-    price: '3200',
-    image: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-    patients: '10k',
-    successRate: 95,
-    experience: 15,
-    certifications: ['ISO 9001'],
-  },
+/* ─── 12 établissements — uniques, avec vraies images Unsplash ─── */
+const CLINICS = [
+  // MAROC
+  { hub: 'MAROC', city: 'Rabat', name: 'Hôpital International Cheikh Zaid', tag: 'HUB MAROC', spec: 'Pluridisciplinaire: Oncologie, Cardiologie', rating: '4.9', type: 'RAPPORT', date: 'MARS 2026', image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90' },
+  { hub: 'MAROC', city: 'Casablanca', name: 'Clinique Dar Salam', tag: 'HUB MAROC', spec: 'Maternité & PMA, Préservation', rating: '4.7', type: 'ÉTUDE', date: 'AVRIL 2026', image: 'https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90' },
+  { hub: 'MAROC', city: 'Marrakech', name: 'Clinique Vinci Maroc', tag: 'HUB MAROC', spec: 'Chirurgie Esthétique & Réparative', rating: '4.8', type: 'ANALYSE', date: 'AOÛT 2026', image: 'https://images.unsplash.com/photo-1504439468489-c8920d796a29?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90' },
+  
+  // TURQUIE
+  { hub: 'TURQUIE', city: 'Istanbul', name: 'Acibadem Hospital', tag: 'HUB TURQUIE', spec: 'Greffe Capillaire (DHI/FUE)', rating: '4.9', type: 'ARTICLE', date: 'JANV. 2026', image: 'https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90' },
+  { hub: 'TURQUIE', city: 'Istanbul', name: 'Memorial Sisli', tag: 'HUB TURQUIE', spec: 'Oncologie & Radiothérapie', rating: '4.8', type: 'RAPPORT', date: 'FÉVR. 2026', image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90' },
+  { hub: 'TURQUIE', city: 'Ankara', name: 'Medicana International', tag: 'HUB TURQUIE', spec: 'Chirurgie Robotique & Greffes', rating: '4.7', type: 'ÉTUDE', date: 'JUIN 2026', image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90' },
+  
+  // TUNISIE
+  { hub: 'TUNISIE', city: 'Tunis', name: 'Clinique Pasteur', tag: 'HUB TUNISIE', spec: 'Affections Digestives & Bariatrique', rating: '4.9', type: 'RAPPORT', date: 'MAI 2026', image: 'https://images.unsplash.com/photo-1551076805-e1869033e561?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90' },
+  { hub: 'TUNISIE', city: 'Tunis', name: 'Clinique Hannibal', tag: 'HUB TUNISIE', spec: 'Cardiologie Interventionnelle', rating: '4.8', type: 'ANALYSE', date: 'JUILLET 2026', image: 'https://images.unsplash.com/photo-1538108149393-fbbd81895907?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90' },
+  { hub: 'TUNISIE', city: 'Sousse', name: 'Clinique Les Oliviers', tag: 'HUB TUNISIE', spec: 'Chirurgie Orthopédique & Traumatologie', rating: '4.7', type: 'ARTICLE', date: 'SEPT. 2026', image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90' },
+  
+  // FRANCE
+  { hub: 'FRANCE', city: 'Paris', name: 'Hôpital Américain', tag: 'HUB FRANCE', spec: 'Neurochirurgie, Traitement AVC, Spine', rating: '5.0', type: 'ÉTUDE', date: 'OCT. 2026', image: 'https://images.unsplash.com/photo-1596541223130-5d31a73fb6c6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90' },
+  { hub: 'FRANCE', city: 'Paris', name: 'Institut Curie', tag: 'HUB FRANCE', spec: 'Recherche clinique & Cancérologie', rating: '4.9', type: 'RAPPORT', date: 'NOV. 2026', image: 'https://images.unsplash.com/photo-1632833239869-a37e3a5806d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90' },
+  { hub: 'FRANCE', city: 'Lyon', name: 'Hôpital Mermoz', tag: 'HUB FRANCE', spec: 'Oncologie, Hépato-gastro & Orthopédie', rating: '4.8', type: 'ARTICLE', date: 'DÉC. 2026', image: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90' }
 ]
 
-const ClinicCard = ({ clinic, featured = false }: { clinic: typeof clinics[0], featured?: boolean }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      whileHover={{ y: -8 }}
-      className={`group relative bg-white rounded-3xl xl:rounded-[2rem] 2xl:rounded-[2.5rem] overflow-hidden border-2 border-slate-100 hover:border-blue-200 transition-all duration-500 shadow-lg hover:shadow-2xl ${
-        featured ? 'md:col-span-2 md:row-span-2' : ''
-      }`}
-    >
-      {/* Image Container */}
-      <div className={`relative overflow-hidden ${featured ? 'h-64 sm:h-80 md:h-full' : 'h-48 sm:h-56 md:h-64'}`}>
-        <Image
-          src={clinic.image}
-          alt={clinic.name}
-          fill
-          className="object-cover group-hover:scale-110 transition-transform duration-700"
-        />
-        {/* Overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-        {/* Badges top */}
-        <div className="absolute top-3 xl:top-4 2xl:top-5 left-3 xl:left-4 2xl:left-5 right-3 xl:right-4 2xl:right-5 flex justify-between items-start">
-          {/* Badge pays */}
-          <div className="flex items-center gap-2 bg-white/95 backdrop-blur-sm px-3 py-1.5 xl:px-4 xl:py-2 2xl:px-5 2xl:py-2.5 rounded-full shadow-lg">
-            <Image
-              src={`https://flagcdn.com/w40/${clinic.countryCode}.png`}
-              alt={clinic.country}
-              width={20}
-              height={15}
-              className="rounded-sm xl:w-6 xl:h-5 2xl:w-7 2xl:h-6"
-            />
-            <span className="text-xs xl:text-sm 2xl:text-base font-bold text-slate-900">{clinic.country}</span>
-          </div>
-
-          {/* Rating */}
-          <div className="flex items-center gap-1.5 bg-white/95 backdrop-blur-sm px-3 py-1.5 xl:px-4 xl:py-2 2xl:px-5 2xl:py-2.5 rounded-full shadow-lg">
-            <Star className="w-4 h-4 xl:w-5 xl:h-5 2xl:w-6 2xl:h-6 fill-yellow-400 text-yellow-400" />
-            <span className="font-bold text-slate-900 text-sm xl:text-base 2xl:text-lg">{clinic.rating}</span>
-            <span className="text-xs xl:text-sm 2xl:text-base text-slate-600">({clinic.reviews})</span>
-          </div>
-        </div>
-
-        {/* Featured badge */}
-        {featured && (
-          <div className="absolute top-3 xl:top-4 2xl:top-5 left-1/2 -translate-x-1/2">
-            <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-1.5 xl:px-5 xl:py-2 2xl:px-6 2xl:py-2.5 rounded-full text-xs xl:text-sm 2xl:text-base font-bold shadow-xl">
-              ⭐ Recommandée
-            </div>
-          </div>
-        )}
-
-        {/* Hover: Bouton consulter */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-          <Button className="bg-white text-blue-600 hover:bg-blue-50 px-6 py-3 xl:px-8 xl:py-4 2xl:px-10 2xl:py-5 rounded-full font-bold shadow-2xl transform scale-90 group-hover:scale-100 transition-transform text-sm xl:text-base 2xl:text-lg">
-            Consulter la Clinique
-            <ArrowRight className="ml-2 w-4 h-4 xl:w-5 xl:h-5 2xl:w-6 2xl:h-6" />
-          </Button>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className={`p-4 sm:p-5 md:p-6 xl:p-8 2xl:p-10 ${featured ? 'md:absolute md:bottom-0 md:left-0 md:right-0 md:bg-gradient-to-t md:from-white md:via-white/95 md:to-transparent' : ''}`}>
-        {/* Location */}
-        <div className="flex items-center gap-1.5 text-blue-600 mb-2 xl:mb-3">
-          <MapPin className="w-3 h-3 xl:w-4 xl:h-4 2xl:w-5 2xl:h-5" />
-          <span className="text-xs xl:text-sm 2xl:text-base font-semibold">{clinic.city}</span>
-        </div>
-
-        {/* Nom clinique */}
-        <h3 className={`font-extrabold text-slate-900 mb-2 xl:mb-3 2xl:mb-4 group-hover:text-blue-600 transition-colors ${
-          featured ? 'text-xl sm:text-2xl md:text-3xl xl:text-4xl 2xl:text-5xl' : 'text-lg sm:text-xl md:text-2xl xl:text-2xl 2xl:text-3xl'
-        }`}>
-          {clinic.name}
-        </h3>
-
-        {/* Spécialités */}
-        <div className="flex flex-wrap gap-1.5 xl:gap-2 2xl:gap-2.5 mb-3 xl:mb-4 2xl:mb-5">
-          {clinic.specialties.slice(0, featured ? 3 : 2).map((spec, i) => (
-            <span
-              key={i}
-              className="px-2 py-1 xl:px-3 xl:py-1.5 2xl:px-4 2xl:py-2 bg-blue-50 text-blue-700 text-[10px] xl:text-xs 2xl:text-sm font-bold rounded-full border border-blue-100"
-            >
-              {spec}
-            </span>
-          ))}
-          {clinic.specialties.length > (featured ? 3 : 2) && (
-            <span className="px-2 py-1 xl:px-3 xl:py-1.5 2xl:px-4 2xl:py-2 bg-slate-50 text-slate-600 text-[10px] xl:text-xs 2xl:text-sm font-bold rounded-full">
-              +{clinic.specialties.length - (featured ? 3 : 2)}
-            </span>
-          )}
-        </div>
-
-        {/* Prix */}
-        <div className="mb-3 xl:mb-4 2xl:mb-5">
-          <div className="flex items-baseline gap-2">
-            <span className="text-xs xl:text-sm 2xl:text-base text-slate-500 font-medium">À partir de</span>
-            <span className={`font-extrabold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent ${
-              featured ? 'text-2xl sm:text-3xl md:text-4xl xl:text-5xl 2xl:text-6xl' : 'text-xl sm:text-2xl md:text-3xl xl:text-3xl 2xl:text-4xl'
-            }`}>
-              {clinic.price}€
-            </span>
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className={`grid grid-cols-3 gap-2 xl:gap-3 2xl:gap-4 mb-3 xl:mb-4 2xl:mb-5 ${featured ? 'md:grid-cols-3' : ''}`}>
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-1 mb-1">
-              <Users className="w-3 h-3 xl:w-4 xl:h-4 2xl:w-5 2xl:h-5 text-blue-600" />
-            </div>
-            <div className={`font-extrabold text-slate-900 ${featured ? 'text-base xl:text-lg 2xl:text-xl' : 'text-sm xl:text-base 2xl:text-lg'}`}>
-              {clinic.patients}
-            </div>
-            <div className="text-[10px] xl:text-xs 2xl:text-sm text-slate-500 font-medium">Patients/an</div>
-          </div>
-
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-1 mb-1">
-              <TrendingUp className="w-3 h-3 xl:w-4 xl:h-4 2xl:w-5 2xl:h-5 text-emerald-600" />
-            </div>
-            <div className={`font-extrabold text-emerald-600 ${featured ? 'text-base xl:text-lg 2xl:text-xl' : 'text-sm xl:text-base 2xl:text-lg'}`}>
-              {clinic.successRate}%
-            </div>
-            <div className="text-[10px] xl:text-xs 2xl:text-sm text-slate-500 font-medium">Réussite</div>
-          </div>
-
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-1 mb-1">
-              <Calendar className="w-3 h-3 xl:w-4 xl:h-4 2xl:w-5 2xl:h-5 text-purple-600" />
-            </div>
-            <div className={`font-extrabold text-slate-900 ${featured ? 'text-base xl:text-lg 2xl:text-xl' : 'text-sm xl:text-base 2xl:text-lg'}`}>
-              {clinic.experience} ans
-            </div>
-            <div className="text-[10px] xl:text-xs 2xl:text-sm text-slate-500 font-medium">Expérience</div>
-          </div>
-        </div>
-
-        {/* Certifications */}
-        <div className="flex items-center gap-2 xl:gap-3 2xl:gap-4 mb-3 xl:mb-4">
-          {clinic.certifications.map((cert, i) => (
-            <div
-              key={i}
-              className="flex items-center gap-1.5 px-2 py-1 xl:px-3 xl:py-1.5 2xl:px-4 2xl:py-2 bg-emerald-50 border border-emerald-200 rounded-lg"
-            >
-              <Award className="w-3 h-3 xl:w-4 xl:h-4 2xl:w-5 2xl:h-5 text-emerald-600" />
-              <span className="text-[10px] xl:text-xs 2xl:text-sm font-bold text-emerald-700">{cert}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Vérifié */}
-        <div className="flex items-center gap-2 text-green-600">
-          <CheckCircle className="w-4 h-4 xl:w-5 xl:h-5 2xl:w-6 2xl:h-6" />
-          <span className="text-xs xl:text-sm 2xl:text-base font-semibold">Vérifié par MediBridge</span>
-        </div>
-      </div>
-    </motion.div>
-  )
-}
+const spotlights = ['MAROC', 'TURQUIE', 'TUNISIE', 'FRANCE']
 
 export function TopClinics() {
+  const [active, setActive] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
+  const len = CLINICS.length
+
+  const next = useCallback(() => setActive(a => (a + 1) % len), [len])
+  const prev = useCallback(() => setActive(a => (a - 1 + len) % len), [len])
+
+  useEffect(() => {
+    if (paused || isHovered) return
+    const id = setInterval(next, 6000)
+    return () => clearInterval(id)
+  }, [next, paused, isHovered])
+
+  // Détermination de la fenêtre visible de 5 éléments pour animer doucement les entrées/sorties
+  const positions = [-2, -1, 0, 1, 2]
+  const visibleItems = positions.map(pos => {
+    const idx = (active + pos + len) % len
+    return { pos, idx, data: CLINICS[idx] }
+  })
+
   return (
-    <section className="bg-white relative overflow-hidden">
-      {/* Bandeau défilant en haut */}
-      <div className="relative bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 py-4 md:py-5 xl:py-6 2xl:py-7 overflow-hidden">
-        <div className="absolute inset-0 bg-white/5 backdrop-blur-sm" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px)] bg-[size:40px_40px]" />
-
-        <motion.div
-          className="flex gap-8 md:gap-12 xl:gap-16 2xl:gap-20 whitespace-nowrap relative z-10"
-          animate={{ x: [0, -3000] }}
-          transition={{
-            duration: 50,
-            repeat: Infinity,
-            ease: "linear"
-          }}
+    <section className="bg-[#f5f5f5] overflow-hidden">
+      {/* ── Titre ── */}
+      <div className="pt-8 sm:pt-12 pb-6 text-center px-4">
+        <p className="text-[11px] tracking-[0.3em] uppercase text-[#1B433E] font-bold mb-4">
+          Excellence Médicale
+        </p>
+        <h2
+          className="text-3xl sm:text-4xl lg:text-5xl text-[#1a1f24] leading-[1.15] tracking-tight max-w-4xl mx-auto"
+          style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontWeight: 400 }}
         >
-          {[
-            { icon: Stethoscope, text: 'Plus de 300 Cliniques Certifiées Internationalement' },
-            { icon: Heart, text: 'Clinique Internationale Rabat' },
-            { flag: 'ma', text: 'Maroc - À partir de 2500€' },
-            { icon: Building2, text: 'Acibadem Hospital Istanbul' },
-            { icon: TrendingUp, text: 'Greffe Capillaire : 1800€ (vs 8000€ Europe)' },
-            { icon: Shield, text: 'Certifications JCI & ISO 9001 Vérifiées' },
-            { flag: 'tr', text: 'Turquie - Leader Mondial Esthétique' },
-            { icon: Building2, text: 'Memorial Hospital Ankara' },
-            { icon: Users, text: '98.7% Satisfaction Patient (4850 avis)' },
-            { icon: Heart, text: 'Clinique Pasteur Tunis' },
-            { icon: Sparkles, text: 'Chirurgie Bariatrique : Dès 3200€' },
-            { flag: 'fr', text: 'France - Excellence Neurologie' },
-            { icon: Building2, text: 'Hôpital Américain Paris' },
-            { icon: Plane, text: 'Vol + Hôtel 4★ + Transferts Inclus' },
-            { icon: Heart, text: 'Clinique Atlas Casablanca' },
-            { icon: Zap, text: 'Délai d\'attente : 7-15 jours (vs 6 mois Europe)' },
-            { flag: 'tn', text: 'Tunisie - Chirurgie Digestive' },
-            { icon: Building2, text: 'Liv Hospital Istanbul' },
-            { icon: TrendingUp, text: 'Économisez 60-75% Sans Compromis Qualité' },
-            { icon: Shield, text: 'Assurance Rapatriement Médicale Offerte' },
-            { icon: Heart, text: 'Clinique Hannibal Tunis' },
-            { icon: Sparkles, text: 'Nouveau : Robot Da Vinci Xi Disponible' },
-            { flag: 'ae', text: 'Émirats - Technologie de Pointe' },
-            { icon: Building2, text: 'American Hospital Dubai' },
-            { icon: Plane, text: 'MediBridge Travel - Votre Conciergerie Santé' },
-            { icon: Users, text: '52,000+ Patients Accompagnés Depuis 2018' },
-            { icon: Heart, text: 'Clinique Internationale Marrakech' },
-            { icon: TrendingUp, text: 'Opération Genou : 4500€ (vs 12000€)' },
-            { flag: 'de', text: 'Allemagne - Cardiologie Avancée' },
-            { icon: Building2, text: 'Charité Hospital Berlin' },
-            { icon: Shield, text: 'Prévention : Bilan Santé Complet 250€' },
-            { icon: Heart, text: 'Clinique du Lac Tunis' },
-            { icon: Sparkles, text: 'Implants Dentaires : 450€/unité (vs 1500€)' },
-            { flag: 'it', text: 'Italie - Oncologie & Radiothérapie' },
-            { icon: Building2, text: 'Humanitas Research Hospital Milan' },
-            { icon: Zap, text: 'Réponse Devis Personnalisé Sous 24h' },
-            { icon: Award, text: 'Prix Excellence Médicale 2024 - 15 Cliniques' },
-            { icon: Heart, text: 'Clinique Avicenne Marrakech' },
-            { flag: 'ch', text: 'Suisse - Orthopédie Premium' },
-            { icon: TrendingUp, text: 'Opération Cataracte : 1200€/œil' },
-            { icon: Building2, text: 'Medicana International Istanbul' },
-            { icon: Plane, text: 'Visa Médical Express : 72h Garanti' },
-            { icon: Users, text: 'Interprète Médical Francophone Inclus' },
-            { icon: Heart, text: 'Clinique Taoufik Tunis' },
-            { icon: Shield, text: 'Garantie Résultat ou Reprise Gratuite' },
-            { flag: 'be', text: 'Belgique - Fertilité & PMA' },
-            { icon: Building2, text: 'UZ Leuven Hospital' },
-            { icon: Sparkles, text: 'FIV : 2800€ (vs 5500€ France)' },
-            { icon: TrendingUp, text: 'Bypass Gastrique : 4800€ Tout Compris' },
-            { icon: Heart, text: 'Clinique Essalem Rabat' },
-            { flag: 'ma', text: 'Maroc - Ophtalmologie Laser' },
-            { icon: Plane, text: 'Convalescence Hôtel 5★ + Spa Incluse' },
-            { icon: Building2, text: 'Istanbul Surgery Hospital' },
-            { icon: Users, text: 'Suivi Post-Op à Distance : 12 Mois Offerts' },
-            { icon: Zap, text: 'Chirurgie Sein : 3500€ (Prothèses Mentor/Allergan)' },
-            { icon: Heart, text: 'Clinique Moderne Sousse' },
-            { flag: 'tn', text: 'Tunisie - Chirurgie Maxillo-Faciale' },
-            { icon: Shield, text: 'Dépistage Cancer Gratuit Pour +50 ans' },
-            { icon: Building2, text: 'Florence Nightingale Hospital Istanbul' },
-            { icon: Sparkles, text: 'Rhinoplastie : 2200€ (Chirurgien Certifié)' },
-            { icon: TrendingUp, text: 'Sleeve Gastrectomie : 3800€' },
-            { icon: Heart, text: 'Clinique Yasmine Hammamet' },
-            { flag: 'tr', text: 'Turquie - Greffe Osseuse Dentaire' },
-            { icon: Plane, text: 'Prise en Charge Aéroport 24/7' },
-            { icon: Users, text: 'Note Moyenne : 4.8/5 (12,400 avis Google)' },
-            { icon: Building2, text: 'Koç University Hospital Istanbul' },
-            { icon: Shield, text: 'Couverture Complications Post-Op : 2 Ans' },
-            { icon: Heart, text: 'Clinique Les Jasmins Tunis' },
-            { icon: Sparkles, text: 'Nouveau : Protonthérapie Cancer Disponible' },
-            { flag: 'ae', text: 'Dubaï - Médecine Régénérative' },
-            { icon: TrendingUp, text: 'Liposuccion : 2400€ (Haute Définition)' },
-            { icon: Building2, text: 'Mediclinic City Hospital Dubai' },
-            { icon: Plane, text: 'Package Famille : 2ème Accompagnant Gratuit' },
-            { icon: Heart, text: 'Clinique Ibn Sina Rabat' },
-            { flag: 'ma', text: 'Maroc - Chirurgie Orthopédique' },
-            { icon: Users, text: 'Taux Réussite Prothèse Hanche : 99.2%' },
-            { icon: Shield, text: 'Accréditation Ministère Santé : 100% Conformité' },
-            { icon: Stethoscope, text: 'Plus de 300 Cliniques Certifiées Internationalement' },
-          ].map((item, idx) => (
-            <span key={idx} className="text-white font-bold text-sm md:text-base xl:text-lg 2xl:text-xl flex items-center gap-2 md:gap-3">
-              {item.icon ? (
-                <item.icon className="w-4 h-4 md:w-5 md:h-5 xl:w-6 xl:h-6" />
-              ) : item.flag ? (
-                <div className="relative w-5 h-4 md:w-6 md:h-5 xl:w-7 xl:h-6 flex-shrink-0">
-                  <Image
-                    src={`https://flagcdn.com/w40/${item.flag}.png`}
-                    alt={item.text}
-                    width={28}
-                    height={20}
-                    className="rounded-sm object-cover"
-                  />
-                </div>
-              ) : (
-                <span className="w-1.5 h-1.5 md:w-2 md:h-2 xl:w-2.5 xl:h-2.5 bg-white rounded-full" />
-              )}
-              {item.text}
-            </span>
-          ))}
-        </motion.div>
+          Les Établissements Qui<br className="hidden sm:block" />
+          Font Notre Réseau d&apos;Exception
+        </h2>
       </div>
 
-      {/* Section principale */}
-      <div className="py-16 md:py-24 xl:py-28 2xl:py-32 relative">
-        {/* Background pattern subtil */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px]" />
+      {/* ── Carrousel Convoyeur Majeur ── */}
+      <div className="w-full flex justify-center pb-4 pt-10">
+        {/* Le conteneur ne doit pas avoir d'overflow hidden pour permettre au card-in-card de déborder au besoin */}
+        <div className="relative flex items-center justify-center gap-[4vw] sm:gap-[5vw] min-h-[550px]">
+          <AnimatePresence mode="popLayout" initial={false}>
+            {visibleItems.map(item => {
+              const isCenter = item.pos === 0
+              const isSide = Math.abs(item.pos) === 1
+              // Les items à -2 ou +2 existent dans le DOM pour le recalcul layout, mais doivent être invisibles
+              const isHidden = Math.abs(item.pos) > 1
 
-        {/* Gradient orbs */}
-        <div className="absolute top-20 -right-40 w-96 h-96 bg-blue-100/30 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 -left-40 w-96 h-96 bg-cyan-100/30 rounded-full blur-3xl" />
+              return (
+                <motion.div
+                  layout // Active le déplacement "conveyor belt" hyper fluide en flexbox
+                  key={item.idx} // La clé reste constante pour qu'un item glisse physiquement
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{
+                    opacity: isHidden ? 0 : 1, // Les cartes de côté ne sont plus assombries/translucides
+                    scale: 1,
+                  }}
+                  exit={{ opacity: 0, scale: 0.85 }}
+                  transition={{
+                    duration: 1.2, // Slow-motion majestueux
+                    ease: [0.32, 0.72, 0, 1]
+                  }}
+                  onMouseEnter={() => { if (isCenter) setIsHovered(true) }}
+                  onMouseLeave={() => { if (isCenter) setIsHovered(false) }}
+                  className="shrink-0 relative cursor-pointer"
+                  style={{
+                    // Diminution de 10-15% des largeurs. Bords stricts : pas de border-radius
+                    width: isCenter ? 'clamp(280px, 30vw, 380px)' : 'clamp(170px, 19vw, 240px)',
+                    aspectRatio: isCenter ? '4/5' : '3/4',
+                    zIndex: isCenter ? 30 : isHidden ? 0 : 10
+                  }}
+                  onClick={() => {
+                    if (item.pos === 1) next()
+                    if (item.pos === -1) prev()
+                  }}
+                >
+                  <div className="relative w-full h-full">
+                    {/* Bords totalement CARRÉS selon la demande (pas de rounded) */}
+                    <Image
+                      src={item.data.image}
+                      alt={item.data.name}
+                      fill
+                      className="object-cover object-center"
+                      sizes="440px"
+                      priority={isCenter}
+                    />
 
-        <div className="container mx-auto px-4 relative z-10">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto mb-12 md:mb-16 xl:mb-20 2xl:mb-24"
-        >
-          <span className="inline-block px-4 py-2 xl:px-5 xl:py-2.5 2xl:px-6 2xl:py-3 bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 font-bold tracking-wider uppercase text-xs sm:text-sm xl:text-base 2xl:text-lg rounded-full mb-4 xl:mb-5 2xl:mb-6">
-            Excellence Médicale
+                    {/* Contenu de la carte centrale (Normal vs Hover) */}
+                    <AnimatePresence>
+                      {isCenter && !isHovered && (
+                         <motion.div
+                           initial={{ opacity: 0 }}
+                           animate={{ 
+                             opacity: 1, 
+                             transition: { duration: 0.8, delay: 0.35, ease: [0.32, 0.72, 0, 1] } 
+                           }}
+                           exit={{ 
+                             opacity: 0, 
+                             transition: { duration: 0.3, ease: 'linear' } 
+                           }}
+                           className="absolute inset-0 z-20 pointer-events-none"
+                         >
+                           {/* Badge Supérieur - Capsule, arrondie */}
+                           <div className="absolute top-5 left-0 right-0 flex justify-center">
+                             <div className="bg-[#1a1f24]/75 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20">
+                               <span className="text-[9px] font-bold tracking-[0.18em] uppercase text-white">
+                                 {item.data.tag}
+                               </span>
+                             </div>
+                           </div>
+
+                           {/* Gradient Sombre en bas */}
+                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+                           {/* Textes de la carte */}
+                           <div className="absolute inset-x-0 bottom-0 px-6 pb-14 text-center sm:text-left">
+                             <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/70 mb-2.5">
+                               <span className="text-white">{item.data.type}</span>
+                               <span className="mx-2 text-white/30">|</span>
+                               <span>{item.data.date}</span>
+                             </p>
+                             <h3
+                               className="text-xl sm:text-2xl text-white leading-snug mb-3"
+                               style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontWeight: 400 }}
+                             >
+                               {item.data.name}
+                             </h3>
+                           </div>
+
+                           {/* Bloc card-in-card débordant */}
+                           <div className="absolute -bottom-10 left-4 right-4 pointer-events-auto shadow-2xl">
+                             <div className="bg-[#f0ece9] rounded-xl px-5 py-4 border border-white/30">
+                               <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-[#63666A] mb-1.5">
+                                 {item.data.hub} <span className="mx-1 text-[#C4C4C4]">|</span> {item.data.city} <span className="mx-1 text-[#C4C4C4]">|</span> ★ {item.data.rating}
+                               </p>
+                               <p className="text-[13px] text-[#424242] font-serif leading-relaxed line-clamp-2">
+                                 {item.data.spec}
+                               </p>
+                             </div>
+                           </div>
+                         </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    {/* Nouveau Contenu HOVER (Carte Centrale) */}
+                    <AnimatePresence>
+                      {isCenter && isHovered && (
+                        <motion.div
+                          initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+                          animate={{ 
+                            opacity: 1, 
+                            backdropFilter: 'blur(8px)', 
+                            transition: { duration: 0.4, delay: 0.1 } 
+                          }}
+                          exit={{ 
+                            opacity: 0, 
+                            backdropFilter: 'blur(0px)', 
+                            transition: { duration: 0.3 } 
+                          }}
+                          className="absolute inset-0 z-40 bg-white/20 flex flex-col pointer-events-auto"
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#1a1f24] via-[#1a1f24]/50 to-transparent" />
+                          <div className="relative z-50 flex flex-col h-full px-7 pt-12 pb-8 text-white">
+                            <h4 className="text-xl sm:text-2xl font-bold mb-4" style={{ fontFamily: 'Georgia, serif' }}>
+                              Détails de l'établissement
+                            </h4>
+                            <p className="text-xs sm:text-sm text-white/90 leading-relaxed mb-auto">
+                              Découvrez nos équipements de pointe, nos parcours personnalisés et notre équipe dédiée à votre santé au sein de {item.data.name}.
+                            </p>
+                            <div className="flex justify-start mt-4">
+                              <Link href="/cliniques" className="bg-[#1B433E] text-white hover:bg-[#122c28] px-5 py-3 flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase transition-colors shadow-lg">
+                                En Savoir Plus <ArrowRight className="w-4 h-4 ml-1" />
+                              </Link>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+              )
+            })}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* ── Contrôles Carrés & Espace de respiration pour le card-in-card ── */}
+      {/* Modification critique : justify-start au lieu de justify-center, ramenés à gauche */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 mt-12 mb-10 flex justify-start">
+        <div className="flex items-center gap-[5px]">
+          <button onClick={() => setPaused(!paused)} className="w-10 h-10 bg-white border border-[#E5E5E5] flex items-center justify-center transition-colors text-[#63666A] hover:text-[#1a1f24] hover:border-[#1a1f24]">
+            {paused ? <Play size={14} /> : <Pause size={14} />}
+          </button>
+          <button onClick={prev} className="w-10 h-10 bg-white border border-[#E5E5E5] flex items-center justify-center transition-colors text-[#63666A] hover:text-[#1a1f24] hover:border-[#1a1f24]">
+            <ChevronLeft size={16} />
+          </button>
+          <button onClick={next} className="w-10 h-10 bg-white border border-[#E5E5E5] flex items-center justify-center transition-colors text-[#63666A] hover:text-[#1a1f24] hover:border-[#1a1f24]">
+            <ChevronRight size={16} />
+          </button>
+        </div>
+      </div>
+
+      {/* ── Spotlight Bar ── */}
+      <div className="flex justify-center pb-12 px-4">
+        <div className="inline-flex items-center gap-6 sm:gap-10 px-8 py-4 bg-white border border-[#E5E5E5] shadow-sm rounded-full">
+          <span className="text-[10px] sm:text-[11px] font-black tracking-[0.18em] uppercase text-[#1a1f24] shrink-0">
+            MediBridge Spotlight
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl 2xl:text-7xl font-extrabold text-slate-900 mb-4 xl:mb-5 2xl:mb-6">
-            Les Meilleures <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500">Cliniques Partenaires</span>
-          </h2>
-          <p className="text-base sm:text-lg md:text-xl xl:text-2xl 2xl:text-3xl text-slate-600 leading-relaxed">
-            Plus de 300 établissements d&apos;excellence certifiés et vérifiés à travers le monde
-          </p>
-        </motion.div>
-
-        {/* Bento Grid - Desktop */}
-        <div className="hidden md:grid md:grid-cols-3 gap-4 xl:gap-6 2xl:gap-8 mb-12 md:mb-16 xl:mb-20">
-          {/* Featured clinic - 2 cols x 2 rows */}
-          <ClinicCard clinic={clinics[0]} featured={true} />
-
-          {/* Other clinics */}
-          {clinics.slice(1).map((clinic) => (
-            <ClinicCard key={clinic.id} clinic={clinic} />
+          {spotlights.map((sp, i) => (
+            <Link key={i} href="#" className="text-[11px] sm:text-[13px] font-bold uppercase text-slate-800 border-b-2 border-slate-800 pb-[1px] hover:text-[#1B433E] hover:border-[#1B433E] transition-colors hidden sm:block">
+              {sp}
+            </Link>
           ))}
-        </div>
-
-        {/* Mobile - Stack vertical */}
-        <div className="md:hidden space-y-6 mb-8">
-          {clinics.map((clinic) => (
-            <ClinicCard key={clinic.id} clinic={clinic} />
-          ))}
-        </div>
-
-        {/* CTA Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8"
-        >
-          <Link href="/cliniques" className="w-full sm:w-auto">
-            <Button className="w-full sm:w-auto bg-slate-900 text-white px-8 sm:px-10 xl:px-14 2xl:px-16 py-4 sm:py-5 xl:py-6 2xl:py-7 rounded-full shadow-2xl hover:shadow-3xl transition-all group text-base sm:text-lg xl:text-xl 2xl:text-2xl font-bold">
-              <span>Voir Toutes les Cliniques (300+)</span>
-              <ArrowRight className="ml-3 xl:ml-4 w-5 h-5 xl:w-6 xl:h-6 2xl:w-7 2xl:h-7 group-hover:translate-x-2 transition-transform" />
-            </Button>
-          </Link>
-
-          <Link href="/register?role=clinique" className="w-full sm:w-auto">
-            <motion.div
-              animate={{ y: [0, -8, 0] }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              whileHover={{ scale: 1.05, y: 0 }}
-            >
-              <Button variant="outline" className="w-full sm:w-auto rounded-full border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-4 sm:px-8 sm:py-5 h-auto text-sm sm:text-base font-bold whitespace-normal text-center leading-tight shadow-lg">
-                Vous représentez une clinique ? <br className="hidden sm:block md:hidden"/> Devenez partenaire
-              </Button>
-            </motion.div>
-          </Link>
-        </motion.div>
         </div>
       </div>
+
+      {/* ── CTA ── */}
+      <div className="text-center pb-24 px-4">
+        <Link href="/cliniques">
+          <button className="h-14 px-9 bg-[#1a1f24] hover:bg-black text-white text-[13px] font-bold tracking-wide uppercase transition-all duration-300 inline-flex items-center gap-3 group rounded-none">
+            Visiter nos Hôpitaux et cliniques
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+          </button>
+        </Link>
+      </div>
+
     </section>
   )
 }
