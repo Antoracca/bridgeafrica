@@ -32,7 +32,7 @@ const destinations = [
   {
     city: 'Tunis',
     country: 'Tunisie',
-    image: 'https://images.unsplash.com/photo-1572911438914-1186eebd8fb1?auto=format&fit=crop&q=80&w=1920',
+    image: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&q=80&w=1920',
     tagline: "Excellence chirurgicale avérée et structures hospitalières accréditées.",
     specialties: ['Chirurgie de l\'Obésité', 'Chirurgie Générale', 'Ophtalmologie'],
   },
