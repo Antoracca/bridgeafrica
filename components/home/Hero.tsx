@@ -103,7 +103,7 @@ export function Hero() {
   useEffect(() => {
     const wordInterval = setInterval(() => {
       setCurrentWordIndex((prev) => (prev + 1) % words.length)
-    }, 3500)
+    }, 3200)
 
     const lottieInterval = setInterval(() => {
       setActiveLottieIndex((prev) => (prev + 1) % lottieScenes.length)
@@ -144,10 +144,10 @@ export function Hero() {
             }}
           >
             {/* EVASAN Label (Minimaliste & Pro) */}
-            <motion.div variants={FADE_UP_ANIMATION_VARIANTS} className="flex items-center justify-center xl:justify-start gap-3 mb-8 w-fit mx-auto xl:mx-0">
-              <span className="h-px w-6 lg:w-8 bg-brand-teal rounded-full"></span>
+            <motion.div variants={FADE_UP_ANIMATION_VARIANTS} className="flex items-start justify-center xl:justify-start gap-3 mb-8 w-fit mx-auto xl:mx-0">
+              <span className="h-px w-6 lg:w-8 bg-brand-teal rounded-full shrink-0 mt-[0.55em]"></span>
               <span className="text-[12px] sm:text-[13px] font-bold text-slate-400 uppercase tracking-[0.2em]">
-                Expertise & Évacuation Sanitaire (EVASAN)
+                Expertise &amp; Évacuation Sanitaire (EVASAN)
               </span>
             </motion.div>
 
@@ -155,13 +155,13 @@ export function Hero() {
             <motion.h1 variants={FADE_UP_ANIMATION_VARIANTS} className="text-5xl sm:text-6xl md:text-7xl lg:text-[5rem] font-extrabold text-slate-900 leading-[1.1] mb-8 tracking-tight">
               L'excellence médicale <br className="hidden md:block" />
               sans <span className="inline-grid w-[240px] sm:w-[350px] justify-center xl:justify-start">
-                <AnimatePresence mode="wait">
+                <AnimatePresence mode="sync">
                   <motion.span
                     key={currentWordIndex}
-                    initial={{ y: 20, opacity: 0, filter: 'blur(10px)' }}
-                    animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
-                    exit={{ y: -20, opacity: 0, filter: 'blur(10px)' }}
-                    transition={{ type: "spring", stiffness: 200, damping: 20, duration: 0.5 }}
+                    initial={{ opacity: 0, scale: 0.97 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.03 }}
+                    transition={{ duration: 0.6, ease: "easeInOut" }}
                     className="text-transparent bg-clip-text bg-gradient-to-r from-brand-navy via-brand-teal to-brand-teal-light col-start-1 row-start-1"
                   >
                     {words[currentWordIndex]}
@@ -172,14 +172,14 @@ export function Hero() {
 
             <motion.p variants={FADE_UP_ANIMATION_VARIANTS} className="text-lg sm:text-xl text-slate-600 mb-10 leading-relaxed max-w-2xl mx-auto xl:mx-0 font-medium">
               Votre santé mérite les meilleurs experts mondiaux. De la consultation au voyage, nous organisons tout pour vous avec
-              <span className="text-brand-teal font-bold bg-brand-teal-pale px-2.5 py-1 rounded-md mx-1.5 shadow-sm border border-brand-teal-border">0 tracas</span>.
+              <span className="text-brand-teal font-bold bg-brand-teal-pale px-2.5 py-1 rounded-md mx-1.5 shadow-sm border border-brand-teal-border whitespace-nowrap">0 tracas</span>.
             </motion.p>
 
             {/* Interactive Search Bar */}
             <motion.div variants={FADE_UP_ANIMATION_VARIANTS} className="relative w-full max-w-2xl mx-auto xl:mx-0 group mb-12 cursor-text">
               <div className="absolute -inset-2 bg-gradient-to-r from-brand-teal-pale via-brand-teal-light to-brand-teal-pale rounded-[1.5rem] blur-xl opacity-30 group-hover:opacity-60 transition duration-700"></div>
 
-              <div className="relative bg-white/60 backdrop-blur-2xl rounded-2xl shadow-2xl shadow-slate-200/30 border border-white/80 p-2.5 flex flex-col sm:flex-row gap-2 transition-all duration-500 z-10 group-hover:bg-white/80">
+              <div className="relative bg-white/60 backdrop-blur-2xl rounded-2xl shadow-2xl shadow-slate-200/30 border border-white/80 p-2.5 flex flex-col sm:flex-row gap-3 transition-all duration-500 z-10 group-hover:bg-white/80">
                 <div className="flex-1 flex items-center gap-3 px-5 h-14 sm:h-auto bg-slate-50/50 rounded-xl border border-white/50 focus-within:bg-white focus-within:border-brand-teal-light focus-within:ring-4 ring-brand-teal-pale/50 transition-all">
                   <Search className="text-brand-teal w-5 h-5 flex-shrink-0" />
                   <input
@@ -202,9 +202,9 @@ export function Hero() {
 
               {/* Quick Tags */}
               <div className="mt-5 flex flex-wrap justify-center xl:justify-start gap-2 items-center relative z-20">
-                <span className="text-sm font-semibold text-slate-400 mr-2">Populaire :</span>
-                {['Greffe Capillaire', 'Dentisterie', 'FIV'].map((tag) => (
-                  <span key={tag} className="px-4 py-1.5 bg-white text-slate-600 text-sm font-semibold rounded-full border border-slate-200 shadow-sm cursor-pointer hover:border-brand-teal-light hover:text-brand-teal hover:shadow-md hover:bg-brand-teal-pale transition-all">
+                <span className="text-sm font-semibold text-slate-400 mr-1 shrink-0">Populaire :</span>
+                {['Cancer', 'Chirurgie', 'BBL', 'Cardiologie'].map((tag) => (
+                  <span key={tag} className="px-3.5 py-1.5 bg-white text-slate-600 text-sm font-semibold rounded-full border border-slate-200 shadow-sm cursor-pointer hover:border-brand-teal-light hover:text-brand-teal hover:shadow-md hover:bg-brand-teal-pale transition-all">
                     {tag}
                   </span>
                 ))}
@@ -219,7 +219,7 @@ export function Hero() {
                 { title: 'Sécurité', desc: 'Données de santé (HDS)' },
                 { title: 'Sur-mesure', desc: 'Accompagnement premium' },
               ].map((item, i) => (
-                <div key={i} className="flex flex-col border-l-2 border-slate-200 hover:border-brand-teal transition-colors duration-300 pl-4 py-1">
+                <div key={i} className="flex flex-col py-1">
                   <div className="text-[15px] sm:text-[17px] font-extrabold text-slate-900 mb-1 leading-none">{item.title}</div>
                   <div className="text-[11px] sm:text-[13px] text-slate-500 font-semibold leading-snug">{item.desc}</div>
                 </div>

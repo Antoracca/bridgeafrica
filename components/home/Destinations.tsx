@@ -32,7 +32,7 @@ const destinations = [
   {
     city: 'Tunis',
     country: 'Tunisie',
-    image: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&q=80&w=1920',
+    image: 'https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?auto=format&fit=crop&q=80&w=1920',
     tagline: "Excellence chirurgicale avérée et structures hospitalières accréditées.",
     specialties: ['Chirurgie de l\'Obésité', 'Chirurgie Générale', 'Ophtalmologie'],
   },
@@ -197,9 +197,19 @@ export function Destinations() {
       {/* ── Metrics Verticales & Descriptif Médical ── */}
       <div className="relative z-20 pt-16 pb-20 sm:pt-28 sm:pb-32 overflow-hidden bg-brand-cream border-t border-brand-teal/10">
         
-        {/* Image de fond abstraite/médicale, ancrée à droite avec un fondu léger */}
+        {/* Image de fond — mobile: plein fond centré / desktop: ancré à droite avec fondu */}
+        {/* Mobile : fond absolu plein-section, centré pour montrer le cœur */}
+        <div className="lg:hidden absolute inset-0 z-0 opacity-20 mix-blend-luminosity pointer-events-none">
+          <Image 
+            src="https://images.unsplash.com/photo-1585421514738-01798e348b17?q=80&w=800&auto=format&fit=crop"
+            alt="Medical background"
+            fill
+            className="object-cover object-center"
+          />
+        </div>
+        {/* Desktop : ancré à droite avec fondu gauche */}
         <div 
-          className="absolute top-0 right-0 w-full lg:w-[65%] h-full z-0 opacity-40 mix-blend-luminosity pointer-events-none" 
+          className="hidden lg:block absolute top-0 right-0 w-[65%] h-full z-0 opacity-40 mix-blend-luminosity pointer-events-none" 
           style={{
             maskImage: 'linear-gradient(to left, black 30%, transparent 100%)',
             WebkitMaskImage: 'linear-gradient(to left, black 30%, transparent 100%)'

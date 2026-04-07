@@ -3,6 +3,7 @@
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin, ArrowRight, HeartPulse } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import Image from 'next/image'
 
 export function Footer() {
   return (
@@ -14,12 +15,15 @@ export function Footer() {
           
           {/* Brand Column */}
           <div className="space-y-6">
-            <div className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-brand-teal rounded-xl flex items-center justify-center text-white shadow-lg shadow-brand-navy/50">
-                   <HeartPulse size={24} fill="currentColor" className="text-white" />
-                </div>
-                <span className="text-2xl font-bold tracking-tight">Medi<span className="text-brand-teal">Bridge</span></span>
-            </div>
+            <a href="/" className="inline-block mb-2">
+               <Image 
+                 src="/Logomeba.png" 
+                 alt="MediBridge Africa" 
+                 width={360} 
+                 height={90} 
+                 className="h-16 w-auto object-contain brightness-0 invert hover:opacity-80 transition-opacity" 
+               />
+            </a>
             <p className="text-slate-400 leading-relaxed text-sm">
               La première plateforme digitale connectant les patients d&apos;Afrique subsaharienne à l&apos;excellence médicale internationale. Sécurité, transparence et accompagnement humain.
             </p>

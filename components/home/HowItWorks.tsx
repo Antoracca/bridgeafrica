@@ -153,7 +153,7 @@ export function HowItWorks() {
           transition={{ duration: 0.5, delay: 0.15 }}
           className="mt-14 sm:mt-16"
         >
-          <Link href="/notre-processus">
+          <Link href="/register">
             <button className="h-14 px-10 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-base font-semibold
                                transition-all duration-300 hover:scale-[1.02] inline-flex items-center gap-3 group shadow-lg">
               Démarrer votre accompagnement

@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic'
 import { Navbar } from '@/components/home/Navbar'
 import { Hero } from '@/components/home/Hero'
 import { Button } from '@/components/ui/button'
-import { HeartPulse, CheckCircle } from 'lucide-react'
+import { HeartPulse, CheckCircle, ArrowRight } from 'lucide-react'
 
 const Destinations = dynamic(() => import('@/components/home/Destinations').then(m => ({ default: m.Destinations })))
 const HowItWorks   = dynamic(() => import('@/components/home/HowItWorks').then(m => ({ default: m.HowItWorks })))
@@ -38,48 +38,45 @@ export default function Home() {
       {/* 7. Packages Tout Inclus (New Design) */}
       <Packages />
 
-      {/* 8. Call to Action Final - Design Light Professionnel */}
-      <section className="py-24 bg-white relative overflow-hidden">
-         {/* Accents de couleur subtils en fond */}
-         <div className="absolute top-0 left-0 w-full h-full bg-slate-50/50"></div>
-         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-teal-pale rounded-full blur-[100px] translate-x-1/3 -translate-y-1/3"></div>
+      {/* 8. Call to Action Final - Design Magistral BCG */}
+      <section className="relative py-32 bg-[#020617] overflow-hidden flex items-center justify-center border-t border-slate-800">
+         {/* Background Image magistrale / Sombre */}
+         <div className="absolute inset-0">
+           <img 
+              src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=1600" 
+              alt="Hôpital luxueux ou hall d'hôtel 5 étoiles" 
+              className="w-full h-full object-cover opacity-20 grayscale mix-blend-overlay"
+           />
+           <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/80 to-[#020617]/40"></div>
+         </div>
          
-         <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-14 relative z-10">
-            <div className="max-w-5xl mx-auto text-center">
-               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-teal-pale border border-brand-teal-border text-brand-teal-dark text-sm font-bold mb-8">
-                  <HeartPulse size={16} className="text-brand-teal" />
-                  Votre santé est notre priorité
-               </div>
-               
-               <h2 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-8 tracking-tight leading-tight">
-                  Prêt à bénéficier des meilleurs <br/>
-                  <span className="text-brand-teal text-transparent bg-clip-text bg-gradient-to-r from-brand-navy to-brand-teal-dark">soins internationaux ?</span>
-               </h2>
-               
-               <p className="text-lg md:text-xl text-slate-600 mb-12 max-w-2xl mx-auto leading-relaxed">
-                  Rejoignez MediBridge aujourd'hui. Nos conseillers vous accompagnent à chaque étape de votre parcours médical, en toute sérénité.
-               </p>
-               
-               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                  <Button size="lg" className="bg-brand-teal hover:bg-brand-teal-dark text-white text-lg px-10 h-16 rounded-full shadow-xl shadow-brand-teal-border w-full sm:w-auto font-bold transition-all hover:scale-105 active:scale-95">
-                     Créer mon dossier gratuit
-                  </Button>
-                  <Button size="lg" variant="outline" className="bg-white border-slate-200 text-black hover:bg-slate-50 hover:border-slate-300 text-lg px-10 h-16 rounded-full w-full sm:w-auto font-bold transition-all hover:scale-105 active:scale-95 shadow-sm">
-                     Parler à un conseiller
-                  </Button>
-               </div>
-               
-               <div className="mt-12 flex flex-wrap justify-center gap-8 text-slate-400 font-medium text-sm">
-                  <div className="flex items-center gap-2">
-                     <CheckCircle size={16} className="text-green-500" /> +5000 Patients satisfaits
-                  </div>
-                  <div className="flex items-center gap-2">
-                     <CheckCircle size={16} className="text-green-500" /> Réponse sous 24h
-                  </div>
-                  <div className="flex items-center gap-2">
-                     <CheckCircle size={16} className="text-green-500" /> Devis gratuit & sans engagement
-                  </div>
-               </div>
+         <div className="max-w-5xl mx-auto px-4 sm:px-8 relative z-10 text-center">
+            <h3 className="text-brand-teal tracking-[0.3em] text-[10px] uppercase font-bold mb-6">
+               Prêt à franchir le pas
+            </h3>
+            
+            <h2 className="text-4xl md:text-5xl lg:text-7xl font-normal text-white mb-8 leading-[1.05]" style={{ fontFamily: 'Georgia, serif' }}>
+               Votre santé est absolue.<br />
+               <span className="text-slate-400 italic font-light">Notre engagement aussi.</span>
+            </h2>
+            
+            <p className="text-lg lg:text-xl text-slate-400 mb-14 max-w-2xl mx-auto font-light leading-relaxed">
+               Confiez l'intégralité de votre logistique médicale à l'architecture MediBridge. Nos experts orchestrent chaque étape de votre prise en charge internationale avec un devoir d'excellence certifié.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+               <button className="w-full sm:w-auto bg-brand-teal text-white px-10 h-16 text-xs font-bold uppercase tracking-[0.1em] hover:bg-brand-teal-dark transition-all duration-300 flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(72,156,140,0.2)]">
+                  Débuter L'Étude de Dossier <ArrowRight size={14} />
+               </button>
+               <button className="w-full sm:w-auto bg-transparent border border-white/20 text-white px-10 h-16 text-xs font-bold uppercase tracking-[0.1em] hover:bg-white hover:text-slate-900 transition-all duration-300 flex items-center justify-center gap-3">
+                  Contacter La Conciergerie
+               </button>
+            </div>
+            
+            <div className="mt-16 pt-10 border-t border-white/10 flex flex-wrap justify-center gap-x-12 gap-y-6 text-slate-500 text-[10px] uppercase tracking-[0.2em] font-bold">
+               <span className="flex items-center gap-3"><CheckCircle size={14} className="text-brand-teal" /> Secret Médical Garanti</span>
+               <span className="flex items-center gap-3"><CheckCircle size={14} className="text-brand-teal" /> Protocole HDS</span>
+               <span className="flex items-center gap-3"><CheckCircle size={14} className="text-brand-teal" /> Devis strict sous 48H</span>
             </div>
          </div>
       </section>
