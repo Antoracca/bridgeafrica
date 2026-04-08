@@ -13,7 +13,9 @@ import type { ClinicEntry } from '@/lib/data/homepage'
 import { ClinicModal } from './ClinicModal'
 import { NavSpecialties } from './NavSpecialties'
 import { NavbarMobile } from './NavbarMobile'
-import { NavHowItWorks } from './NavHowItWorks'
+import { NavPricing } from './NavPricing'
+import { NavResources } from './NavResources'
+import { NavPartners } from './NavPartners'
 
 /* ── Data ───────────────────────────────────────────────────────────── */
 const destinations = NAV_DESTINATIONS
@@ -54,7 +56,7 @@ function Diamond() {
    ══════════════════════════════════════════════════════════════════════ */
 export function Navbar() {
   const [menuOpen, setMenuOpen]           = useState(false)
-  const [activeSection, setActiveSection] = useState<'destinations' | 'specialites' | 'how'>('destinations')
+  const [activeSection, setActiveSection] = useState<'destinations' | 'specialites' | 'pricing' | 'resources' | 'partners'>('destinations')
   const [activeCountry, setActiveCountry] = useState<string | null>(null)
   const [searchQuery, setSearchQuery]     = useState('')
   const [isScrolled, setIsScrolled]       = useState(false)
@@ -209,14 +211,20 @@ export function Navbar() {
                     <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-[0.18em] mb-0.5">
                       {activeSection === 'destinations' ? 'Destinations médicales'
                         : activeSection === 'specialites' ? 'Expertise médicale'
-                        : 'Parcours patient'}
+                        : activeSection === 'pricing' ? 'Tarifs & Financement'
+                        : activeSection === 'resources' ? 'Ressources patient'
+                        : 'Partenariats institutionnels'}
                     </p>
                     <p className="text-[14px] font-bold text-slate-900 leading-snug">
                       {activeSection === 'destinations'
                         ? 'Hôpitaux & cliniques partenaires'
                         : activeSection === 'specialites'
                           ? 'Spécialités & services inclus'
-                          : 'Comment ça marche en 4 étapes'}
+                          : activeSection === 'pricing'
+                            ? 'Forfaits, estimations & financement'
+                            : activeSection === 'resources'
+                              ? 'Guides, outils & contenus éducatifs'
+                              : 'Impact, partenaires & devenir partenaire'}
                     </p>
                   </div>
                 </motion.div>
@@ -229,19 +237,23 @@ export function Navbar() {
             <div className={`flex items-center gap-0.5 transition-all duration-300 px-1.5 py-1.5
               ${menuOpen ? 'bg-transparent border-transparent gap-1' : 'bg-slate-50 border border-slate-200/80 rounded-full'}`}>
               {[
-                { key: 'destinations' as const, label: 'Destinations & Cliniques' },
-                { key: 'specialites' as const, label: 'Spécialités & Services' },
-                { key: 'how' as const, label: 'Comment ça marche' },
+                { key: 'destinations' as const, label: 'Destinations & Cliniques', highlighted: false },
+                { key: 'specialites' as const, label: 'Spécialités & Services', highlighted: false },
+                { key: 'pricing' as const, label: 'Tarifs & Financement', highlighted: false },
+                { key: 'resources' as const, label: 'Ressources Patient', highlighted: false },
+                { key: 'partners' as const, label: 'Devenir Partenaire', highlighted: true },
               ].map(item => (
                 <button key={item.key}
                   onClick={() => { setActiveSection(item.key); setActiveCountry(null); setMenuOpen(true) }}
                   className={`text-[13px] font-semibold px-3.5 py-1.5 transition-all duration-200
-                    ${menuOpen ? 'rounded-none border-b-2' : 'rounded-full'}
+                    ${menuOpen ? 'rounded-none border-b-2' : item.highlighted ? 'rounded-full' : 'rounded-full'}
                     ${menuOpen && activeSection === item.key
                       ? 'text-brand-teal border-brand-teal'
                       : menuOpen
                         ? 'text-slate-500 border-transparent hover:text-brand-teal hover:border-brand-teal/30'
-                        : 'text-slate-600 hover:text-brand-teal hover:bg-white/70'}`}>
+                        : item.highlighted
+                          ? 'text-white bg-brand-teal hover:bg-brand-teal-dark shadow-sm shadow-brand-teal/20'
+                          : 'text-slate-600 hover:text-brand-teal hover:bg-white/70'}`}>
                   {item.label}
                 </button>
               ))}
@@ -342,12 +354,16 @@ export function Navbar() {
                     <p className="text-[9px] font-bold text-brand-teal uppercase tracking-[0.22em] mb-2">
                       {activeSection === 'destinations' ? 'Destinations'
                         : activeSection === 'specialites' ? 'Spécialités'
-                        : 'Parcours patient'}
+                        : activeSection === 'pricing' ? 'Tarifs'
+                        : activeSection === 'resources' ? 'Ressources'
+                        : 'Partenariats'}
                     </p>
                     <h3 className="text-[16px] font-bold text-slate-900 leading-snug" style={{ fontFamily: 'Georgia, serif' }}>
                       {activeSection === 'destinations' ? 'Notre réseau médical'
                         : activeSection === 'specialites' ? 'Notre expertise'
-                        : 'Comment ça marche'}
+                        : activeSection === 'pricing' ? 'Tarifs & Financement'
+                        : activeSection === 'resources' ? 'Guides & Ressources'
+                        : 'Devenir Partenaire'}
                     </h3>
                   </div>
                   <div className="h-px bg-slate-200/80 mx-5 mb-1" />
@@ -478,18 +494,52 @@ export function Navbar() {
 
                   <div className="h-px bg-slate-200/80 mx-5 my-1" />
 
-                  {/* Section: Comment ça marche */}
-                  <button onClick={() => { setActiveSection('how'); setActiveCountry(null); setSelectedSpecialty(null) }}
+                  {/* Section: Devenir Partenaire */}
+                  <button onClick={() => { setActiveSection('partners'); setActiveCountry(null); setSelectedSpecialty(null) }}
                     className={`w-full text-left px-5 py-4 transition-all
-                      ${activeSection === 'how'
+                      ${activeSection === 'partners'
                         ? 'border-l-2 border-brand-teal bg-white'
                         : 'border-l-2 border-transparent hover:bg-white/60'
                       }`}>
-                    <span className={`text-[13px] font-bold tracking-wide uppercase block ${activeSection === 'how' ? 'text-brand-teal' : 'text-slate-500 hover:text-slate-800'}`}>
-                      Comment ça marche
+                    <span className={`text-[13px] font-bold tracking-wide uppercase block ${activeSection === 'partners' ? 'text-brand-teal' : 'text-slate-500 hover:text-slate-800'}`}>
+                      Devenir Partenaire
                     </span>
                     <span className="text-[10px] text-slate-400 mt-0.5 block">
-                      Parcours patient en 4 étapes
+                      Cliniques · Assurances · ONG · Gouvernements
+                    </span>
+                  </button>
+
+                  <div className="h-px bg-slate-200/80 mx-5 my-1" />
+
+                  {/* Section: Tarifs & Financement */}
+                  <button onClick={() => { setActiveSection('pricing'); setActiveCountry(null); setSelectedSpecialty(null) }}
+                    className={`w-full text-left px-5 py-4 transition-all
+                      ${activeSection === 'pricing'
+                        ? 'border-l-2 border-brand-teal bg-white'
+                        : 'border-l-2 border-transparent hover:bg-white/60'
+                      }`}>
+                    <span className={`text-[13px] font-bold tracking-wide uppercase block ${activeSection === 'pricing' ? 'text-brand-teal' : 'text-slate-500 hover:text-slate-800'}`}>
+                      Tarifs & Financement
+                    </span>
+                    <span className="text-[10px] text-slate-400 mt-0.5 block">
+                      3 forfaits · Estimations · Crédits
+                    </span>
+                  </button>
+
+                  <div className="h-px bg-slate-200/80 mx-5 my-1" />
+
+                  {/* Section: Ressources & Guides Patient */}
+                  <button onClick={() => { setActiveSection('resources'); setActiveCountry(null); setSelectedSpecialty(null) }}
+                    className={`w-full text-left px-5 py-4 transition-all
+                      ${activeSection === 'resources'
+                        ? 'border-l-2 border-brand-teal bg-white'
+                        : 'border-l-2 border-transparent hover:bg-white/60'
+                      }`}>
+                    <span className={`text-[13px] font-bold tracking-wide uppercase block ${activeSection === 'resources' ? 'text-brand-teal' : 'text-slate-500 hover:text-slate-800'}`}>
+                      Ressources Patient
+                    </span>
+                    <span className="text-[10px] text-slate-400 mt-0.5 block">
+                      Guides · Checklist · Glossaire · Devis
                     </span>
                   </button>
 
@@ -714,10 +764,24 @@ export function Navbar() {
                       </motion.div>
                     )}
 
-                    {/* ═══ COMMENT ÇA MARCHE ═════════════════════════════ */}
-                    {activeSection === 'how' && (
-                      <motion.div key="how" variants={panelV} initial="initial" animate="animate" exit="exit">
-                        <NavHowItWorks closeMenu={closeMenu} />
+                    {/* ═══ DEVENIR PARTENAIRE ════════════════════════════ */}
+                    {activeSection === 'partners' && (
+                      <motion.div key="partners" variants={panelV} initial="initial" animate="animate" exit="exit">
+                        <NavPartners closeMenu={closeMenu} />
+                      </motion.div>
+                    )}
+
+                    {/* ═══ TARIFS & FINANCEMENT ══════════════════════════ */}
+                    {activeSection === 'pricing' && (
+                      <motion.div key="pricing" variants={panelV} initial="initial" animate="animate" exit="exit">
+                        <NavPricing closeMenu={closeMenu} />
+                      </motion.div>
+                    )}
+
+                    {/* ═══ RESSOURCES & GUIDES PATIENT ══════════════════ */}
+                    {activeSection === 'resources' && (
+                      <motion.div key="resources" variants={panelV} initial="initial" animate="animate" exit="exit">
+                        <NavResources closeMenu={closeMenu} />
                       </motion.div>
                     )}
 

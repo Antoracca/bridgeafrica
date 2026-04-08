@@ -13,24 +13,17 @@ export const metadata: Metadata = {
 
 export default function RegisterPage() {
   return (
-    <div className="container relative min-h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0 overflow-hidden w-full max-w-full">
-
-      {/* Background médical pour mobile - gradient plus léger */}
-      <div className="absolute inset-0 lg:hidden">
-        <BackgroundSlideshow />
-        {/* Gradient overlay très subtil pour voir clairement les images */}
-        <div className="absolute inset-0 bg-linear-to-b from-slate-900/40 via-emerald-950/30 to-slate-950/50" />
-      </div>
+    <div className="relative min-h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0 bg-white lg:bg-slate-50 w-full max-w-full">
 
       {/* Logo MediBridge - mobile top */}
-      <div className="lg:hidden absolute top-5 left-5 z-30 flex items-center text-white drop-shadow-lg">
-        <Activity className="mr-2 h-5 w-5 text-emerald-400" />
-        <span className="text-base font-bold tracking-tight">MediBridge</span>
+      <div className="lg:hidden absolute top-6 left-6 z-30 flex items-center text-slate-900">
+        <Activity className="mr-2 h-5 w-5 text-brand-teal" />
+        <span className="text-base font-bold tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>MediBridge</span>
       </div>
 
       <Link
         href="/login"
-        className="absolute right-4 top-4 z-30 flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium text-white hover:text-white hover:bg-white/20 backdrop-blur-md border border-white/30 transition-all shadow-lg lg:bg-transparent lg:border-0 lg:text-primary lg:hover:bg-muted lg:right-8 lg:top-8 lg:rounded-lg"
+        className="absolute right-4 top-4 z-30 flex items-center justify-center rounded-md px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all lg:bg-white lg:border lg:border-slate-200 lg:right-8 lg:top-8 lg:shadow-sm"
       >
         Déjà un compte ?
       </Link>
@@ -53,43 +46,37 @@ export default function RegisterPage() {
       </div>
 
       {/* Contenu principal - avec padding pour que la page respire */}
-      <div className="relative z-20 flex min-h-screen lg:min-h-0 h-full items-center justify-center px-4 py-8 sm:px-6 lg:p-8 overflow-y-auto">
-        <div className="w-full max-w-[460px] mx-auto flex flex-col justify-center space-y-3 lg:space-y-4 my-auto">
+      <div className="relative z-20 flex min-h-screen lg:min-h-0 h-full items-center justify-center px-4 pt-20 pb-8 sm:px-6 lg:p-8 overflow-y-auto lg:bg-white">
+        <div className="w-full max-w-[420px] mx-auto flex flex-col justify-center space-y-4 my-auto">
 
-          {/* Animation Lottie - compacte avec espace */}
+          {/* Animation Lottie - conservée comme demandé, légèrement resserrée */}
           <LottieAnimation
             animationData={OnlineDoctorAnimation}
-            className="w-20 h-20 sm:w-28 sm:h-28 lg:w-36 lg:h-36 mx-auto -mb-1 lg:mb-0"
+            className="w-24 h-24 sm:w-28 sm:h-28 mx-auto -mb-2"
             loop={false}
           />
 
-          {/* Header moderne */}
-          <div className="flex flex-col space-y-1 text-center">
-            <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-white drop-shadow-lg lg:text-slate-900 lg:dark:text-white lg:drop-shadow-none">
+          {/* Header moderne et strict */}
+          <div className="flex flex-col space-y-2 text-center mb-4">
+            <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-slate-900" style={{ fontFamily: 'Georgia, serif' }}>
               Créer un compte
             </h1>
-            <p className="text-sm text-white/90 drop-shadow lg:text-muted-foreground lg:drop-shadow-none">
-              Rejoignez MediBridge
+            <p className="text-sm text-slate-500 font-light">
+              Rejoignez l'écosystème MediBridge
             </p>
           </div>
 
-          {/* Carte moderne avec glassmorphism élégant */}
-          <div className="relative backdrop-blur-xl bg-white/97 lg:bg-transparent rounded-3xl lg:rounded-2xl px-5 py-6 sm:px-6 lg:p-6 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.3)] lg:shadow-xl border-2 border-white/60 lg:border-border overflow-hidden">
-            {/* Effet de brillance subtil */}
-            <div className="absolute inset-0 bg-linear-to-br from-blue-500/3 via-transparent to-emerald-500/3 pointer-events-none lg:hidden" />
-
-            {/* Pattern décoratif subtil */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-blue-500 via-emerald-500 to-blue-500 rounded-t-3xl lg:hidden" />
-
+          {/* Carte ultra épurée, sans bordure visible ni ombres grossières */}
+          <div className="relative bg-white rounded-none px-2 py-4 sm:px-4 lg:p-6 w-full">
             <div className="relative">
               <RegisterForm />
             </div>
           </div>
 
-          {/* Footer - visible sur mobile et desktop */}
-          <p className="text-center text-xs text-white/75 drop-shadow-sm lg:text-muted-foreground lg:drop-shadow-none px-4">
-            En cliquant sur s&apos;inscrire, vous acceptez nos{" "}
-            <Link href="#" className="underline underline-offset-2 hover:text-white lg:hover:text-primary transition-colors">
+          {/* Footer ultra minimaliste */}
+          <p className="text-center text-[11px] text-slate-400 px-4 mt-6">
+            En cliquant sur s'inscrire, vous acceptez nos{" "}
+            <Link href="#" className="underline underline-offset-4 hover:text-slate-900 transition-colors">
               Conditions Générales
             </Link>
           </p>

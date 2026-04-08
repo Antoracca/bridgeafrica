@@ -1,57 +1,9 @@
 'use client'
 
+import { useState } from 'react'
 import { Check, Minus, Phone } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-
-const FEATURES = [
-  { label: 'Accès à la plateforme MediBridge', essentiel: true, serenite: true, excellence: true },
-  { label: 'Mise en relation avec une clinique', essentiel: true, serenite: true, excellence: true },
-  { label: 'Devis médical personnalisé', essentiel: true, serenite: true, excellence: true },
-  { label: 'Coordinateur dédié (WhatsApp + Email)', essentiel: false, serenite: true, excellence: true },
-  { label: 'Organisation du voyage (vols + hôtel)', essentiel: false, serenite: true, excellence: true },
-  { label: 'Transferts aéroport & clinique', essentiel: false, serenite: true, excellence: true },
-  { label: 'Interprète médical sur place', essentiel: false, serenite: true, excellence: true },
-  { label: 'Assurance annulation & rapatriement', essentiel: false, serenite: true, excellence: true },
-  { label: 'Suivi post-opératoire (3 mois)', essentiel: false, serenite: true, excellence: true },
-  { label: 'Concierge 24/7 pendant le séjour', essentiel: false, serenite: false, excellence: true },
-  { label: 'Accompagnateur personnel en clinique', essentiel: false, serenite: false, excellence: true },
-  { label: 'Accès VIP aux meilleurs chirurgiens', essentiel: false, serenite: false, excellence: true },
-  { label: 'Hébergement 5★ sélectionné', essentiel: false, serenite: false, excellence: true },
-  { label: 'Suivi post-opératoire (12 mois)', essentiel: false, serenite: false, excellence: true },
-]
-
-const PLANS = [
-  {
-    id: 'essentiel',
-    name: 'Essentiel',
-    tagline: 'Pour commencer votre démarche',
-    price: 'Gratuit',
-    priceSub: null,
-    badge: null,
-    highlighted: false,
-    cta: 'Choisir',
-  },
-  {
-    id: 'serenite',
-    name: 'Sérénité',
-    tagline: 'Le parcours complet, clé en main',
-    price: 'Dès 490 €',
-    priceSub: 'par séjour médical',
-    badge: 'La plus demandée',
-    highlighted: true,
-    cta: 'Choisir Sérénité',
-  },
-  {
-    id: 'excellence',
-    name: 'Excellence',
-    tagline: 'La prise en charge absolue',
-    price: 'Sur mesure',
-    priceSub: 'devis personnalisé',
-    badge: null,
-    highlighted: false,
-    cta: 'Contact VIP',
-  },
-]
+import { PRICING_PLANS as PLANS, PRICING_FEATURES as FEATURES } from '@/lib/data/pricing'
 
 function FeatureCell({ value, highlighted }: { value: boolean, highlighted?: boolean }) {
   if (value) {
@@ -61,23 +13,43 @@ function FeatureCell({ value, highlighted }: { value: boolean, highlighted?: boo
 }
 
 export function Pricing() {
+  const [activePlanId, setActivePlanId] = useState<string>('serenite')
+  const activePlan = PLANS.find(p => p.id === activePlanId) || PLANS[1]
+
   return (
     <section id="pricing" className="pt-0 pb-32 bg-[#fafafa]">
       <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-14">
 
         {/* --- HEADER MAGISTRAL --- */}
         <div className="text-center mb-16 md:mb-24 max-w-4xl mx-auto">
-          <h2 className="text-5xl md:text-6xl text-slate-900 mb-8 leading-[1.05]" style={{ fontFamily: 'Georgia, serif' }}>
-            Nos Formules. <br className="hidden md:block"/>
-            <span className="text-brand-teal italic font-light">L'accompagnement à votre mesure.</span>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl text-slate-900 mb-6 md:mb-8 leading-[1.1]" style={{ fontFamily: 'Georgia, serif' }}>
+            Nos Formules. <span className="block mt-2 md:mt-1 md:inline text-brand-teal italic font-light">L'accompagnement à votre mesure.</span>
           </h2>
           <p className="text-lg md:text-xl text-slate-500 leading-relaxed font-light mx-auto max-w-2xl">
             Peu importe la maladie ou la destination, choisissez le niveau d'orchestration qui sécurise parfaitement votre séjour.
           </p>
         </div>
 
+        {/* --- TABS MOBILE --- */}
+        <div className="md:hidden flex p-1.5 bg-slate-200/50 rounded-full mx-auto max-w-sm mb-8">
+          {PLANS.map((plan) => (
+            <button
+              key={plan.id}
+              onClick={() => setActivePlanId(plan.id)}
+              className={`flex-1 py-3 px-2 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all
+                ${activePlanId === plan.id 
+                  ? 'bg-brand-teal text-white shadow-md' 
+                  : 'text-slate-500 hover:text-slate-700'
+                }
+              `}
+            >
+              {plan.name}
+            </button>
+          ))}
+        </div>
+
         {/* --- PRICING MATRIX --- */}
-        <div className="border border-slate-200 bg-white flex flex-col md:overflow-visible">
+        <div className="border border-slate-200 bg-slate-50/50 md:bg-white flex flex-col md:overflow-visible rounded-xl overflow-hidden md:rounded-none">
 
           {/* En-têtes (Headers) */}
           <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr_1fr]">
@@ -90,12 +62,13 @@ export function Pricing() {
                 key={plan.id}
                 className={`
                   p-8 md:p-10 border-b border-slate-200 relative
-                  ${plan.highlighted ? 'bg-[#f4f7f6] shadow-[inset_0_4px_0_0_#489c8c]' : 'bg-white'}
+                  ${activePlanId === plan.id ? 'block' : 'hidden md:block'}
+                  ${plan.highlighted ? 'md:bg-[#f4f7f6] md:shadow-[inset_0_4px_0_0_#489c8c] bg-white' : 'bg-white'}
                   ${i < PLANS.length - 1 ? 'md:border-r md:border-slate-200' : ''}
                 `}
               >
                 {plan.badge && (
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 sm:top-4 sm:translate-y-0 text-[10px] uppercase tracking-widest font-bold bg-brand-teal text-white px-4 py-1.5 whitespace-nowrap shadow-sm z-20">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 md:top-4 text-[10px] uppercase tracking-widest font-bold bg-brand-teal text-white px-4 py-1.5 whitespace-nowrap shadow-sm z-20 rounded-b-lg md:rounded-b-none">
                     {plan.badge}
                   </div>
                 )}
@@ -131,17 +104,12 @@ export function Pricing() {
                 {feature.label}
               </div>
 
-              {/* Version Mobile: Affiche le label + 3 valeurs en ligne */}
-              <div className="md:hidden px-6 py-5 border-b border-slate-100 bg-slate-50/50">
-                <p className="text-[14px] text-slate-800 font-bold mb-4">{feature.label}</p>
-                <div className="grid grid-cols-3 text-center gap-4">
-                  {PLANS.map((plan) => (
-                    <div key={plan.id} className="flex flex-col items-center gap-2">
-                       <span className="text-[10px] uppercase font-bold text-slate-400">{plan.name}</span>
-                       <FeatureCell value={feature[plan.id as keyof typeof feature] as boolean} highlighted={plan.highlighted} />
-                    </div>
-                  ))}
-                </div>
+              {/* Version Mobile: Affiche le label + la valeur pour le plan ACTIF */}
+              <div className="md:hidden px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-white transition-colors">
+                 <span className="text-[13px] text-slate-700 font-medium pr-4 leading-snug">{feature.label}</span>
+                 <div className="shrink-0 flex items-center justify-center w-8">
+                   <FeatureCell value={feature[activePlanId as keyof typeof feature] as boolean} highlighted={activePlan.highlighted} />
+                 </div>
               </div>
 
               {/* Version Desktop: Les valeurs alignées */}
@@ -174,8 +142,9 @@ export function Pricing() {
               <div
                 key={plan.id}
                 className={`
-                  min-w-0 p-8 flex items-center border-t border-slate-200
-                  ${plan.highlighted ? 'bg-[#f4f7f6] shadow-[inset_0_-4px_0_0_#489c8c]' : 'bg-white'}
+                  min-w-0 p-6 md:p-8 items-center bg-white md:bg-transparent
+                  ${activePlanId === plan.id ? 'flex' : 'hidden md:flex'}
+                  ${plan.highlighted ? 'md:bg-[#f4f7f6] md:shadow-[inset_0_-4px_0_0_#489c8c]' : 'md:bg-white'}
                   ${i < PLANS.length - 1 ? 'md:border-r md:border-slate-200' : ''}
                 `}
               >

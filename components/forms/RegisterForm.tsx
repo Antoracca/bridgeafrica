@@ -396,16 +396,14 @@ function RegisterFormContent() {
         </Alert>
       )}
 
-      {/* Indicateur d'étapes - design moderne */}
-      <div className="flex items-center justify-center gap-3 mb-5">
-        <div className={`relative flex items-center justify-center w-9 h-9 rounded-xl text-sm font-bold transition-all duration-300 ${currentStep === 1 ? 'bg-linear-to-br from-blue-600 to-blue-700 text-white shadow-md shadow-blue-500/30' : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500'}`}>
-          1
-          {currentStep === 1 && <div className="absolute inset-0 rounded-xl bg-white/20 animate-pulse" />}
+      {/* Indicateur d'étapes - design épuré (Progress Bar) */}
+      <div className="mb-6 mt-2">
+        <div className="flex justify-between items-center mb-2.5">
+          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400">Étape {currentStep} sur 2</span>
+          <span className="text-[10px] sm:text-xs font-semibold text-slate-700">{currentStep === 1 ? 'Informations Personnelles' : 'Sécurité du Compte'}</span>
         </div>
-        <div className={`h-0.5 w-16 rounded-full transition-all duration-500 ${currentStep === 2 ? 'bg-linear-to-r from-blue-600 to-emerald-500' : 'bg-slate-200 dark:bg-slate-700'}`} />
-        <div className={`relative flex items-center justify-center w-9 h-9 rounded-xl text-sm font-bold transition-all duration-300 ${currentStep === 2 ? 'bg-linear-to-br from-emerald-600 to-emerald-700 text-white shadow-md shadow-emerald-500/30' : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500'}`}>
-          2
-          {currentStep === 2 && <div className="absolute inset-0 rounded-xl bg-white/20 animate-pulse" />}
+        <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+          <div className={`h-full bg-slate-900 transition-all duration-500 ease-out ${currentStep === 1 ? 'w-1/2' : 'w-full'}`} />
         </div>
       </div>
 
@@ -428,7 +426,7 @@ function RegisterFormContent() {
                             <Input
                               placeholder="Jean"
                               {...field}
-                              className="h-12 px-4 text-base rounded-xl transition-all duration-300 border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 hover:border-slate-300 dark:hover:border-slate-600 shadow-sm font-medium"
+                              className="h-11 px-3 text-base rounded-md transition-colors border border-slate-200 bg-white focus:border-brand-teal focus:ring-1 focus:ring-brand-teal hover:border-slate-300 shadow-sm font-medium"
                               onChange={(e) => {
                                 field.onChange(e)
                                 setNameToCheck({ ...nameToCheck, firstName: e.target.value })
@@ -456,7 +454,7 @@ function RegisterFormContent() {
                             <Input
                               placeholder="Dupont"
                               {...field}
-                              className="h-12 px-4 text-base rounded-xl transition-all duration-300 border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 hover:border-slate-300 dark:hover:border-slate-600 shadow-sm font-medium"
+                              className="h-11 px-3 text-base rounded-md transition-colors border border-slate-200 bg-white focus:border-brand-teal focus:ring-1 focus:ring-brand-teal hover:border-slate-300 shadow-sm font-medium"
                               onChange={(e) => {
                                 field.onChange(e)
                                 setNameToCheck({ ...nameToCheck, lastName: e.target.value })
@@ -512,7 +510,7 @@ function RegisterFormContent() {
                               field.onChange(value || '')
                               setPhoneToCheck(value || '')
                             }}
-                            className="flex h-12 w-full rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-1 text-base shadow-sm transition-all duration-300 hover:border-slate-300 dark:hover:border-slate-600 focus-visible:outline-none focus-visible:border-blue-500 focus-visible:ring-4 focus-visible:ring-blue-500/10 disabled:cursor-not-allowed disabled:opacity-50 font-medium"
+                            className="flex h-11 w-full rounded-md border border-slate-200 bg-white px-3 py-1 text-base shadow-sm transition-colors hover:border-slate-300 focus-within:border-brand-teal focus-within:ring-1 focus-within:ring-brand-teal outline-none disabled:cursor-not-allowed disabled:opacity-50 font-medium"
                           />
                         </FormControl>
                         <div className="absolute right-12 top-0 h-full flex items-center pointer-events-none">
@@ -547,7 +545,7 @@ function RegisterFormContent() {
                   <Button
                     variant="outline"
                     type="button"
-                    className="h-11 rounded-xl border-2 border-slate-200 dark:border-slate-700 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/20 transition-all duration-300 shadow-sm hover:shadow group"
+                    className="h-11 rounded-md border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-colors shadow-sm group text-slate-700 font-medium"
                     disabled={isPending}
                     onClick={() => handleSocialLogin('google')}
                   >
@@ -557,7 +555,7 @@ function RegisterFormContent() {
                   <Button
                     variant="outline"
                     type="button"
-                    className="h-11 rounded-xl border-2 border-slate-200 dark:border-slate-700 hover:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-300 shadow-sm hover:shadow group"
+                    className="h-11 rounded-md border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-colors shadow-sm group text-slate-700 font-medium"
                     disabled={isPending}
                     onClick={() => handleSocialLogin('apple')}
                   >
@@ -570,7 +568,7 @@ function RegisterFormContent() {
                 <Button
                   type="button"
                   onClick={goToStep2}
-                  className="w-full h-12 mt-5 rounded-xl bg-linear-to-r from-blue-600 via-blue-600 to-blue-700 hover:from-blue-700 hover:via-blue-700 hover:to-blue-800 text-white font-bold shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] text-base"
+                  className="w-full h-12 mt-6 rounded-md bg-slate-900 hover:bg-slate-800 text-white font-semibold shadow-sm transition-colors text-base"
                   disabled={!isStep1Valid || isPending}
                 >
                   Suivant
@@ -593,7 +591,7 @@ function RegisterFormContent() {
                           type="email"
                           placeholder="exemple@email.com"
                           {...field}
-                          className="h-12 px-4 text-base rounded-xl transition-all duration-300 border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 hover:border-slate-300 dark:hover:border-slate-600 shadow-sm font-medium"
+                          className="h-11 px-3 text-base rounded-md transition-colors border border-slate-200 bg-white focus:border-brand-teal focus:ring-1 focus:ring-brand-teal hover:border-slate-300 shadow-sm font-medium"
                           onChange={(e) => {
                             field.onChange(e)
                             setEmailToCheck(e.target.value)
@@ -626,7 +624,7 @@ function RegisterFormContent() {
                             type={showPassword ? "text" : "password"}
                             placeholder="••••••••"
                             {...field}
-                            className="h-12 px-4 pr-12 text-base rounded-xl transition-all duration-300 border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 hover:border-slate-300 dark:hover:border-slate-600 shadow-sm font-medium"
+                            className="h-11 px-3 pr-10 text-base rounded-md transition-colors border border-slate-200 bg-white focus:border-brand-teal focus:ring-1 focus:ring-brand-teal hover:border-slate-300 shadow-sm font-medium"
                           />
                         </FormControl>
                         <Button
@@ -657,7 +655,7 @@ function RegisterFormContent() {
                             type={showConfirmPassword ? "text" : "password"}
                             placeholder="••••••••"
                             {...field}
-                            className="h-12 px-4 pr-12 text-base rounded-xl transition-all duration-300 border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 hover:border-slate-300 dark:hover:border-slate-600 shadow-sm font-medium"
+                            className="h-11 px-3 pr-10 text-base rounded-md transition-colors border border-slate-200 bg-white focus:border-brand-teal focus:ring-1 focus:ring-brand-teal hover:border-slate-300 shadow-sm font-medium"
                           />
                         </FormControl>
                         <Button
@@ -676,12 +674,12 @@ function RegisterFormContent() {
                 />
 
                 {/* Boutons Retour et S'inscrire - design moderne */}
-                <div className="flex gap-3 mt-5">
+                <div className="flex gap-3 mt-6">
                   <Button
                     type="button"
                     variant="outline"
                     onClick={() => setCurrentStep(1)}
-                    className="w-auto px-5 h-12 rounded-xl border-2 border-slate-200 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-300"
+                    className="w-auto px-5 h-12 rounded-md border border-slate-200 hover:bg-slate-50 transition-colors text-slate-700 font-medium"
                     disabled={isPending}
                   >
                     <svg className="mr-1.5 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
@@ -691,7 +689,7 @@ function RegisterFormContent() {
                   </Button>
                   <Button
                     type="submit"
-                    className="flex-1 h-12 rounded-xl bg-linear-to-r from-emerald-600 via-emerald-600 to-emerald-700 hover:from-emerald-700 hover:via-emerald-700 hover:to-emerald-800 text-white font-bold shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] text-base"
+                    className="flex-1 h-12 rounded-md bg-brand-teal hover:bg-brand-teal-dark text-white font-semibold shadow-sm transition-colors text-base"
                     disabled={isPending || !isStep2Valid}
                   >
                     {isPending ? (
