@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, MapPin, Plane, Brain, Star, ChevronRight, CheckCircle2, ShieldCheck, Stethoscope, Activity } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ExploreModal } from './ExploreModal'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 
@@ -19,6 +20,7 @@ const FADE_UP_ANIMATION_VARIANTS = {
 
 export function Hero() {
   const [searchQuery, setSearchQuery] = useState('')
+  const [exploreOpen, setExploreOpen] = useState(false)
   const [currentWordIndex, setCurrentWordIndex] = useState(0)
   const words = ["Frontières.", "Limites.", "Compromis."]
 
@@ -172,7 +174,7 @@ export function Hero() {
 
             <motion.p variants={FADE_UP_ANIMATION_VARIANTS} className="text-lg sm:text-xl text-slate-600 mb-10 leading-relaxed max-w-2xl mx-auto xl:mx-0 font-medium">
               Votre santé mérite les meilleurs experts mondiaux. De la consultation au voyage, nous organisons tout pour vous avec
-              <span className="text-brand-teal font-bold bg-brand-teal-pale px-2.5 py-1 rounded-md mx-1.5 shadow-sm border border-brand-teal-border whitespace-nowrap">0 tracas</span>.
+              <span className="text-brand-teal font-bold bg-brand-teal-pale px-2.5 py-1 rounded-md mx-1.5 shadow-sm border border-brand-teal-border whitespace-nowrap">0 tracasseries</span>.
             </motion.p>
 
             {/* Interactive Search Bar */}
@@ -186,12 +188,16 @@ export function Hero() {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') setExploreOpen(true) }}
                     placeholder="Intervention, pays, clinique..."
                     className="w-full bg-transparent outline-none text-slate-800 placeholder:text-slate-400 font-medium text-base sm:text-lg"
                     suppressHydrationWarning
                   />
                 </div>
-                <Button className="w-full sm:w-auto relative group/btn rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-white px-8 h-14 text-base font-bold shadow-lg transition-all animate-none overflow-hidden hover:scale-[1.02]">
+                <Button
+                  onClick={() => setExploreOpen(true)}
+                  className="w-full sm:w-auto relative group/btn rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-white px-8 h-14 text-base font-bold shadow-lg transition-all animate-none overflow-hidden hover:scale-[1.02]"
+                >
                   <span className="relative z-10 flex items-center gap-2">
                     Explorer
                     <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1.5 transition-transform duration-300" />
@@ -204,7 +210,11 @@ export function Hero() {
               <div className="mt-5 flex flex-wrap justify-center xl:justify-start gap-2 items-center relative z-20">
                 <span className="text-sm font-semibold text-slate-400 mr-1 shrink-0">Populaire :</span>
                 {['Cancer', 'Chirurgie', 'BBL', 'Cardiologie'].map((tag) => (
-                  <span key={tag} className="px-3.5 py-1.5 bg-white text-slate-600 text-sm font-semibold rounded-full border border-slate-200 shadow-sm cursor-pointer hover:border-brand-teal-light hover:text-brand-teal hover:shadow-md hover:bg-brand-teal-pale transition-all">
+                  <span
+                    key={tag}
+                    onClick={() => { setSearchQuery(tag); setExploreOpen(true) }}
+                    className="px-3.5 py-1.5 bg-white text-slate-600 text-sm font-semibold rounded-full border border-slate-200 shadow-sm cursor-pointer hover:border-brand-teal-light hover:text-brand-teal hover:shadow-md hover:bg-brand-teal-pale transition-all"
+                  >
                     {tag}
                   </span>
                 ))}
@@ -283,6 +293,13 @@ export function Hero() {
         </div>
 
       </div>
+
+      {/* Explore modal — slides from right */}
+      <ExploreModal
+        isOpen={exploreOpen}
+        onClose={() => setExploreOpen(false)}
+        initialQuery={searchQuery}
+      />
     </section>
   )
 }

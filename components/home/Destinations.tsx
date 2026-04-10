@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { DestinationsModal } from './DestinationsModal'
 
 /* ─── Data ─── */
 const destinations = [
@@ -78,6 +79,7 @@ function AnimatedCounter({ value, suffix }: { value: string; suffix: string }) {
 /* ─── Component ─── */
 export function Destinations() {
   const [active, setActive] = useState(0)
+  const [destModalOpen, setDestModalOpen] = useState(false)
 
   const next = useCallback(() => setActive(p => (p + 1) % destinations.length), [])
 
@@ -111,15 +113,15 @@ export function Destinations() {
               meilleurs soins au monde
             </h2>
           </div>
-          <Link
-            href="/liste-pays"
+          <button
+            onClick={() => setDestModalOpen(true)}
             className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full
                        bg-slate-900 text-white text-sm font-semibold
                        hover:bg-slate-800 transition-all duration-300 self-start sm:self-auto flex-shrink-0"
           >
             Toutes les destinations
             <ArrowUpRight className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
-          </Link>
+          </button>
         </motion.div>
       </div>
 
@@ -274,6 +276,7 @@ export function Destinations() {
           </div>
         </div>
       </div>
+      <DestinationsModal isOpen={destModalOpen} onClose={() => setDestModalOpen(false)} />
     </section>
   )
 }
