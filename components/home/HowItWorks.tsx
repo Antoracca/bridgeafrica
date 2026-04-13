@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
-import Link from 'next/link'
+import { OnboardingModal } from './OnboardingModal'
 
 const steps = [
   {
@@ -58,6 +58,7 @@ const steps = [
 
 export function HowItWorks() {
   const [active, setActive] = useState(0)
+  const [onboardingOpen, setOnboardingOpen] = useState(false)
   const step = steps[active]
 
   return (
@@ -153,16 +154,22 @@ export function HowItWorks() {
           transition={{ duration: 0.5, delay: 0.15 }}
           className="mt-14 sm:mt-16"
         >
-          <Link href="/register">
-            <button className="h-14 px-10 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-base font-semibold
-                               transition-all duration-300 hover:scale-[1.02] inline-flex items-center gap-3 group shadow-lg">
-              Démarrer votre accompagnement
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </Link>
+          <button
+            onClick={() => setOnboardingOpen(true)}
+            className="h-14 px-10 bg-slate-900 hover:bg-brand-teal text-white text-base font-semibold
+                       transition-all duration-300 hover:scale-[1.02] inline-flex items-center gap-3 group shadow-lg"
+          >
+            Démarrer votre accompagnement
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </button>
         </motion.div>
 
       </div>
+
+      <OnboardingModal
+        isOpen={onboardingOpen}
+        onClose={() => setOnboardingOpen(false)}
+      />
     </section>
   )
 }

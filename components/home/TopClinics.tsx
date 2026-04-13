@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, ChevronRight, Pause, Play, ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { CliniquesModal } from './CliniquesModal'
 
 /* ─── 12 établissements — uniques, avec vraies images Unsplash ─── */
 const CLINICS = [
@@ -35,6 +36,7 @@ export function TopClinics() {
   const [active, setActive] = useState(0)
   const [paused, setPaused] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
+  const [showCliniques, setShowCliniques] = useState(false)
   const len = CLINICS.length
 
   const next = useCallback(() => setActive(a => (a + 1) % len), [len])
@@ -250,13 +252,16 @@ export function TopClinics() {
 
       {/* ── CTA ── */}
       <div className="text-center pb-24 px-4">
-        <Link href="/cliniques">
-          <button className="h-14 px-9 bg-[#1a1f24] hover:bg-black text-white text-[13px] font-bold tracking-wide uppercase transition-all duration-300 inline-flex items-center gap-3 group rounded-none">
-            Visiter nos Hôpitaux et cliniques
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
-          </button>
-        </Link>
+        <button
+          onClick={() => setShowCliniques(true)}
+          className="h-14 px-9 bg-[#1a1f24] hover:bg-black text-white text-[13px] font-bold tracking-wide uppercase transition-all duration-300 inline-flex items-center gap-3 group rounded-none"
+        >
+          Visiter nos Hôpitaux et cliniques
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+        </button>
       </div>
+
+      <CliniquesModal isOpen={showCliniques} onClose={() => setShowCliniques(false)} />
 
     </section>
   )

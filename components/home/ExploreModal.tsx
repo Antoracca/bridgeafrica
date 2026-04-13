@@ -94,6 +94,16 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
     }
   }, [isOpen, initialQuery])
 
+  /* ── Lock body scroll when open ───────────────────────── */
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [isOpen])
+
   /* ── Focus AI input when entering AI mode ──────────────── */
   useEffect(() => {
     if (aiMode) setTimeout(() => aiInputRef.current?.focus(), 120)
@@ -158,7 +168,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
             <div className="shrink-0 border-b border-slate-100">
 
               {/* Top bar */}
-              <div className="flex items-center justify-between px-6 pt-5 pb-4">
+              <div className="flex items-center justify-between px-4 sm:px-6 pt-5 pb-4">
                 <div className="flex items-center gap-3">
                   {/* Logo réseau — topologie.png */}
                   <div className="w-9 h-9 shrink-0 flex items-center justify-center">
@@ -192,7 +202,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
               </div>
 
               {/* ── AI CTA Banner ──────────────────────────── */}
-              <div className="px-6 pb-4">
+              <div className="px-4 sm:px-6 pb-4">
                 <div className="space-y-2.5">
                   {/* AI invite button — design épuré */}
                   <button
@@ -234,8 +244,8 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
                       value={query}
                       onChange={e => setQuery(e.target.value)}
                       placeholder="Recherche rapide — clinique, pays, spécialité..."
-                      className="flex-1 bg-transparent outline-none text-[12px] text-slate-800 placeholder:text-slate-400"
-                      autoFocus
+                      style={{ touchAction: 'manipulation' }}
+                      className="flex-1 bg-transparent outline-none text-base sm:text-[12px] text-slate-800 placeholder:text-slate-400"
                     />
                     {query && (
                       <button onClick={() => setQuery('')} className="text-slate-400 hover:text-slate-600">
@@ -248,7 +258,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
 
               {/* Tabs */}
               {(
-                <div className="px-6 flex items-center gap-1 -mb-px">
+                <div className="px-4 sm:px-6 flex items-center gap-1 -mb-px overflow-x-auto scrollbar-none" style={{ WebkitOverflowScrolling: 'touch' }}>
                   {([
                     { key: 'clinics' as const, label: 'Établissements', count: clinicCount },
                     { key: 'specialties' as const, label: 'Spécialités', count: specCount },
@@ -257,7 +267,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
                     <button
                       key={tab.key}
                       onClick={() => setActiveTab(tab.key)}
-                      className={`relative px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.15em] transition-colors
+                      className={`relative shrink-0 px-3 sm:px-4 py-2.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.12em] sm:tracking-[0.15em] whitespace-nowrap transition-colors
                         ${activeTab === tab.key
                           ? 'text-brand-teal'
                           : 'text-slate-400 hover:text-slate-600'
@@ -289,7 +299,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
 
               {/* ═══ TABS CONTENT ═══════ */}
               {activeTab === 'clinics' && (
-                <div className="px-6 py-5">
+                <div className="px-4 sm:px-6 py-5">
 
                   {/* Filters toggle */}
                   <button
@@ -324,7 +334,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
                             <select
                               value={countryFilter}
                               onChange={e => setCountryFilter(e.target.value)}
-                              className="w-full h-9 bg-white border border-slate-200 text-[12px] text-slate-700 px-3 focus:border-brand-teal focus:outline-none transition-colors appearance-none"
+                              className="w-full h-9 bg-white border border-slate-200 text-base sm:text-[12px] text-slate-700 px-3 focus:border-brand-teal focus:outline-none transition-colors appearance-none"
                             >
                               <option value="all">Tous les pays</option>
                               {NAV_DESTINATIONS.map(d => (
@@ -341,7 +351,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
                             <select
                               value={categoryFilter}
                               onChange={e => setCategoryFilter(e.target.value as 'all' | 'hôpital' | 'clinique')}
-                              className="w-full h-9 bg-white border border-slate-200 text-[12px] text-slate-700 px-3 focus:border-brand-teal focus:outline-none transition-colors appearance-none"
+                              className="w-full h-9 bg-white border border-slate-200 text-base sm:text-[12px] text-slate-700 px-3 focus:border-brand-teal focus:outline-none transition-colors appearance-none"
                             >
                               <option value="all">Tous</option>
                               <option value="hôpital">Hôpitaux</option>
@@ -357,7 +367,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
                             <select
                               value={specialtyFilter}
                               onChange={e => setSpecialtyFilter(e.target.value)}
-                              className="w-full h-9 bg-white border border-slate-200 text-[12px] text-slate-700 px-3 focus:border-brand-teal focus:outline-none transition-colors appearance-none"
+                              className="w-full h-9 bg-white border border-slate-200 text-base sm:text-[12px] text-slate-700 px-3 focus:border-brand-teal focus:outline-none transition-colors appearance-none"
                             >
                               <option value="all">Toutes</option>
                               {ALL_SPECIALTIES.map(s => (
@@ -506,7 +516,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
 
               {/* ═══ SPECIALTIES TAB ═══════════════════════ */}
               {activeTab === 'specialties' && (
-                <div className="px-6 py-5 space-y-3">
+                <div className="px-4 sm:px-6 py-5 space-y-3">
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.18em] mb-4">
                     {specCount} spécialité{specCount !== 1 ? 's' : ''} · {NAV_SPECIALTY_DATA.reduce((n, s) => n + s.subSpecialties.length, 0)} sous-spécialités
                   </p>
@@ -567,7 +577,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
 
               {/* ═══ SERVICES TAB ══════════════════════════ */}
               {activeTab === 'services' && (
-                <div className="px-6 py-5">
+                <div className="px-4 sm:px-6 py-5">
 
                   {/* Included services */}
                   <div className="mb-8">
@@ -638,7 +648,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
             </div>
 
             {/* ── Footer ──────────────────────────────────── */}
-            <div className="shrink-0 px-6 py-4 border-t border-slate-100 bg-[#fafafa]">
+            <div className="shrink-0 px-4 sm:px-6 py-4 border-t border-slate-100 bg-[#fafafa]">
               <div className="flex items-center justify-between">
                 <p className="text-[9px] text-slate-400 uppercase tracking-[0.18em] font-semibold">
                   {NAV_DESTINATIONS.length} pays · {NAV_CLINICS.length} établissements · {NAV_SPECIALTY_DATA.length} spécialités
@@ -661,10 +671,10 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.98, y: 15 }}
                   transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute inset-0 z-50 bg-white flex flex-col shadow-[0_0_40px_rgba(0,0,0,0.1)]"
+                  className="absolute inset-0 z-50 bg-white flex flex-col shadow-[0_0_40px_rgba(0,0,0,0.1)] overflow-hidden"
                 >
                   {/* AI Dedicated Header */}
-                  <div className="shrink-0 flex items-center justify-between px-6 pt-5 pb-4 border-b border-slate-100 bg-white/80 backdrop-blur-md">
+                  <div className="shrink-0 flex items-center justify-between px-4 sm:px-6 pt-5 pb-4 border-b border-slate-100 bg-white">
                     <button
                       onClick={() => setAiMode(false)}
                       className="group flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400 hover:text-brand-teal transition-colors"
@@ -695,7 +705,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
                   </div>
                   
                   {/* AI Body (Scrollable) */}
-                  <div className="flex-1 overflow-y-auto px-6 py-6 flex flex-col items-center bg-slate-50/50" style={{ scrollbarWidth: 'thin' }}>
+                  <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 flex flex-col items-center bg-slate-50" style={{ scrollbarWidth: 'thin', overscrollBehavior: 'contain' }}>
                     <div className="w-full max-w-3xl mx-auto flex flex-col items-center pt-8 pb-12">
                         <div className="relative mb-8">
                           <div className="relative w-24 h-24">
@@ -708,7 +718,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
                         <p className="text-[10px] font-bold text-brand-teal uppercase tracking-[0.35em] mb-3 text-center">
                           Assistant Intelligent
                         </p>
-                        <h3 className="text-[28px] md:text-[32px] text-slate-900 leading-tight tracking-tight mb-4 text-center" style={{ fontFamily: 'Georgia, serif' }}>
+                        <h3 className="text-[22px] sm:text-[28px] md:text-[32px] text-slate-900 leading-tight tracking-tight mb-4 text-center" style={{ fontFamily: 'Georgia, serif' }}>
                           Votre conseiller médical personnel
                         </h3>
                         <p className="text-[13px] md:text-[14px] text-slate-500 leading-relaxed max-w-[420px] text-center mb-12">
@@ -737,7 +747,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
                   </div>
 
                   {/* AI Input Fixed Bottom */}
-                  <div className="shrink-0 bg-white border-t border-slate-150 p-5 sm:px-6 sm:pb-6 sm:pt-4">
+                  <div className="shrink-0 bg-white border-t border-slate-150 px-4 sm:px-6 py-4 sm:pb-6">
                     <p className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.2em] mb-2.5 ml-1">
                       Suggestions rapides
                     </p>
@@ -753,14 +763,15 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
                       ))}
                     </div>
 
-                    <div className="relative bg-slate-50 border border-slate-200 focus-within:border-brand-teal focus-within:bg-white focus-within:shadow-[0_4px_20px_-6px_rgba(72,156,140,0.15)] transition-all">
+                    <div className="relative bg-white border border-slate-200 focus-within:border-brand-teal focus-within:shadow-[0_4px_20px_-6px_rgba(72,156,140,0.15)] transition-all">
                       <textarea
                         ref={aiInputRef}
                         value={aiQuery}
                         onChange={e => setAiQuery(e.target.value)}
                         placeholder="Ex : Je cherche une clinique pour un BBL à Istanbul, budget 4 000 €..."
                         rows={2}
-                        className="w-full bg-transparent text-[13px] text-slate-800 placeholder:text-slate-400 outline-none resize-none px-4 py-3.5 leading-relaxed"
+                        style={{ touchAction: 'manipulation' }}
+                        className="w-full bg-white text-base sm:text-[13px] text-slate-800 placeholder:text-slate-400 outline-none resize-none px-4 py-3.5 leading-relaxed"
                       />
                       <div className="flex justify-between items-center px-4 pb-3 pt-1">
                         <span className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider flex items-center gap-1.5">
