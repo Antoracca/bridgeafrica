@@ -17,6 +17,7 @@ import {
   type ClinicEntry,
 } from '@/lib/data/homepage'
 import { searchClinics, searchSpecialties } from '@/lib/search'
+import { useScrollLock } from '@/lib/hooks/useScrollLock'
 
 /* ── Icon maps ─────────────────────────────────────────────── */
 const SPEC_ICONS: Record<string, LucideIcon> = {
@@ -94,15 +95,8 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
     }
   }, [isOpen, initialQuery])
 
-  /* ── Lock body scroll when open ───────────────────────── */
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-    return () => { document.body.style.overflow = '' }
-  }, [isOpen])
+  /* ── Lock app scroll when open ── */
+  useScrollLock(isOpen)
 
   /* ── Focus AI input when entering AI mode ──────────────── */
   useEffect(() => {
@@ -160,7 +154,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
             <motion.div 
               animate={{ opacity: aiMode ? 0 : 1, filter: aiMode ? 'blur(8px)' : 'blur(0px)', scale: aiMode ? 0.98 : 1 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col h-full pointer-events-auto"
+              className="flex-1 flex flex-col min-h-0 overflow-hidden pointer-events-auto"
               style={{ pointerEvents: aiMode ? 'none' : 'auto' }}
             >
 
@@ -293,7 +287,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
             </div>
 
             {/* ── Content ─────────────────────────────────── */}
-            <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'thin' }}>
+            <div className="flex-1 min-h-0 overflow-y-auto" style={{ scrollbarWidth: 'thin', overscrollBehavior: 'none' }}>
 
               {/* Old AI Placeholder removed */}
 
@@ -705,7 +699,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
                   </div>
                   
                   {/* AI Body (Scrollable) */}
-                  <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 flex flex-col items-center bg-slate-50" style={{ scrollbarWidth: 'thin', overscrollBehavior: 'contain' }}>
+                  <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-6 flex flex-col items-center bg-slate-50" style={{ scrollbarWidth: 'thin', overscrollBehavior: 'none' }}>
                     <div className="w-full max-w-3xl mx-auto flex flex-col items-center pt-8 pb-12">
                         <div className="relative mb-8">
                           <div className="relative w-24 h-24">

@@ -85,7 +85,6 @@ function DevelopmentPlaceholder({ icon: Icon, title, description }: { icon: Reac
           <h3 className="text-2xl font-bold text-slate-900 mb-3">{title}</h3>
           <p className="text-slate-500 text-lg leading-relaxed mb-8">{description}</p>
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 border border-slate-100">
-            <Sparkles className="w-4 h-4 text-slate-400" />
             <span className="text-slate-600 font-medium text-sm">Module en cours d'intégration</span>
           </div>
         </div>

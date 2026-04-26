@@ -99,10 +99,29 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
   -ms-overflow-style: none;
 }
 
-/* Pour garder le scroll fonctionnel mais invisible */
+/* ─────────────────────────────────────────────────────────────
+   App-shell scroll lock — comportement type application mobile.
+   html et body NE scrollent PAS. Le scroll vit dans #app-scroll
+   (défini dans app/layout.tsx). Résultat : aucun rubber-band iOS
+   possible au niveau de la page. La fin du scroll est dure.
+   ───────────────────────────────────────────────────────────── */
 html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+#app-scroll {
+  height: 100vh;
+  height: 100dvh; /* viewport dynamique iOS — masque/affiche barre URL */
+  width: 100%;
+  overflow-y: auto;
   overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* --- Animation Shake (erreur de formulaire) --- */

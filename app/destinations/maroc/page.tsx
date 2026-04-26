@@ -1,187 +1,300 @@
+'use client'
+
+import { useRef, useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, CheckCircle2 } from 'lucide-react'
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { ArrowRight } from 'lucide-react'
 import { NAV_CLINICS, NAV_SPECIALTY_DATA } from '@/lib/data/homepage'
 
-export const metadata = {
-  title: 'Excellence Médicale au Maroc | MediBridge',
-  description: 'Découvrez notre réseau exclusif d\'hôpitaux et cliniques certifiés au Maroc.',
-}
+const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
+
+// Images de remplacement premium pour l'éditorial (car NAV_CLINICS n'a pas de vraies images)
+const CLINIC_IMAGES = [
+  'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=2000&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1551601651-2a8555f1a136?q=80&w=2000&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1538108149393-cebb47ac1927?q=80&w=2000&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?q=80&w=2000&auto=format&fit=crop',
+]
+
+const SPECIALTIES_IMAGES = [
+  'https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2000&auto=format&fit=crop', // Cardiaque/Chirurgie
+  'https://images.unsplash.com/photo-1582750433449-648ed127bb54?q=80&w=2000&auto=format&fit=crop', // Esthétique/Luxe
+  'https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=2000&auto=format&fit=crop', // Orthopédie
+  'https://images.unsplash.com/photo-1631815589968-fdb09a223b1e?q=80&w=2000&auto=format&fit=crop', // FIV/Maternité
+  'https://images.unsplash.com/photo-1530026405186-ed1f139313f8?q=80&w=2000&auto=format&fit=crop', // Oncologie
+]
 
 export default function MarocDestinationPage() {
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    scrollContainerRef.current = document.getElementById('app-scroll') as HTMLDivElement | null
+  }, [])
+
+  const { scrollYProgress } = useScroll({
+    container: scrollContainerRef
+  })
+
+  // Hero Parallax Transforms
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0])
+  const heroY = useTransform(scrollYProgress, [0, 0.2], [0, 200])
+  const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 1.1])
+
   const clinics = NAV_CLINICS.filter(c => c.code === 'ma')
-  const specialties = NAV_SPECIALTY_DATA.filter(s => s.recommended.includes('ma'))
+  const specialties = NAV_SPECIALTY_DATA.filter(s => s.recommended.includes('ma')).slice(0, 5) // Garder les 5 piliers
+  
+  const [hoveredSpec, setHoveredSpec] = useState<number | null>(0)
 
   return (
-    <main className="min-h-screen bg-[#faf9f7] selection:bg-brand-teal selection:text-white pb-32">
+    <main className="bg-[#0A0F14] text-white selection:bg-[#1B433E] selection:text-white font-sans">
       
-      {/* ─── 1. HERO SECTION (Split Design Ultra-Premium) ─────────────── */}
-      <section className="relative min-h-[90vh] flex flex-col lg:flex-row">
-        {/* Left Content */}
-        <div className="w-full lg:w-[45%] flex flex-col justify-center px-8 sm:px-14 lg:pl-20 pt-32 pb-20 z-10 bg-[#faf9f7]">
-          <div className="inline-flex items-center gap-3 px-4 py-2 border-l-2 border-brand-teal bg-white/50 mb-10 w-fit">
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-teal animate-pulse" />
-            <span className="text-brand-teal-dark text-[10px] font-bold uppercase tracking-[0.25em]">
-              Destination Privilège · Hub Médical
-            </span>
-          </div>
-          
-          <h1 className="text-5xl md:text-6xl lg:text-[5rem] font-bold text-[#1a1f24] tracking-tight leading-[1] mb-8" style={{ fontFamily: 'Georgia, serif' }}>
-            Excellence<br />
-            clinique <span className="text-brand-teal font-light italic">au</span><br />
-            Maroc.
+      {/* ──────────────────────────────────────────────────────────── */}
+      {/* ACTE I : THE ARRIVAL (Cinematic Hero) */}
+      {/* ──────────────────────────────────────────────────────────── */}
+      <section className="relative h-[110vh] w-full flex items-center justify-center overflow-hidden">
+        {/* Parallax Background */}
+        <motion.div style={{ y: heroY, scale: heroScale }} className="absolute inset-0 w-full h-full">
+          <Image 
+            src="https://images.unsplash.com/photo-1549487295-849c7d427d14?auto=format&fit=crop&q=80&w=2500"
+            alt="Plateforme Médicale Marocaine"
+            fill
+            className="object-cover opacity-40 grayscale mix-blend-overlay"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0A0F14]/40 via-[#0A0F14]/20 to-[#0A0F14]" />
+        </motion.div>
+
+        {/* Huge Background Text */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none select-none mix-blend-soft-light opacity-10">
+          <h1 className="text-[25vw] font-bold tracking-tighter" style={{ fontFamily: 'Georgia, serif' }}>
+            MAROC
           </h1>
-          
-          <p className="text-lg text-slate-500 font-light leading-relaxed max-w-md mb-12">
-            L'alliance d'un corps médical hautement qualifié et d'infrastructures hospitalières accréditées à l'international. L'accès direct aux meilleurs plateaux techniques du continent.
-          </p>
-          
-          <button className="group inline-flex items-center justify-center gap-3 bg-[#1a1f24] text-white min-h-[60px] px-8 text-[12px] font-bold uppercase tracking-widest hover:bg-black transition-all w-fit rounded-none">
-            Consulter le réseau marocain
-            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-          </button>
         </div>
 
-        {/* Right Image */}
-        <div className="w-full lg:w-[55%] relative min-h-[50vh] lg:min-h-full">
-          <div className="absolute inset-0">
-            <Image
-              src="https://images.unsplash.com/photo-1549487295-849c7d427d14?auto=format&fit=crop&q=80&w=2000"
-              alt="Plateau médical au Maroc"
-              fill
-              className="object-cover"
-              priority
-            />
-            {/* Dark elegant overlay for the image side */}
-            <div className="absolute inset-0 bg-slate-900/10 mix-blend-overlay" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#faf9f7] via-[#faf9f7]/20 to-transparent lg:w-1/3" />
+        <motion.div 
+          style={{ opacity: heroOpacity }}
+          className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-12 flex flex-col items-center sm:items-start text-center sm:text-left mt-24"
+        >
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.2, ease: EASE }}
+            className="flex items-center gap-4 mb-8"
+          >
+            <div className="h-[1px] w-12 bg-brand-teal" />
+            <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-brand-teal">Le Dossier Confidentiel</p>
+          </motion.div>
+
+          <motion.h2 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, delay: 0.4, ease: EASE }}
+            className="text-5xl sm:text-7xl lg:text-[7rem] font-medium leading-[0.9] tracking-tight text-white mb-10"
+            style={{ fontFamily: 'Georgia, serif' }}
+          >
+            Hub Médical <br/> <span className="text-slate-500 italic font-light">Royal.</span>
+          </motion.h2>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.6, ease: EASE }}
+            className="max-w-xl text-slate-400 text-lg sm:text-xl font-light leading-relaxed mb-16 border-l border-white/20 pl-6"
+          >
+            Un réseau clinique de pointe concentré sur l'excellence. Chirurgiens de renommée internationale, infrastructures accréditées JCI, et confidentialité absolue.
+          </motion.div>
+        </motion.div>
+
+        {/* Scroll Indicator */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 1.5 }}
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-50"
+        >
+          <span className="text-[9px] uppercase tracking-[0.3em] text-white rotate-90 mb-6">Découvrir</span>
+          <div className="w-px h-16 bg-white/20 relative overflow-hidden">
+             <motion.div 
+               animate={{ y: ['-100%', '100%'] }} 
+               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+               className="absolute top-0 left-0 w-full h-full bg-brand-teal"
+             />
           </div>
+        </motion.div>
+      </section>
+
+      {/* ──────────────────────────────────────────────────────────── */}
+      {/* ACTE II : THE ARSENAL (Établissements / Asymétrie Éditoriale) */}
+      {/* ──────────────────────────────────────────────────────────── */}
+      <section className="py-32 sm:py-48 bg-[#EAE8E3] text-[#1a1f24] relative z-20">
+        
+        <div className="max-w-7xl mx-auto px-6 sm:px-12 mb-32">
+          <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-teal mb-6">L'Infrastructure</p>
+          <h3 className="text-4xl sm:text-6xl lg:text-7xl font-normal leading-[1.1] tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>
+            Des plateaux techniques <br className="hidden sm:block"/>
+            <span className="italic text-slate-500 font-light">sans compromis.</span>
+          </h3>
+        </div>
+
+        <div className="flex flex-col gap-32 sm:gap-48 overflow-hidden pb-20">
+          {clinics.map((clinic, index) => {
+            const isEven = index % 2 === 0
+            const imageStr = CLINIC_IMAGES[index % CLINIC_IMAGES.length]
+            const number = (index + 1).toString().padStart(2, '0')
+
+            return (
+              <div key={clinic.name} className="relative max-w-[1400px] w-full mx-auto px-6 sm:px-12 flex flex-col">
+                <div className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-12 lg:gap-24 relative`}>
+                  
+                  {/* Giant Number Behind */}
+                  <div className={`absolute top-0 ${isEven ? 'right-0 lg:right-24' : 'left-0 lg:left-24'} text-[20vw] lg:text-[15vw] leading-none font-bold text-[#EAE8E3] drop-shadow-[-2px_2px_0_rgba(0,0,0,0.02)] select-none pointer-events-none z-0`} style={{ fontFamily: 'Georgia, serif' }}>
+                    {number}
+                  </div>
+
+                  {/* Image container */}
+                  <div className="w-full lg:w-[55%] relative z-10 group cursor-pointer perspective-1000">
+                    <div className="relative w-full aspect-[4/5] sm:aspect-[16/10] lg:aspect-[4/5] overflow-hidden shadow-2xl transition-all duration-700 group-hover:shadow-[0_40px_80px_rgba(0,0,0,0.15)] group-hover:-translate-y-2">
+                       <Image 
+                         src={imageStr}
+                         alt={clinic.name}
+                         fill
+                         className="object-cover grayscale hover:grayscale-0 transition-all duration-[2s] scale-100 group-hover:scale-105"
+                       />
+                       {/* Overlay effect on image */}
+                       <div className="absolute inset-0 bg-[#1a1f24]/20 group-hover:bg-transparent transition-colors duration-700" />
+                       
+                       <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 flex justify-between items-end">
+                         <span className="text-white text-[10px] uppercase tracking-[0.2em] font-bold border border-white/30 px-3 py-1 bg-black/40 backdrop-blur-md">Certifié JCI</span>
+                         <Link href={clinic.website} target="_blank" className="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 transition-transform">
+                           <ArrowRight size={18} />
+                         </Link>
+                       </div>
+                    </div>
+                  </div>
+
+                  {/* Text Container */}
+                  <div className="w-full lg:w-[45%] relative z-10 flex flex-col justify-center">
+                    <div className="flex items-center gap-4 mb-6">
+                       <div className="bg-[#1B433E] text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest">{clinic.loc.toUpperCase()}</div>
+                       <div className="flex text-yellow-500 text-[10px] tracking-widest">{'★'.repeat(Math.round(clinic.rating))}</div>
+                    </div>
+                    
+                    <h4 className="text-3xl sm:text-5xl font-medium leading-[1.1] mb-8 text-[#1a1f24]" style={{ fontFamily: 'Georgia, serif' }}>
+                      {clinic.name}
+                    </h4>
+                    
+                    <div className="h-px w-full bg-black/10 mb-8" />
+                    
+                    <p className="text-slate-600 text-base sm:text-lg font-light leading-relaxed mb-10 max-w-md">
+                      {clinic.spec} L'infrastructure la plus avancée du royaume, dédiée aux patients internationaux exigeant le plus haut standard de sécurité et de confort.
+                    </p>
+                    
+                    <div className="grid grid-cols-2 gap-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                       <div className="flex flex-col gap-1">
+                         <span className="text-[#1B433E]">Spécialisation</span>
+                         {clinic.category}
+                       </div>
+                       <div className="flex flex-col gap-1">
+                         <span className="text-[#1B433E]">Capacité</span>
+                         Premium / VIP Suites
+                       </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            )
+          })}
         </div>
       </section>
 
-      {/* ─── 2. HÔPITAUX & CLINIQUES (TopClinics style) ─────────────── */}
-      <section className="bg-[#F5F5F5] pt-32 pb-40">
-        <div className="text-center px-4 mb-20 max-w-4xl mx-auto">
-          <p className="text-[11px] tracking-[0.3em] uppercase text-[#1B433E] font-bold mb-4">
-            Excellence Médicale
-          </p>
-          <h2
-            className="text-4xl sm:text-5xl lg:text-6xl text-[#1a1f24] leading-[1.1] tracking-tight"
-            style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontWeight: 400 }}
-          >
-            Les Établissements Qui<br className="hidden sm:block" />
-            Font Notre Réseau d'Exception
-          </h2>
+      {/* ──────────────────────────────────────────────────────────── */}
+      {/* ACTE III : THE EXPERTISE (Accordéon Interactif Cinétique) */}
+      {/* ──────────────────────────────────────────────────────────── */}
+      <section className="relative h-screen min-h-[800px] w-full bg-[#0A0F14] overflow-hidden flex flex-col">
+        
+        {/* Images de Fond Dynamiques */}
+        <AnimatePresence>
+          {hoveredSpec !== null && (
+            <motion.div 
+              key={hoveredSpec}
+              initial={{ opacity: 0, scale: 1.05 }}
+              animate={{ opacity: 0.3, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1, ease: EASE }}
+              className="absolute inset-0 pointer-events-none"
+            >
+              <Image 
+                src={SPECIALTIES_IMAGES[hoveredSpec % SPECIALTIES_IMAGES.length]}
+                alt="Expertise"
+                fill
+                className="object-cover mix-blend-luminosity"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0A0F14] via-transparent to-[#0A0F14]" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-12 pt-32 w-full">
+          <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-brand-teal mb-4">Focus</p>
+          <h3 className="text-4xl sm:text-5xl font-medium text-white tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>
+            Piliers d'Excellence.
+          </h3>
         </div>
 
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-x-6 gap-y-24">
-            {clinics.map((clinic, i) => {
-              // Assigner des images fictives haut de gamme pour simuler le TopClinics (puisque non dans NAV_CLINICS)
-              const images = [
-                'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                'https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                'https://images.unsplash.com/photo-1504439468489-c8920d796a29?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                'https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-              ]
-              const bg = images[i % images.length]
+        {/* L'Accordéon Éditorial */}
+        <div className="relative z-10 flex-1 flex flex-col justify-center max-w-7xl mx-auto w-full px-4 sm:px-12 pb-20">
+          <div className="grid grid-cols-1 divide-y divide-white/10 w-full">
+            {specialties.map((spec, i) => {
+              const isHovered = hoveredSpec === i
+              const isDimmed = hoveredSpec !== null && hoveredSpec !== i
 
               return (
-                <div key={i} className="relative w-full aspect-[3/4] cursor-pointer group">
-                  {/* Image full cover */}
-                  <Image
-                    src={bg}
-                    alt={clinic.name}
-                    fill
-                    className="object-cover object-center group-hover:scale-105 transition-transform duration-[1.5s] ease-out"
-                  />
-                  
-                  {/* Couche d'information normale */}
-                  <div className="absolute inset-0 z-20 pointer-events-none flex flex-col justify-between">
-                    
-                    {/* Badge Supérieur - Capsule, arrondie */}
-                    <div className="w-full flex justify-center mt-5">
-                      <div className="bg-[#1a1f24]/75 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20">
-                        <span className="text-[9px] font-bold tracking-[0.18em] uppercase text-white">
-                          HUB MAROC
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Gradient Sombre en bas */}
-                    <div className="relative h-1/2 w-full mt-auto flex flex-col justify-end px-6 pb-14 text-center">
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-[-1]" />
-                      <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/70 mb-2.5">
-                        <span className="text-white">{clinic.category}</span>
-                        <span className="mx-2 text-white/30">|</span>
-                        <span>{clinic.loc}</span>
-                      </p>
-                      <h3
-                        className="text-2xl text-white leading-snug mb-3"
-                        style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontWeight: 400 }}
+                <div 
+                  key={spec.name}
+                  onMouseEnter={() => setHoveredSpec(i)}
+                  onMouseLeave={() => setHoveredSpec(null)}
+                  className={`group relative py-6 sm:py-8 cursor-pointer transition-all duration-500 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-10 ${isDimmed ? 'opacity-30' : 'opacity-100'}`}
+                >
+                  <div className="flex-1">
+                    <motion.div 
+                      layout
+                      className="flex items-center gap-6"
+                    >
+                      <span className="text-[10px] font-bold text-slate-500 tracking-widest hidden sm:block">0{i + 1}</span>
+                      <h4 
+                        className={`text-3xl sm:text-5xl md:text-6xl font-light tracking-tight transition-all duration-500`}
+                        style={{ fontFamily: 'Georgia, serif' }}
                       >
-                        {clinic.name}
-                      </h3>
-                    </div>
-
-                    {/* Bloc card-in-card débordant */}
-                    <div className="absolute -bottom-10 left-4 right-4 pointer-events-auto shadow-2xl group-hover:-translate-y-2 transition-transform duration-500">
-                      <div className="bg-[#f0ece9] rounded-xl px-5 py-4 border border-white/30">
-                        <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-[#63666A] mb-1.5">
-                          MAROC <span className="mx-1 text-[#C4C4C4]">|</span> {clinic.loc} <span className="mx-1 text-[#C4C4C4]">|</span> ★ {clinic.rating}
-                        </p>
-                        <p className="text-[13px] text-[#424242] font-serif leading-relaxed line-clamp-2">
-                          {clinic.spec}
-                        </p>
-                      </div>
-                    </div>
-
+                        <span className={isHovered ? 'text-white' : 'text-slate-400'}>{spec.name}</span>
+                      </h4>
+                    </motion.div>
                   </div>
 
-                  {/* Bouton Voir Plus au hover complet */}
-                  <div className="absolute inset-0 bg-brand-teal/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-30 flex items-center justify-center">
-                     <Link href={clinic.website} target="_blank" className="bg-white text-slate-900 px-6 py-3 text-[10px] font-bold tracking-widest uppercase flex items-center gap-2">
-                       Visiter le site <ArrowRight size={14} />
-                     </Link>
-                  </div>
+                  <AnimatePresence>
+                    {isHovered && (
+                      <motion.div 
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="w-full md:w-[400px] text-slate-300 font-light text-sm sm:text-base leading-relaxed overflow-hidden"
+                      >
+                        <p className="pt-4 md:pt-0">{spec.desc}</p>
+                        <div className="mt-4 flex items-center gap-2 text-brand-teal text-[10px] font-bold uppercase tracking-wider">
+                          Consulter les experts <ArrowRight size={14} />
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               )
             })}
           </div>
         </div>
-      </section>
 
-      {/* ─── 3. SPÉCIALITÉS D'EXCELLENCE ─────────────── */}
-      <section className="bg-slate-900 text-white rounded-none overflow-hidden relative border-y border-white/10">
-         <div className="absolute inset-0 bg-brand-teal/5 z-0" />
-         
-         <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-14 relative z-10 py-24 md:py-32">
-            
-            <div className="mb-16 border-l-[3px] border-brand-teal pl-6 max-w-3xl">
-               <p className="text-[11px] text-brand-teal font-bold uppercase tracking-[0.25em] mb-4">Domaines d'expertise</p>
-               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold max-w-2xl leading-[1.05]" style={{ fontFamily: 'Georgia, serif' }}>
-                  Pourquoi <span className="italic text-slate-300 font-light">choisir</span> le Maroc ?
-               </h2>
-               <p className="mt-8 text-slate-400 font-light text-lg lg:text-xl leading-relaxed">
-                  Un pôle d'excellence combinant les standards chirurgicaux et technologiques européens à un encadrement médical profondément humain. Découvrez nos domaines d'expertise absolue.
-               </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-               {specialties.map(spec => (
-                 <div key={spec.name} className="group bg-white/5 border border-white/10 p-8 hover:bg-brand-teal/10 hover:border-brand-teal/40 transition-colors duration-500 flex items-start gap-4 cursor-pointer">
-                    <CheckCircle2 className="w-5 h-5 text-brand-teal shrink-0 mt-0.5 opacity-80" />
-                    <div>
-                      <h3 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: 'Georgia, serif' }}>{spec.name}</h3>
-                      <p className="text-slate-400 text-sm leading-relaxed font-light">{spec.desc}</p>
-                    </div>
-                 </div>
-               ))}
-            </div>
-         </div>
       </section>
 
     </main>
   )
 }
- 

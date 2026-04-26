@@ -67,11 +67,11 @@ export function HowItWorks() {
 
         {/* Header — à gauche, grand, aéré */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-16 sm:mb-20"
+           initial={{ opacity: 0, y: 20 }}
+           whileInView={{ opacity: 1, y: 0 }}
+           viewport={{ once: true, margin: '0px 0px -80px 0px' }}
+           transition={{ duration: 0.6 }}
+           className="mb-16 sm:mb-20"
         >
           <p className="text-[11px] tracking-[0.25em] uppercase text-slate-400 font-semibold mb-5">
             Comment ça marche
@@ -148,11 +148,11 @@ export function HowItWorks() {
 
         {/* CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-          className="mt-14 sm:mt-16"
+           initial={{ opacity: 0, y: 20 }}
+           whileInView={{ opacity: 1, y: 0 }}
+           viewport={{ once: true, margin: '0px 0px -80px 0px' }}
+           transition={{ duration: 0.5, delay: 0.15 }}
+           className="mt-14 sm:mt-16"
         >
           <button
             onClick={() => setOnboardingOpen(true)}

@@ -6,7 +6,11 @@ import {
   X, ArrowRight, ArrowLeft, CheckCircle2, ChevronDown,
   Search, Plus, Phone, MessageCircle,
 } from 'lucide-react'
+import Image from 'next/image'
 import { NAV_SPECIALTY_DATA, NAV_DESTINATIONS } from '@/lib/data/homepage'
+import { isValidPhoneNumber, getExampleNumber, type CountryCode } from 'libphonenumber-js/min'
+import examples from 'libphonenumber-js/examples.mobile.json'
+import { useScrollLock } from '@/lib/hooks/useScrollLock'
 
 /* ──────────────────────────────────────────────────────────────────────
    TYPES
@@ -22,6 +26,7 @@ interface FormData {
   country: string
   phone: string
   whatsapp: boolean
+  message: string
 }
 
 interface Props {
@@ -183,6 +188,33 @@ const DIAL_CODES: Record<string, string> = {
   'Qatar': '+974', 'Koweït': '+965',
 }
 
+const COUNTRY_ISO: Record<string, CountryCode> = {
+  'France': 'FR', 'Belgique': 'BE', 'Suisse': 'CH', 'Espagne': 'ES',
+  'Portugal': 'PT', 'Italie': 'IT', 'Allemagne': 'DE', 'Pays-Bas': 'NL',
+  'Royaume-Uni': 'GB', 'Luxembourg': 'LU',
+  'Canada': 'CA', 'États-Unis': 'US',
+  'Maroc': 'MA', 'Algérie': 'DZ', 'Tunisie': 'TN', 'Libye': 'LY',
+  'Égypte': 'EG', 'Mauritanie': 'MR', 'Soudan': 'SD',
+  'Sénégal': 'SN', 'Côte d\'Ivoire': 'CI', 'Mali': 'ML',
+  'Niger': 'NE', 'Burkina Faso': 'BF', 'Ghana': 'GH',
+  'Nigeria': 'NG', 'Guinée': 'GN', 'Guinée-Bissau': 'GW',
+  'Gambie': 'GM', 'Sierra Leone': 'SL', 'Liberia': 'LR',
+  'Togo': 'TG', 'Bénin': 'BJ', 'Cap-Vert': 'CV',
+  'Cameroun': 'CM', 'Gabon': 'GA', 'Congo': 'CG', 'RDC': 'CD',
+  'Tchad': 'TD', 'Centrafrique': 'CF', 'Guinée équatoriale': 'GQ',
+  'São Tomé-et-Príncipe': 'ST', 'Rwanda': 'RW', 'Burundi': 'BI',
+  'Éthiopie': 'ET', 'Kenya': 'KE', 'Tanzanie': 'TZ', 'Ouganda': 'UG',
+  'Somalie': 'SO', 'Érythrée': 'ER', 'Djibouti': 'DJ', 'Comores': 'KM',
+  'Afrique du Sud': 'ZA', 'Zimbabwe': 'ZW', 'Zambie': 'ZM',
+  'Angola': 'AO', 'Namibie': 'NA', 'Botswana': 'BW',
+  'Lesotho': 'LS', 'Eswatini': 'SZ', 'Malawi': 'MW',
+  'Mozambique': 'MZ', 'Madagascar': 'MG',
+  'Réunion': 'RE', 'Martinique': 'MQ', 'Guadeloupe': 'GP', 'Mayotte': 'YT',
+  'Maurice': 'MU', 'Seychelles': 'SC',
+  'Arabie Saoudite': 'SA', 'Émirats Arabes Unis': 'AE',
+  'Qatar': 'QA', 'Koweït': 'KW'
+}
+
 /* ──────────────────────────────────────────────────────────────────────
    PRÉPOSITIONS FRANÇAISES pour les destinations
    ────────────────────────────────────────────────────────────────────── */
@@ -213,20 +245,20 @@ function StepBar({ step }: { step: number }) {
           <div key={i} className="flex items-center flex-1 last:flex-none">
             <div className="flex flex-col items-center gap-1.5">
               <div className={`w-7 h-7 flex items-center justify-center text-[10px] font-bold transition-all duration-300 rounded-sm ${
-                done ? 'bg-brand-teal text-white' :
-                active ? 'bg-white text-slate-900' :
-                'bg-white/10 text-white/30'
+                done ? 'bg-[#1B433E] text-white' :
+                active ? 'bg-white border border-[#1B433E] text-[#1B433E]' :
+                'bg-white border border-[#E1E1E1] text-[#E1E1E1]'
               }`}>
                 {done ? <CheckCircle2 size={14} /> : i + 1}
               </div>
               <span className={`text-[8px] font-bold uppercase tracking-[0.15em] whitespace-nowrap transition-colors ${
-                active ? 'text-white' : done ? 'text-brand-teal' : 'text-white/30'
+                active ? 'text-[#1B433E]' : done ? 'text-[#1B433E]' : 'text-slate-300'
               }`}>
                 {label}
               </span>
             </div>
             {i < steps.length - 1 && (
-              <div className={`flex-1 h-px mx-3 mb-4 transition-all duration-500 ${done ? 'bg-brand-teal' : 'bg-white/10'}`} />
+              <div className={`flex-1 h-px mx-3 mb-4 transition-all duration-500 ${done ? 'bg-[#1B433E]' : 'bg-[#E1E1E1]'}`} />
             )}
           </div>
         )
@@ -241,9 +273,10 @@ function StepBar({ step }: { step: number }) {
 
 export function OnboardingModal({ isOpen, onClose }: Props) {
   const [step, setStep] = useState(0)
+  const [isLoading, setIsLoading] = useState(false)
   const [form, setForm] = useState<FormData>({
     specialty: '', customSpecialty: '', destination: 'all',
-    firstName: '', lastName: '', email: '', country: '', phone: '', whatsapp: false,
+    firstName: '', lastName: '', email: '', country: '', phone: '', whatsapp: false, message: ''
   })
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({})
   const [specSearch, setSpecSearch] = useState('')
@@ -255,7 +288,7 @@ export function OnboardingModal({ isOpen, onClose }: Props) {
     if (!isOpen) {
       setTimeout(() => {
         setStep(0)
-        setForm({ specialty: '', customSpecialty: '', destination: 'all', firstName: '', lastName: '', email: '', country: '', phone: '', whatsapp: false })
+        setForm({ specialty: '', customSpecialty: '', destination: 'all', firstName: '', lastName: '', email: '', country: '', phone: '', whatsapp: false, message: '' })
         setErrors({})
         setSpecSearch('')
         setShowAll(false)
@@ -264,15 +297,8 @@ export function OnboardingModal({ isOpen, onClose }: Props) {
     }
   }, [isOpen])
 
-  /* Lock body scroll when open */
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-    return () => { document.body.style.overflow = '' }
-  }, [isOpen])
+  /* Lock app scroll when open */
+  useScrollLock(isOpen)
 
   /* Auto dial code from country */
   useEffect(() => {
@@ -320,6 +346,19 @@ export function OnboardingModal({ isOpen, onClose }: Props) {
     return groups
   }, [])
 
+  /* Dynamic Phone Placeholder derived from Google Libphonenumber */
+  const phonePlaceholder = useMemo(() => {
+    if (!form.country) return "6 00 00 00 00"
+    const isoCode = COUNTRY_ISO[form.country]
+    if (!isoCode) return "6 00 00 00 00"
+    try {
+      const example = getExampleNumber(isoCode, examples)
+      return example ? example.formatNational() : "6 00 00 00 00"
+    } catch {
+      return "6 00 00 00 00"
+    }
+  }, [form.country])
+
   function validateStep1() {
     if (!form.specialty) { setErrors({ specialty: 'Sélectionnez une spécialité' }); return false }
     if (form.specialty === '__autre__' && !form.customSpecialty.trim()) {
@@ -334,6 +373,20 @@ export function OnboardingModal({ isOpen, onClose }: Props) {
     if (!form.lastName.trim()) e.lastName = 'Requis'
     if (!form.email.trim() || !form.email.includes('@')) e.email = 'Email invalide'
     if (!form.country) e.country = 'Requis'
+    
+    if (form.phone) {
+      const isoCode = COUNTRY_ISO[form.country]
+      if (isoCode) {
+        try {
+          if (!isValidPhoneNumber(form.phone, isoCode)) {
+            e.phone = 'Numéro invalide pour ce pays'
+          }
+        } catch {
+          e.phone = 'Format de téléphone invalide'
+        }
+      }
+    }
+    
     setErrors(e)
     return Object.keys(e).length === 0
   }
@@ -341,6 +394,17 @@ export function OnboardingModal({ isOpen, onClose }: Props) {
   function next() {
     if (step === 0 && !validateStep1()) return
     if (step === 1 && !validateStep2()) return
+    if (step === 1) {
+       setIsLoading(true)
+       setStep(2)
+       setTimeout(() => {
+          document.getElementById('onboarding-scroll-container')?.scrollTo(0,0)
+       }, 50)
+       setTimeout(() => {
+          setIsLoading(false)
+       }, 1800)
+       return
+    }
     setStep(s => s + 1)
   }
 
@@ -350,36 +414,62 @@ export function OnboardingModal({ isOpen, onClose }: Props) {
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop photographique calme (nouveau) */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[90]"
+            transition={{ duration: 0.5 }}
+            className="fixed inset-0 z-[90] bg-[#0c1a17]"
             onClick={onClose}
-          />
+          >
+            <Image
+              src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
+              alt="Fond médical splash d'eau liquide turquoise abstrait"
+              fill
+              className="object-cover opacity-60 mix-blend-screen saturate-150"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0c1a17] via-[#0c1a17]/50 to-transparent" />
+            
+            <div className="hidden lg:flex flex-col items-start justify-center h-full pl-10 lg:pl-16 xl:pl-24 pr-10 w-[calc(100%-520px)] select-none pointer-events-none relative z-10">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2, duration: 0.6, ease: EASE }}
+                className="max-w-xl"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-6 h-px bg-[#4caf91]/50" />
+                  <span className="text-[10px] text-[#4caf91] font-bold uppercase tracking-[0.25em]">MediBridge Privilège</span>
+                </div>
+                <h1
+                  className="text-3xl lg:text-5xl font-normal text-white leading-[1.2]"
+                  style={{ fontFamily: 'Georgia, serif' }}
+                >
+                  Dossier d'admission.
+                </h1>
+              </motion.div>
+            </div>
+          </motion.div>
 
-          {/* Panel */}
+          {/* Panel Formulaire */}
           <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ duration: 0.4, ease: EASE }}
-            className="fixed top-0 right-0 h-full w-full sm:w-[520px] z-[91] flex flex-col shadow-2xl"
+            className="fixed top-0 right-0 h-full w-full sm:w-[520px] z-[91] flex flex-col overflow-hidden shadow-2xl bg-white"
           >
             {/* ── Header ─────────────────────────────────── */}
-            <div className="shrink-0 bg-[#060a0d] px-4 sm:px-7 pt-5 sm:pt-7 pb-5 sm:pb-6 border-b border-white/5">
-              {/* Accent top bar */}
-              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-brand-teal via-brand-teal/60 to-transparent" />
-
+            <div className="shrink-0 bg-[#FDFBF7] px-4 sm:px-7 pt-5 sm:pt-7 pb-5 sm:pb-6 border-b border-[#E1E1E1]">
               <div className="flex items-start justify-between mb-1">
                 <div>
-                  <p className="text-[8px] font-bold text-brand-teal/70 uppercase tracking-[0.35em] mb-2">
-                    MediBridge · Accompagnement médical
+                  <p className="text-[8px] font-bold text-[#1B433E] uppercase tracking-[0.35em] mb-2">
+                    MediBridge · Dossier Admis
                   </p>
                   <h2
-                    className="text-[22px] text-white leading-tight tracking-tight"
+                    className="text-[22px] text-[#1a1f24] leading-tight tracking-tight"
                     style={{ fontFamily: 'Georgia, serif' }}
                   >
                     Démarrer votre parcours
@@ -387,16 +477,16 @@ export function OnboardingModal({ isOpen, onClose }: Props) {
                 </div>
                 <button
                   onClick={onClose}
-                  className="w-8 h-8 flex items-center justify-center text-white/30 hover:text-white hover:bg-white/5 transition-all mt-0.5 rounded-sm"
+                  className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-900 border border-transparent hover:border-[#E1E1E1] transition-all rounded-full"
                 >
-                  <X size={15} />
+                  <X size={18} />
                 </button>
               </div>
               <StepBar step={step} />
             </div>
 
             {/* ── Content ─────────────────────────────────── */}
-            <div className="flex-1 overflow-y-auto bg-white" style={{ scrollbarWidth: 'thin', scrollbarColor: '#e2e8f0 transparent' }}>
+            <div id="onboarding-scroll-container" className="flex-1 min-h-0 overflow-y-auto bg-white" style={{ scrollbarWidth: 'thin', scrollbarColor: '#e2e8f0 transparent', overscrollBehavior: 'none' }}>
               <AnimatePresence mode="wait">
 
                 {/* ══ ÉTAPE 1 — Intervention ══════════════════ */}
@@ -414,13 +504,13 @@ export function OnboardingModal({ isOpen, onClose }: Props) {
                         Étape 1 sur 2
                       </span>
                       <h3
-                        className="text-[21px] text-slate-900 leading-snug tracking-tight"
+                        className="text-[21px] text-[#1a1f24] leading-snug tracking-tight"
                         style={{ fontFamily: 'Georgia, serif' }}
                       >
-                        Quelle intervention recherchez-vous ?
+                        Quelle spécialité recherchez-vous ?
                       </h3>
-                      <p className="text-[12px] text-slate-400 mt-1.5 leading-relaxed">
-                        Sélectionnez une spécialité — nous identifierons les meilleurs établissements pour vous.
+                      <p className="text-[13px] text-slate-500 mt-1.5 leading-relaxed">
+                        Indiquez-nous votre besoin médical. Nous identifierons pour vous l'établissement d'excellence le plus adapté.
                       </p>
                     </div>
 
@@ -655,11 +745,16 @@ export function OnboardingModal({ isOpen, onClose }: Props) {
                           <input
                             type="tel"
                             value={form.phone}
-                            onChange={e => set('phone', e.target.value)}
-                            placeholder="6 00 00 00 00"
+                            onChange={e => {
+                               // Only allow digits, spaces, plus and dashes
+                               const val = e.target.value.replace(/[^\d\s\+\-]/g, '')
+                               set('phone', val)
+                            }}
+                            placeholder={phonePlaceholder}
                             className="flex-1 px-3.5 text-base sm:text-[13px] text-slate-800 bg-white outline-none placeholder:text-slate-300"
                           />
                         </div>
+                        {errors.phone && <p className="text-[10px] text-red-500 mt-1">{errors.phone}</p>}
 
                         {/* WhatsApp CTA */}
                         <label className="flex items-center gap-2.5 mt-2.5 cursor-pointer group">
@@ -674,6 +769,21 @@ export function OnboardingModal({ isOpen, onClose }: Props) {
                             Je préfère être contacté(e) via <strong className="text-[#25D366]">WhatsApp</strong>
                           </span>
                         </label>
+                      </div>
+
+                      {/* NOUVEAU : Champ pour services ou infos */}
+                      <div>
+                        <label className="text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em] block mb-2">
+                          Informations ou services souhaités <span className="normal-case font-normal tracking-normal text-slate-300">(optionnel)</span>
+                        </label>
+                        <textarea
+                          lang="fr"
+                          value={form.message}
+                          onChange={e => set('message', e.target.value)}
+                          placeholder="Ex: Je souhaite une conciergerie 24/7, un traducteur sur place, devis détaillé..."
+                          rows={3}
+                          className="w-full px-4 py-3 text-base sm:text-[13px] text-slate-800 bg-white border border-slate-200 outline-none focus:border-brand-teal focus:shadow-[0_0_0_3px_rgba(13,188,167,0.08)] transition-all placeholder:text-slate-300 rounded-sm resize-none"
+                        />
                       </div>
                     </div>
 
@@ -690,7 +800,7 @@ export function OnboardingModal({ isOpen, onClose }: Props) {
                   </motion.div>
                 )}
 
-                {/* ══ ÉTAPE 3 — Confirmation ═══════════════════ */}
+                {/* ══ ÉTAPE 3 — Confirmation / Loading ═══════════════════ */}
                 {step === 2 && (
                   <motion.div
                     key="step2"
@@ -698,84 +808,96 @@ export function OnboardingModal({ isOpen, onClose }: Props) {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.35, ease: EASE }}
-                    className="flex flex-col items-center justify-center min-h-full px-5 sm:px-8 py-10 sm:py-14 text-center"
+                    className="flex flex-col items-center pt-8 sm:pt-12 pb-16 px-5 sm:px-8 text-center"
                   >
-                    {/* Icon */}
-                    <div className="relative mb-8">
-                      <div className="w-20 h-20 rounded-full bg-brand-teal/8 border border-brand-teal/20 flex items-center justify-center">
-                        <CheckCircle2 size={36} className="text-brand-teal" strokeWidth={1.5} />
-                      </div>
-                      <div className="absolute inset-0 bg-brand-teal/10 blur-3xl -z-10 scale-150" />
-                    </div>
-
-                    <p className="text-[8px] font-bold text-brand-teal uppercase tracking-[0.4em] mb-3">
-                      Demande enregistrée
-                    </p>
-                    <h3
-                      className="text-[24px] text-slate-900 leading-snug mb-4 tracking-tight"
-                      style={{ fontFamily: 'Georgia, serif' }}
-                    >
-                      Bienvenue {form.firstName},<br />votre dossier est en cours
-                    </h3>
-
-                    {/* Recap */}
-                    <div className="w-full max-w-xs bg-gradient-to-br from-slate-900 to-slate-800 px-5 py-4 mb-6 text-left rounded-sm border border-slate-700">
-                      <p className="text-[8px] font-bold text-slate-500 uppercase tracking-[0.25em] mb-2.5">Récapitulatif</p>
-                      <p className="text-[13px] text-white font-semibold leading-snug">
-                        {specialtyLabel}
-                        {form.destination !== 'all' && (
-                          <>
-                            <span className="text-slate-400 font-normal"> {destPrep} </span>
-                            <span className="text-brand-teal">{destLabel}</span>
-                          </>
-                        )}
-                      </p>
-                      <p className="text-[11px] text-slate-400 mt-1.5">{form.email}</p>
-                      {form.phone && (
-                        <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1.5">
-                          {form.whatsapp && <MessageCircle size={10} className="text-[#25D366]" />}
-                          {dialCode} {form.phone}
+                    {isLoading ? (
+                      <div className="flex flex-col items-center justify-center flex-1">
+                        <div className="w-12 h-12 border-2 border-[#E1E1E1] border-t-[#1B433E] rounded-full animate-spin mb-6" />
+                        <h3 className="text-[20px] text-[#1a1f24] tracking-tight mb-2" style={{ fontFamily: 'Georgia, serif' }}>
+                          Transmission sécurisée...
+                        </h3>
+                        <p className="text-[12px] text-slate-500 font-light">
+                          Notre guichet chiffre et réceptionne vos données.
                         </p>
-                      )}
-                    </div>
-
-                    <p className="text-[12px] text-slate-500 leading-relaxed max-w-xs mb-8">
-                      Vous recevrez une proposition personnalisée sur{' '}
-                      <strong className="text-slate-700">{form.email}</strong> dans les{' '}
-                      <strong className="text-slate-700">48 heures</strong>.
-                    </p>
-
-                    {/* Prochaines étapes */}
-                    <div className="w-full max-w-xs space-y-2 mb-10 text-left">
-                      {[
-                        'Confirmation par email dans quelques minutes',
-                        'Analyse de votre profil par notre comité médical',
-                        'Proposition d\'établissements sous 48h',
-                        'Création de votre espace personnel',
-                      ].map((item, i) => (
-                        <div key={i} className="flex items-start gap-3 px-4 py-3 border border-slate-100 bg-slate-50/60 rounded-sm">
-                          <div className="relative w-3.5 h-3.5 shrink-0 mt-0.5">
-                            <div className="absolute inset-0 rotate-45 border border-brand-teal/30 bg-brand-teal/8" />
-                            <div className="absolute inset-[3px] rotate-45 bg-brand-teal/60" />
+                      </div>
+                    ) : (
+                      <>
+                        {/* Icon */}
+                        <div className="relative mb-6">
+                          <div className="w-16 h-16 rounded-full bg-[#f2f7f6] border border-[#d6ebe5] flex items-center justify-center shadow-sm">
+                            <CheckCircle2 size={30} className="text-[#1B433E]" strokeWidth={1.5} />
                           </div>
-                          <p className="text-[11px] text-slate-600 leading-snug">{item}</p>
                         </div>
-                      ))}
-                    </div>
 
-                    <a
-                      href="/register"
-                      className="w-full max-w-xs flex items-center justify-center gap-2 h-12 bg-slate-900 hover:bg-brand-teal text-white text-[11px] font-bold uppercase tracking-[0.15em] transition-all duration-300 group rounded-sm"
-                    >
-                      Créer mon espace MediBridge
-                      <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
-                    </a>
-                    <button
-                      onClick={onClose}
-                      className="mt-3 text-[10px] text-slate-400 hover:text-slate-600 uppercase tracking-wider font-semibold transition-colors"
-                    >
-                      Fermer
-                    </button>
+                        <p className="text-[9px] font-bold text-[#1B433E] uppercase tracking-[0.4em] mb-3">
+                          Dossier réceptionné
+                        </p>
+                        <h3
+                          className="text-[24px] text-[#1a1f24] leading-snug mb-5 tracking-tight"
+                          style={{ fontFamily: 'Georgia, serif' }}
+                        >
+                          Merci {form.firstName},<br />votre dossier est à l'étude
+                        </h3>
+
+                        {/* Recap Premium Clair */}
+                        <div className="w-full max-w-sm bg-[#FDFBF7] px-6 py-5 mb-8 text-left rounded-sm border border-[#E1E1E1] shadow-sm">
+                          <p className="text-[9px] font-bold text-[#1B433E] uppercase tracking-[0.3em] mb-3 border-b border-[#E1E1E1] pb-2">Récapitulatif</p>
+                          <p className="text-[14px] text-[#1a1f24] leading-snug mb-2 font-medium" style={{ fontFamily: 'Georgia, serif' }}>
+                            {specialtyLabel}
+                            {form.destination !== 'all' && (
+                              <>
+                                <span className="text-slate-500 font-light italic"> {destPrep} </span>
+                                <span className="text-[#1B433E] font-medium">{destLabel}</span>
+                              </>
+                            )}
+                          </p>
+                          <p className="text-[12px] text-slate-600 mb-1">{form.email}</p>
+                          {form.phone && (
+                            <p className="text-[12px] text-slate-600 flex items-center gap-1.5">
+                              {form.whatsapp && <MessageCircle size={12} className="text-[#25D366]" />}
+                              {dialCode} {form.phone}
+                            </p>
+                          )}
+                        </div>
+
+                        <p className="text-[13px] text-slate-500 leading-relaxed font-light max-w-sm mb-6">
+                          Notre confrérie analysera vos informations. Vous recevrez des recommandations personnalisées sous <strong className="text-slate-800 font-medium">24 heures express</strong>.
+                        </p>
+
+                        {/* Prochaines étapes (Horizontales avec coches) */}
+                        <div className="w-full max-w-md mb-10">
+                           <div className="flex flex-wrap justify-center gap-3">
+                             {[
+                               'Email de confirmation',
+                               'Analyse profil en 24h',
+                               'Proposition d\'hôpitaux',
+                               'Ouverture d\'espace',
+                             ].map((item, i) => (
+                               <div key={i} className="flex items-center gap-2 px-3 py-2 border border-slate-200 bg-slate-50/50 rounded-sm">
+                                 <CheckCircle2 size={13} className="text-[#4caf91] shrink-0" strokeWidth={2} />
+                                 <p className="text-[11px] text-slate-600 font-medium">{item}</p>
+                               </div>
+                             ))}
+                           </div>
+                        </div>
+
+                        <div className="w-full max-w-md flex flex-col gap-4 pb-8">
+                          <a
+                            href="/register"
+                            className="w-full flex items-center justify-center gap-2 h-14 sm:h-16 bg-[#1B433E] hover:bg-[#122e2a] text-white text-[13px] sm:text-[14px] font-bold uppercase tracking-[0.2em] transition-all duration-300 group rounded-lg shadow-md"
+                          >
+                            Ouvrir mon espace patient
+                            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                          </a>
+                          <button
+                            onClick={onClose}
+                            className="w-full h-12 flex items-center justify-center border border-slate-200 text-slate-500 hover:text-slate-800 hover:border-slate-300 hover:bg-slate-50 text-[11px] sm:text-[12px] uppercase tracking-widest font-bold transition-all rounded-lg shadow-sm bg-white"
+                          >
+                            Fermer
+                          </button>
+                        </div>
+                      </>
+                    )}
                   </motion.div>
                 )}
 

@@ -15,16 +15,31 @@ export function MessagesView() {
 
     const contacts = [
         { id: 1, name: "Dr. Fatima El Amrani", role: "Chirurgien Orthopédiste", avatar: "FE", online: true, lastMsg: "Votre IRM est parfaite. On maintient la date." },
-        { id: 2, name: "Sarah (Coordination)", role: "Conciergerie Médicale", avatar: "SC", online: true, lastMsg: "Vos billets sont réservés ! ✈️", unread: 2 },
-        { id: 3, name: "Equipe Administative", role: "Clinique El Manar", avatar: "CE", online: false, lastMsg: "Facture d'acompte envoyée." }
+        { id: 2, name: "Sarah Coordination", role: "Conciergerie Médicale", avatar: "SC", online: true, lastMsg: "Vos billets sont réservés ! ✈️", unread: 2 },
+        { id: 3, name: "Equipe Administrative", role: "Clinique El Manar", avatar: "EA", online: false, lastMsg: "Facture d'acompte envoyée." }
     ]
 
-    const messages = [
-        { id: 1, sender: "doctor", text: "Bonjour Jean-Pierre, j'ai bien reçu votre dernière IRM cervicale.", time: "09:14" },
-        { id: 2, sender: "patient", text: "Bonjour Docteur. Tout vous semble correct pour l'opération ?", time: "09:30" },
-        { id: 3, sender: "doctor", text: "Oui, c'est parfaitement aligné avec notre plan chirurgical. L'articulation est claire, je n'ai aucune inquiétude. Préparez-vous sereinement pour le voyage.", time: "10:05" },
-        { id: 4, sender: "doctor", type: "file", fileName: "Bilan_Pre_Op_Signe.pdf", fileSize: "2.4 MB", time: "10:06" }
-    ]
+    const messagesByContact: Record<number, any[]> = {
+        1: [
+            { id: 1, sender: "doctor", text: "Bonjour Jean-Pierre, j'ai bien reçu votre dernière IRM cervicale.", time: "09:14" },
+            { id: 2, sender: "patient", text: "Bonjour Docteur. Tout vous semble correct pour l'opération ?", time: "09:30" },
+            { id: 3, sender: "doctor", text: "Oui, c'est parfaitement aligné avec notre plan chirurgical. L'articulation est claire, je n'ai aucune inquiétude. Préparez-vous sereinement pour le voyage.", time: "10:05" },
+            { id: 4, sender: "doctor", type: "file", fileName: "Bilan_Pre_Op_Signe.pdf", fileSize: "2.4 MB", time: "10:06" }
+        ],
+        2: [
+            { id: 1, sender: "patient", text: "Bonjour Sarah, avez-vous pu confirmer le vol ?", time: "Hier" },
+            { id: 2, sender: "doctor", text: "Bonjour ! Oui, c'est confirmé. Vos billets sont réservés ! ✈️", time: "08:15" },
+            { id: 3, sender: "doctor", text: "Je vous envoie le récapitulatif dans un instant.", time: "08:16" }
+        ],
+        3: [
+            { id: 1, sender: "doctor", text: "Bonjour, voici votre facture d'acompte pour l'intervention.", time: "Lundi" },
+            { id: 2, sender: "doctor", type: "file", fileName: "Facture_Acompte_001.pdf", fileSize: "1.1 MB", time: "Lundi" },
+            { id: 3, sender: "patient", text: "Merci, je procède au virement aujourd'hui.", time: "Lundi" }
+        ]
+    }
+
+    const activeContactDetails = contacts.find(c => c.id === activeContact) || contacts[0]
+    const activeMessages = messagesByContact[activeContact] || []
 
     return (
         <motion.div
@@ -82,12 +97,12 @@ export function MessagesView() {
                 <div className="h-20 border-b border-slate-100 bg-white flex items-center justify-between px-6 shrink-0 z-10 shadow-sm">
                     <div className="flex items-center gap-4">
                         <Avatar className="h-10 w-10 border border-slate-100 shadow-sm">
-                            <AvatarFallback className="bg-blue-100 text-blue-700 font-bold">FE</AvatarFallback>
+                            <AvatarFallback className="bg-brand-teal/10 text-brand-teal font-bold">{activeContactDetails.avatar}</AvatarFallback>
                         </Avatar>
                         <div>
-                            <h2 className="font-bold text-slate-900 leading-tight">Dr. Fatima El Amrani</h2>
-                            <p className="text-xs text-emerald-600 font-medium flex items-center gap-1">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" /> En ligne
+                            <h2 className="font-bold text-slate-900 leading-tight">{activeContactDetails.name}</h2>
+                            <p className={`text-xs font-medium flex items-center gap-1 ${activeContactDetails.online ? 'text-emerald-600' : 'text-slate-400'}`}>
+                                <span className={`w-1.5 h-1.5 rounded-full inline-block ${activeContactDetails.online ? 'bg-emerald-500' : 'bg-slate-400'}`} /> {activeContactDetails.online ? 'En ligne' : 'Hors ligne'}
                             </p>
                         </div>
                     </div>
@@ -105,13 +120,13 @@ export function MessagesView() {
                         <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-200/50 px-3 py-1 rounded-full">Aujourd'hui</span>
                     </div>
 
-                    {messages.map(msg => (
+                    {activeMessages.map(msg => (
                         <div key={msg.id} className={`flex ${msg.sender === 'patient' ? 'justify-end' : 'justify-start'}`}>
                             <div className={`flex gap-3 max-w-[70%] ${msg.sender === 'patient' ? 'flex-row-reverse' : 'flex-row'}`}>
 
                                 {msg.sender === 'doctor' && (
                                     <Avatar className="h-8 w-8 shrink-0 mt-auto border border-white shadow-sm">
-                                        <AvatarFallback className="bg-blue-100 text-[10px] font-bold text-blue-700">FE</AvatarFallback>
+                                        <AvatarFallback className="bg-brand-teal/10 text-[10px] font-bold text-brand-teal">{activeContactDetails.avatar}</AvatarFallback>
                                     </Avatar>
                                 )}
 
@@ -154,7 +169,7 @@ export function MessagesView() {
 
                         <textarea
                             className="flex-1 max-h-32 min-h-[44px] bg-transparent border-none resize-none px-3 py-3 text-[15px] outline-none placeholder:text-slate-400 text-slate-800"
-                            placeholder="Écrivez votre message au Dr. El Amrani..."
+                            placeholder={`Écrivez votre message à ${activeContactDetails.name}...`}
                             rows={1}
                         />
 

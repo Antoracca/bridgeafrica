@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, ChevronLeft, ChevronRight, Clock, Monitor, Award, MapPin, CalendarCheck, Send, Loader2 } from 'lucide-react'
 import Image from 'next/image'
 import type { DoctorFull } from './DoctorProfileModal'
+import { useScrollLock } from '@/lib/hooks/useScrollLock'
 
 interface Props {
   isOpen: boolean
@@ -43,23 +44,7 @@ export function DoctorRDVModal({ isOpen, onClose, doctor }: Props) {
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
 
-  useEffect(() => {
-    if (!isOpen) return
-    const scrollY = window.scrollY
-    document.body.style.position = 'fixed'
-    document.body.style.top = `-${scrollY}px`
-    document.body.style.left = '0'
-    document.body.style.right = '0'
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.body.style.position = ''
-      document.body.style.top = ''
-      document.body.style.left = ''
-      document.body.style.right = ''
-      document.body.style.overflow = ''
-      window.scrollTo(0, scrollY)
-    }
-  }, [isOpen])
+  useScrollLock(isOpen)
 
   useEffect(() => {
     if (!isOpen) {
@@ -132,8 +117,8 @@ export function DoctorRDVModal({ isOpen, onClose, doctor }: Props) {
                   <div className="absolute bottom-1/4 -left-8 w-28 h-36 bg-gradient-to-r from-white/15 via-white/5 to-transparent rounded-full blur-2xl" />
                 </div>
 
-                {/* Blue transparent glass card */}
-                <div className="relative z-10 bg-[#006994]/30 backdrop-blur-sm border border-white/15 px-8 py-8 lg:px-10 lg:py-10 shadow-2xl">
+                {/* Green transparent glass card */}
+                <div className="relative z-10 bg-[#1B433E]/60 backdrop-blur-md border border-white/20 px-8 py-8 lg:px-10 lg:py-10 shadow-2xl rounded-sm">
 
                   {/* Badge */}
                   <div className="flex items-center gap-2 mb-5">
@@ -182,17 +167,17 @@ export function DoctorRDVModal({ isOpen, onClose, doctor }: Props) {
             transition={{ duration: 0.4, ease: EASE }}
             className="fixed top-0 right-0 h-full w-full sm:w-[460px] bg-white z-[91] flex flex-col shadow-2xl"
           >
-            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#006994] to-transparent z-10" />
+            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#1B433E] to-transparent z-10" />
 
             {/* Header */}
-            <div className="shrink-0 bg-[#060a0d] px-5 sm:px-7 pt-5 pb-5 border-b border-white/5">
+            <div className="shrink-0 bg-[#FDFBF7] px-5 sm:px-7 pt-5 pb-5 border-b border-[#E1E1E1]">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <p className="text-[8px] font-bold text-[#4caf91] uppercase tracking-[0.35em] mb-1.5">
+                  <p className="text-[8px] font-bold text-[#1B433E] uppercase tracking-[0.35em] mb-1.5">
                     Rendez-vous · {doctor.name.split(' ').pop()}
                   </p>
                   <h2
-                    className="text-[20px] text-white leading-tight tracking-tight"
+                    className="text-[20px] text-[#1a1f24] leading-tight tracking-tight"
                     style={{ fontFamily: 'Georgia, serif' }}
                   >
                     {sent ? 'Demande envoyée' : sending ? 'Envoi en cours...' : 'Planifier un rendez-vous'}
@@ -200,34 +185,34 @@ export function DoctorRDVModal({ isOpen, onClose, doctor }: Props) {
                 </div>
                 <button
                   onClick={onClose}
-                  className="w-8 h-8 flex items-center justify-center text-white/30 hover:text-white hover:bg-white/5 transition-all"
+                  className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-900 border border-transparent hover:border-[#E1E1E1] rounded-full transition-all"
                 >
-                  <X size={15} />
+                  <X size={16} />
                 </button>
               </div>
 
               {/* Mini doctor info */}
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full overflow-hidden border border-white/20 shrink-0">
+                <div className="w-9 h-9 rounded-none overflow-hidden border border-[#E1E1E1] shrink-0 shadow-sm">
                   <Image src={doctor.image} alt="" width={36} height={36} className="w-9 h-9 object-cover" />
                 </div>
                 <div>
-                  <p className="text-[11px] text-white font-semibold">{doctor.name}</p>
-                  <p className="text-[10px] text-white/40">{doctor.specialty} · {doctor.establishment}</p>
+                  <p className="text-[11px] text-[#1a1f24] font-bold">{doctor.name}</p>
+                  <p className="text-[10px] text-slate-500 font-light italic">{doctor.specialty} · {doctor.establishment}</p>
                 </div>
               </div>
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto bg-white" style={{ scrollbarWidth: 'thin' }}>
+            <div className="flex-1 overflow-y-auto bg-white" style={{ scrollbarWidth: 'thin', overscrollBehavior: 'none' }}>
 
               {sending ? (
                 /* ── Loading state ── */
                 <div className="flex flex-col items-center justify-center px-8 py-24 text-center">
-                  <div className="w-16 h-16 rounded-full bg-[#006994]/10 border border-[#006994]/20 flex items-center justify-center mb-6">
-                    <Loader2 size={28} className="text-[#006994] animate-spin" strokeWidth={1.5} />
+                  <div className="w-16 h-16 rounded-full bg-[#1B433E]/10 border border-[#1B433E]/20 flex items-center justify-center mb-6">
+                    <Loader2 size={28} className="text-[#1B433E] animate-spin" strokeWidth={1.5} />
                   </div>
-                  <p className="text-[10px] font-bold text-[#006994] uppercase tracking-[0.3em] mb-3">
+                  <p className="text-[10px] font-bold text-[#1B433E] uppercase tracking-[0.3em] mb-3">
                     Envoi en cours
                   </p>
                   <p className="text-[13px] text-slate-500 leading-relaxed max-w-xs">
@@ -237,31 +222,31 @@ export function DoctorRDVModal({ isOpen, onClose, doctor }: Props) {
               ) : sent ? (
                 /* ── Demande envoyée (pas confirmée) ── */
                 <div className="flex flex-col items-center justify-center px-8 py-12 text-center">
-                  <div className="w-16 h-16 rounded-full bg-[#006994]/10 border border-[#006994]/20 flex items-center justify-center mb-6">
-                    <Send size={26} className="text-[#006994]" strokeWidth={1.5} />
+                  <div className="w-16 h-16 rounded-full bg-[#1B433E]/10 border border-[#1B433E]/20 flex items-center justify-center mb-6">
+                    <Send size={26} className="text-[#1B433E]" strokeWidth={1.5} />
                   </div>
 
-                  <p className="text-[9px] font-bold text-[#006994] uppercase tracking-[0.35em] mb-3">
+                  <p className="text-[9px] font-bold text-[#1B433E] uppercase tracking-[0.35em] mb-3">
                     Demande envoyée
                   </p>
                   <h3
-                    className="text-[22px] text-slate-900 leading-snug tracking-tight mb-5"
+                    className="text-[22px] text-[#1a1f24] leading-snug tracking-tight mb-5"
                     style={{ fontFamily: 'Georgia, serif' }}
                   >
                     Votre demande a bien été transmise
                   </h3>
 
-                  <div className="w-full max-w-xs bg-slate-900 px-5 py-4 text-left mb-6">
-                    <p className="text-[8px] font-bold text-slate-500 uppercase tracking-[0.25em] mb-2">Récapitulatif</p>
-                    <p className="text-[13px] text-white font-semibold">{doctor.name}</p>
-                    <p className="text-[11px] text-slate-400 mt-1">{doctor.specialty}</p>
-                    <div className="mt-3 pt-3 border-t border-slate-700 flex items-center gap-3">
-                      <CalendarCheck size={12} className="text-[#4caf91]" />
-                      <span className="text-[12px] text-white">{selectedDay} {MONTHS[month]} {year} à {selectedSlot}</span>
+                  <div className="w-full max-w-xs bg-[#FDFBF7] border border-[#E1E1E1] px-5 py-4 text-left mb-6 shadow-sm">
+                    <p className="text-[8px] font-bold text-[#1B433E] uppercase tracking-[0.3em] mb-2 border-b border-[#E1E1E1] pb-2">Récapitulatif</p>
+                    <p className="text-[13px] text-[#1a1f24] font-semibold" style={{ fontFamily: 'Georgia, serif' }}>{doctor.name}</p>
+                    <p className="text-[11px] text-slate-500 mt-1 font-light italic">{doctor.specialty}</p>
+                    <div className="mt-3 pt-3 flex items-center gap-3">
+                      <CalendarCheck size={13} className="text-[#1B433E]" />
+                      <span className="text-[12px] text-slate-700 font-medium">{selectedDay} {MONTHS[month]} {year} à {selectedSlot}</span>
                     </div>
                     <div className="mt-2 flex items-center gap-3">
-                      <Monitor size={12} className="text-[#4caf91]" />
-                      <span className="text-[12px] text-white">Plateforme MediBridge</span>
+                      <Monitor size={13} className="text-[#1B433E]" />
+                      <span className="text-[12px] text-slate-700 font-medium">Plateforme MediBridge</span>
                     </div>
                   </div>
 
@@ -278,7 +263,7 @@ export function DoctorRDVModal({ isOpen, onClose, doctor }: Props) {
 
                   <button
                     onClick={onClose}
-                    className="w-full max-w-xs h-11 bg-slate-900 hover:bg-[#006994] text-white text-[11px] font-bold uppercase tracking-[0.15em] transition-all"
+                    className="w-full max-w-xs h-11 bg-slate-900 hover:bg-[#1B433E] text-white text-[11px] font-bold uppercase tracking-[0.15em] transition-all"
                   >
                     Fermer
                   </button>
@@ -338,10 +323,10 @@ export function DoctorRDVModal({ isOpen, onClose, doctor }: Props) {
                           disabled={disabled}
                           className={`h-9 text-[12px] font-medium transition-all ${
                             isSelected
-                              ? 'bg-[#006994] text-white font-bold'
+                              ? 'bg-[#1B433E] text-white font-bold'
                               : disabled
                                 ? 'text-slate-200 cursor-not-allowed'
-                                : 'text-slate-700 hover:bg-[#006994]/10 hover:text-[#006994]'
+                                : 'text-slate-700 hover:bg-[#1B433E]/10 hover:text-[#1B433E]'
                           }`}
                         >
                           {day}
@@ -353,7 +338,7 @@ export function DoctorRDVModal({ isOpen, onClose, doctor }: Props) {
                   {/* Légende */}
                   <div className="flex items-center gap-4 mb-6 text-[9px] text-slate-400">
                     <span className="flex items-center gap-1.5">
-                      <div className="w-3 h-3 bg-[#006994]" />
+                      <div className="w-3 h-3 bg-[#1B433E]" />
                       Sélectionné
                     </span>
                     <span className="flex items-center gap-1.5">
@@ -381,8 +366,8 @@ export function DoctorRDVModal({ isOpen, onClose, doctor }: Props) {
                               onClick={() => setSelectedSlot(slot)}
                               className={`h-9 px-4 text-[12px] font-semibold border transition-all ${
                                 selectedSlot === slot
-                                  ? 'bg-[#006994] text-white border-[#006994]'
-                                  : 'text-slate-600 border-slate-200 hover:border-[#006994] hover:text-[#006994]'
+                                  ? 'bg-[#1B433E] text-white border-[#1B433E]'
+                                  : 'text-slate-600 border-slate-200 hover:border-[#1B433E] hover:text-[#1B433E]'
                               }`}
                             >
                               {slot}
@@ -401,8 +386,8 @@ export function DoctorRDVModal({ isOpen, onClose, doctor }: Props) {
                       <Monitor size={11} />
                       Canal de consultation
                     </h4>
-                    <div className="flex items-center gap-3 bg-[#006994]/5 border border-[#006994]/15 px-4 py-3">
-                      <div className="w-8 h-8 bg-[#006994] flex items-center justify-center shrink-0">
+                    <div className="flex items-center gap-3 bg-[#1B433E]/5 border border-[#1B433E]/15 px-4 py-3">
+                      <div className="w-8 h-8 bg-[#1B433E] flex items-center justify-center shrink-0">
                         <Monitor size={14} className="text-white" />
                       </div>
                       <div>
@@ -419,15 +404,15 @@ export function DoctorRDVModal({ isOpen, onClose, doctor }: Props) {
 
             {/* Footer — Confirmer */}
             {!sent && !sending && (
-              <div className="shrink-0 px-5 sm:px-7 py-4 border-t border-slate-100 bg-white">
+              <div className="shrink-0 px-5 sm:px-7 py-4 border-t border-[#E1E1E1] bg-[#FDFBF7]">
                 <button
                   onClick={handleConfirm}
                   disabled={!selectedDay || !selectedSlot}
-                  className="w-full h-12 bg-[#006994] hover:bg-[#005174] disabled:bg-slate-200 disabled:text-slate-400 text-white text-[11px] font-bold uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-2"
+                  className="w-full h-[50px] bg-[#1B433E] hover:bg-[#122e2a] disabled:bg-slate-100 disabled:text-slate-400 disabled:border disabled:border-slate-200 text-white text-[11px] font-bold uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 rounded-none shadow-sm"
                 >
                   {selectedDay && selectedSlot
-                    ? `Envoyer la demande — ${selectedDay} ${MONTHS[month]} à ${selectedSlot}`
-                    : 'Sélectionnez un créneau'
+                    ? `Confirmer — ${selectedDay} ${MONTHS[month]} ${selectedSlot}`
+                    : 'Sélectionnez un créneau horaire'
                   }
                 </button>
               </div>

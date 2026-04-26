@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Building2 } from 'lucide-react'
+import { useScrollLock } from '@/lib/hooks/useScrollLock'
 
 interface Props {
   isOpen: boolean
@@ -12,23 +12,7 @@ interface Props {
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
 
 export function CliniquesModal({ isOpen, onClose }: Props) {
-  useEffect(() => {
-    if (!isOpen) return
-    const scrollY = window.scrollY
-    document.body.style.position = 'fixed'
-    document.body.style.top = `-${scrollY}px`
-    document.body.style.left = '0'
-    document.body.style.right = '0'
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.body.style.position = ''
-      document.body.style.top = ''
-      document.body.style.left = ''
-      document.body.style.right = ''
-      document.body.style.overflow = ''
-      window.scrollTo(0, scrollY)
-    }
-  }, [isOpen])
+  useScrollLock(isOpen)
 
   return (
     <AnimatePresence>
@@ -75,76 +59,69 @@ export function CliniquesModal({ isOpen, onClose }: Props) {
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#1B433E] to-transparent z-10" />
 
             {/* Header */}
-            <div className="shrink-0 bg-[#060a0d] px-6 sm:px-8 pt-6 pb-6 border-b border-white/5">
+            <div className="shrink-0 bg-[#FDFBF7] px-6 sm:px-8 pt-6 pb-6 border-b border-[#E1E1E1]">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-[8px] font-bold text-[#4caf91] uppercase tracking-[0.35em] mb-2">
+                  <p className="text-[8px] font-bold text-[#1B433E] uppercase tracking-[0.35em] mb-2">
                     MediBridge · Réseau Médical
                   </p>
                   <h2
-                    className="text-[22px] text-white leading-tight tracking-tight"
+                    className="text-[22px] text-[#1a1f24] leading-tight tracking-tight"
                     style={{ fontFamily: 'Georgia, serif' }}
                   >
-                    Hôpitaux &amp; Cliniques
+                    L'Annuaire des Établissements
                   </h2>
                 </div>
                 <button
                   onClick={onClose}
-                  className="w-8 h-8 flex items-center justify-center text-white/30 hover:text-white hover:bg-white/5 transition-all rounded-sm"
+                  className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-900 border border-transparent hover:border-[#E1E1E1] transition-all rounded-full"
                 >
-                  <X size={15} />
+                  <X size={18} />
                 </button>
               </div>
 
               <div className="mt-5 flex items-center gap-5">
                 <div className="flex items-center gap-2">
-                  <Building2 size={11} className="text-white/35" />
-                  <span className="text-[11px] font-semibold text-white/35 tabular-nums">0 établissement</span>
+                  <Building2 size={11} className="text-slate-500" />
+                  <span className="text-[11px] font-semibold text-slate-500 tabular-nums">Accréditations JCI & ISO</span>
                 </div>
-                <div className="w-px h-3 bg-white/10" />
-                <span className="text-[11px] font-semibold text-white/35 uppercase tracking-widest">En construction</span>
+                <div className="w-px h-3 bg-[#E1E1E1]" />
+                <span className="text-[11px] font-semibold text-[#1a1f24] uppercase tracking-widest">Publication Imminente</span>
               </div>
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto bg-white">
-              <div className="px-8 pt-12 pb-16 flex flex-col items-start">
-
-                {/* Status pill */}
-                <div className="inline-flex items-center gap-2 border border-slate-200 px-3 py-1.5 rounded-sm mb-8">
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-teal" />
-                  <span className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.25em]">En préparation</span>
-                </div>
+            <div className="flex-1 overflow-y-auto bg-white" style={{ overscrollBehavior: 'none' }}>
+              <div className="px-6 sm:px-8 py-5 flex flex-col items-start justify-center min-h-full">
 
                 <h3
-                  className="text-[26px] text-slate-900 leading-snug tracking-tight mb-4"
-                  style={{ fontFamily: 'Georgia, serif' }}
+                  className="text-[24px] tracking-tight mb-3"
+                  style={{ fontFamily: 'Georgia, serif', color: '#1B433E' }}
                 >
-                  Notre annuaire<br />d&apos;établissements arrive
+                  Certification des infrastructures.
                 </h3>
 
-                <p className="text-[13px] text-slate-400 leading-relaxed mb-12 max-w-sm">
-                  Accréditations, équipes médicales, tarifs et logistique de séjour. Tout sera centralisé ici pour vous guider vers les meilleurs soins.
+                <p className="text-[13px] text-slate-500 font-light leading-relaxed mb-6 max-w-sm">
+                  Notre collège indépendant vérifie activement les accréditations JCI, les plateaux techniques et la sécurisation des processus.
                 </p>
 
                 {/* Steps */}
                 <div className="w-full space-y-0 border-t border-slate-100">
                   {[
-                    { done: true,  text: 'Sélection des établissements partenaires' },
-                    { done: true,  text: 'Vérification des accréditations médicales' },
-                    { done: false, text: 'Rédaction des fiches détaillées' },
-                    { done: false, text: 'Mise en ligne sur MediBridge' },
+                    { done: true,  text: 'Sélection des partenaires' },
+                    { done: true,  text: 'Vérification accréditations' },
+                    { done: false, text: 'Audit sur site' },
+                    { done: false, text: 'Publication MediBridge' },
                   ].map((step, i) => (
-                    <div key={i} className="flex items-center gap-4 py-4 border-b border-slate-100">
-                      <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${step.done ? 'bg-[#1B433E]' : 'border-2 border-slate-200'}`}>
+                    <div key={i} className="flex items-center gap-3 py-3 border-b border-slate-100">
+                      <div className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${step.done ? 'bg-[#1B433E]' : 'border border-slate-200'}`}>
                         {step.done && (
                           <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
                             <path d="M1 4l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         )}
                       </div>
-                      <p className={`text-[12.5px] ${step.done ? 'text-slate-800 font-medium' : 'text-slate-350'}`}
-                         style={!step.done ? { color: '#c0c7d0' } : {}}>
+                      <p className={`text-[12px] ${step.done ? 'text-slate-800 font-medium' : 'text-slate-300'}`}>
                         {step.text}
                       </p>
                     </div>
@@ -152,15 +129,15 @@ export function CliniquesModal({ isOpen, onClose }: Props) {
                 </div>
 
                 {/* CTA */}
-                <div className="mt-10 w-full">
+                <div className="mt-6 w-full">
                   <button
                     onClick={onClose}
-                    className="w-full h-12 bg-slate-900 hover:bg-[#1B433E] text-white text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300"
+                    className="w-full h-[50px] bg-[#1B433E] hover:bg-black text-white text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300 rounded-none shadow-sm"
                   >
-                    Fermer
+                    Retourner au portail
                   </button>
-                  <p className="text-[10px] text-slate-400 mt-4 text-center leading-relaxed">
-                    Vous serez notifié(e) dès la mise en ligne<br />via votre espace MediBridge.
+                  <p className="text-[10px] text-slate-400 mt-4 text-center leading-relaxed italic">
+                    Notification automatique dès l'ouverture<br />du registre public.
                   </p>
                 </div>
 

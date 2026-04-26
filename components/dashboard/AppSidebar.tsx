@@ -1,7 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { usePathname } from "next/navigation"
+import Link from "next/link"
+import { usePathname, useSearchParams } from "next/navigation"
 import { logout } from "@/lib/actions/auth"
 import { toast } from "sonner"
 import { useLoading } from "@/contexts/LoadingContext"
@@ -63,6 +64,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import Image from "next/image"
 
 // Fonction utilitaire pour navigation (plus besoin de coming soon)
 
@@ -161,19 +163,21 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
   }
 
   return (
-    <Sidebar collapsible="icon" {...props} className="border-r border-slate-300 bg-white/95 backdrop-blur-sm overflow-x-hidden w-full max-w-[280px]">
+    <Sidebar collapsible="icon" {...props} className="border-r border-slate-300 bg-white/95 backdrop-blur-sm overflow-x-hidden">
       <SidebarHeader className="border-b border-slate-300 bg-white w-full">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" className="hover:bg-white/80 transition-all">
-              <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-600/30 group-data-[collapsible=icon]:size-8">
-                <HeartPulse className="size-5 group-data-[collapsible=icon]:size-4" strokeWidth={2.5} />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">
-                  MediBridge
-                </span>
-                <span className="truncate text-xs text-slate-500 font-medium">{roleLabel}</span>
+            <SidebarMenuButton size="lg" className="hover:bg-slate-50 transition-all px-2 py-6">
+              <div className="flex w-full items-center gap-3">
+                <div className="relative h-12 w-12 flex items-center justify-center shrink-0">
+                  <Image src="/FaviconFinal.png" alt="MediBridge" fill className="object-contain" priority />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-bold text-slate-900 tracking-tight text-[15px]">
+                    MediBridge
+                  </span>
+                  <span className="truncate text-[11px] text-slate-500 font-bold uppercase tracking-wider">{roleLabel}</span>
+                </div>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -205,7 +209,7 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
                         }
                         `}
                     >
-                      <a href={item.url} className="flex items-center gap-2 w-full min-w-0">
+                      <Link href={item.url} className="flex items-center gap-2 w-full min-w-0">
                         <item.icon
                           className={`${isActive ? "text-white" : item.highlight ? "text-blue-700" : "text-slate-700"} shrink-0`}
                           strokeWidth={isActive ? 2.5 : 2.5}
@@ -221,7 +225,7 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
                             {item.badge}
                           </Badge>
                         )}
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 )
@@ -246,13 +250,13 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
                   tooltip="Notifications"
                   className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
                 >
-                  <a href={isMedecin ? "/medecin/notifications" : isClinique ? "/clinique/notifications" : "/patient/notifications"} className="flex items-center gap-2 relative w-full min-w-0">
+                  <Link href={isMedecin ? "/medecin/notifications" : isClinique ? "/clinique/notifications" : "/patient/notifications"} className="flex items-center gap-2 relative w-full min-w-0">
                     <Bell className="text-slate-700 shrink-0" strokeWidth={2.5} />
                     <span className="truncate flex-1 min-w-0">Notifications</span>
                     <Badge className="ml-auto text-[10px] px-1.5 py-0 h-5 min-w-5 flex items-center justify-center font-bold bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-sm shrink-0">
                       3
                     </Badge>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
@@ -261,10 +265,10 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
                   tooltip="Mon Profil"
                   className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
                 >
-                  <a href={isMedecin ? "/medecin/profile" : isClinique ? "/clinique/profile" : "/patient/profile"} className="flex items-center gap-2 w-full min-w-0">
+                  <Link href={isMedecin ? "/medecin/profile" : isClinique ? "/clinique/profile" : "/patient/profile"} className="flex items-center gap-2 w-full min-w-0">
                     <User className="text-slate-700 shrink-0" strokeWidth={2.5} />
                     <span className="truncate flex-1 min-w-0">Mon Profil</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
@@ -273,10 +277,10 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
                   tooltip="Paramètres"
                   className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
                 >
-                  <a href={isMedecin ? "/medecin/settings" : isClinique ? "/clinique/settings" : "/patient/settings"} className="flex items-center gap-2 w-full min-w-0">
+                  <Link href={isMedecin ? "/medecin/settings" : isClinique ? "/clinique/settings" : "/patient/settings"} className="flex items-center gap-2 w-full min-w-0">
                     <Settings className="text-slate-700 shrink-0" strokeWidth={2.5} />
                     <span className="truncate flex-1 min-w-0">Paramètres</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
@@ -285,10 +289,10 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
                   tooltip="Centre d'aide"
                   className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
                 >
-                  <a href={isMedecin ? "/medecin/help" : isClinique ? "/clinique/help" : "/patient/help"} className="flex items-center gap-2 w-full min-w-0">
+                  <Link href={isMedecin ? "/medecin/help" : isClinique ? "/clinique/help" : "/patient/help"} className="flex items-center gap-2 w-full min-w-0">
                     <HelpCircle className="text-slate-700 shrink-0" strokeWidth={2.5} />
                     <span className="truncate flex-1 min-w-0">Centre d'Aide</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -304,11 +308,11 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
               tooltip="Retour à l'accueil"
               className="hover:bg-slate-100 transition-all text-slate-800 hover:text-blue-600 font-semibold bg-white"
             >
-              <a href="/" className="flex items-center gap-2 w-full min-w-0">
+              <Link href="/" className="flex items-center gap-2 w-full min-w-0">
                 <Home className="text-slate-700 shrink-0" strokeWidth={2.5} />
                 <span className="font-semibold truncate flex-1 min-w-0">Retour Accueil</span>
                 <ChevronRight className="ml-auto w-4 h-4 text-slate-600 shrink-0" />
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>

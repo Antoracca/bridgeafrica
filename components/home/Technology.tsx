@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Shield, Activity, Lock, Wifi, BatteryMedium, BrainCircuit, Hospital, CheckCircle2, Loader2, SignalHigh } from 'lucide-react'
+import Image from 'next/image'
 
 // --- LE COMPOSANT DU SIMULATEUR QUI TOURNE EN BOUCLE (Z-10) ---
 // Design : Ultra Minimaliste, "Swiss Design", Noir & Blanc/Gris.
@@ -178,10 +179,11 @@ const SimulatorContent = () => {
               
               {/* Photo Clinique Unsplash Premium en Cover */}
               <div className="absolute inset-0 z-0">
-                 <img 
-                    src="https://images.unsplash.com/photo-1638202993928-7267aad84c31?q=80&w=600&auto=format&fit=crop" 
+                 <img
+                    src="https://images.unsplash.com/photo-1638202993928-7267aad84c31?q=80&w=600&auto=format&fit=crop"
                     alt="Medical Team"
                     className="w-full h-full object-cover opacity-60"
+                    loading="eager"
                  />
                  {/* Dark gradient overlay for text readability */}
                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
@@ -246,8 +248,8 @@ export function Technology() {
                 <SimulatorContent />
               </div>
               {/* Image iPhone */}
-              <div className="absolute inset-0 z-20 pointer-events-none drop-shadow-[0_16px_32px_rgba(0,0,0,0.3)] flex items-center justify-center">
-                <img src="/ImageFinal.png" className="w-full h-full object-contain" alt="Mockup iPhone dans la main" />
+              <div className="absolute inset-0 z-20 pointer-events-none drop-shadow-[0_16px_32px_rgba(0,0,0,0.3)] flex items-center justify-center" style={{ willChange: 'transform', transform: 'translateZ(0)' }}>
+                <Image src="/ImageFinal.png" width={320} height={320} className="w-full h-full object-contain" alt="Mockup iPhone dans la main" priority />
               </div>
               {/* Reflet */}
               <div className="absolute z-30 pointer-events-none bg-gradient-to-tr from-white/0 via-white/5 to-white/20"
@@ -299,8 +301,8 @@ export function Technology() {
               <SimulatorContent />
             </div>
             {/* Image iPhone */}
-            <div className="absolute inset-0 z-20 pointer-events-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.25)] flex items-center justify-center">
-              <img src="/ImageFinal.png" className="w-full h-full object-contain" alt="Mockup iPhone dans la main" />
+            <div className="absolute inset-0 z-20 pointer-events-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.25)] flex items-center justify-center" style={{ willChange: 'transform', transform: 'translateZ(0)' }}>
+              <Image src="/ImageFinal.png" width={650} height={650} className="w-full h-full object-contain" alt="Mockup iPhone dans la main" priority />
             </div>
             {/* Reflet */}
             <div className="absolute z-30 pointer-events-none bg-gradient-to-tr from-white/0 via-white/5 to-white/20"

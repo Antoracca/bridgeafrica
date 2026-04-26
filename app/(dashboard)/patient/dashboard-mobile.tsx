@@ -55,7 +55,7 @@ export function MobileDashboard({ user, stats }: { user: User, stats: Stats }) {
     <div className="pb-6 space-y-4">
       {/* Header Mobile */}
       <div className="bg-gradient-to-br from-blue-600 to-cyan-600 text-white p-4 rounded-2xl shadow-lg">
-        <h1 className="text-xl font-bold mb-1">Bonjour {firstName} 👋</h1>
+        <h1 className="text-xl font-bold mb-1">Bonjour {firstName}</h1>
         <p className="text-sm text-blue-100">Voici votre parcours de soins</p>
       </div>
 

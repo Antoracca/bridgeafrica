@@ -17,11 +17,11 @@ export function Packages() {
   const [activeCard, setActiveCard] = useState<number | null>(null)
   return (
     <>
-    <section className="bg-[#fafafa] font-sans pb-16 pt-20 border-t border-[#EAEAEA]">
+    <section className="bg-[#fafafa] font-sans pb-10 pt-20 border-t border-[#EAEAEA]">
       <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-14">
         
         {/* --- HEADER ÉDITORIAL --- */}
-        <div className="mb-24 flex flex-col md:flex-row items-center justify-between gap-12 lg:gap-20">
+        <div className="mb-16 flex flex-col md:flex-row items-center justify-between gap-12 lg:gap-20">
            <div className="w-full md:w-1/2">
              <h3 className="text-2xl md:text-3xl text-slate-400 font-light italic mb-4" style={{ fontFamily: 'Georgia, serif' }}>
                 L'Accompagnement Privilège.
@@ -41,10 +41,11 @@ export function Packages() {
              
              {/* Image avec bord droit en demi-cercle (rounded-r-full) */}
              <div className="relative w-full max-w-[400px] aspect-[4/5] rounded-l-2xl rounded-r-full overflow-hidden shadow-2xl border-4 border-white">
-               <img 
-                 src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800" 
+               <img
+                 src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800"
                  alt="Assistance Patient MediBridge"
                  className="w-full h-full object-cover"
+                 loading="eager"
                />
                <div className="absolute inset-0 bg-slate-900/10"></div>
              </div>
@@ -52,7 +53,7 @@ export function Packages() {
         </div>
 
         {/* --- LA MÉTHODE / L'ÉCOSYSTÈME (Effet Escalier / Catalogue) --- */}
-        <div className="mb-24 lg:pb-16">
+        <div className="mb-12">
           <div className="flex flex-col md:flex-row justify-between items-end mb-14 border-b border-slate-200 pb-6">
             <h3 className="text-2xl md:text-3xl text-slate-900" style={{ fontFamily: 'Georgia, serif' }}>Inclus dans chaque démarche</h3>
           </div>
@@ -62,18 +63,18 @@ export function Packages() {
                const mtClasses = ["lg:mt-0", "lg:mt-8", "lg:mt-16", "lg:mt-24"];
                const isActive = activeCard === i;
                return (
-                 <motion.div 
-                   key={i} 
-                   initial={{ opacity: 0, y: 30 }}
+                 <motion.div
+                   key={i}
+                   initial={{ opacity: 0, y: 20 }}
                    whileInView={{ opacity: 1, y: 0 }}
-                   viewport={{ once: true }}
-                   transition={{ delay: i * 0.1, duration: 0.6 }}
+                   viewport={{ once: true, margin: '0px 0px -80px 0px' }}
+                   transition={{ delay: i * 0.08, duration: 0.5 }}
                    onClick={() => setActiveCard(isActive ? null : i)}
                    className={`relative bg-slate-900 p-4 sm:p-6 md:p-8 aspect-[4/5] lg:aspect-square flex flex-col group transition-all cursor-pointer ${isActive ? 'shadow-2xl shadow-brand-teal/20' : 'shadow-md hover:shadow-2xl hover:shadow-brand-teal/20'} ${mtClasses[i]}`}
                  >
                    {/* Container Image (overflow hidden to keep scaling strictly inside) */}
                    <div className="absolute inset-0 overflow-hidden z-0">
-                     <img src={feat.image} className={`w-full h-full object-cover transition-transform duration-700 ease-out opacity-40 mix-blend-screen ${isActive ? 'scale-110' : 'scale-100 group-hover:scale-110'}`} alt={feat.title} />
+                     <img src={feat.image} className={`w-full h-full object-cover transition-transform duration-700 ease-out ${isActive ? 'scale-110' : 'scale-100 group-hover:scale-110'}`} alt={feat.title} loading="lazy" style={{ opacity: 0.35 }} />
                      <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/80 to-[#020617]/10"></div>
                      <div className={`absolute inset-0 border transition-colors ${isActive ? 'border-brand-teal/50' : 'border-slate-700/50 group-hover:border-brand-teal/50'}`}></div>
                    </div>
@@ -105,34 +106,54 @@ export function Packages() {
             
             {/* 1. Particuliers */}
             <div className="bg-white p-6 sm:p-10 lg:p-12 border-r border-b lg:border-b-0 border-slate-200 hover:bg-slate-50 transition-colors flex flex-col">
-              <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-slate-100 mb-4 sm:mb-6 rounded-none">
-                 <UserCircle size={24} className="text-slate-600 w-5 h-5 sm:w-6 sm:h-6" strokeWidth={1.5} />
-              </div>
+              <div className="w-8 h-px bg-slate-900 mb-6 sm:mb-8"></div>
               <h4 className="text-[16px] sm:text-2xl text-slate-900 mb-3 sm:mb-4 leading-tight" style={{ fontFamily: 'Georgia, serif' }}>Patients Particuliers</h4>
-              <p className="text-[11px] sm:text-base text-slate-500 font-light leading-relaxed mb-4 sm:mb-8 flex-1">
+              <p className="text-[11px] sm:text-base text-slate-500 font-light leading-relaxed mb-8 flex-1">
                 Que vous soyez autonome ou que vous exigiez une conciergerie All-Inclusive, accédez en privé aux meilleures normes cliniques mondiales. Choisissez votre forfait d'accompagnement plus bas.
               </p>
+              
+              {/* Certifications Particuliers — masquées sur très petit mobile */}
+              <div className="hidden sm:flex items-center justify-between gap-3 mt-auto border-t border-slate-100 pt-5 sm:pt-6">
+                 <div className="flex items-center justify-center opacity-40 hover:opacity-100 transition-opacity">
+                    <span className="text-[8px] sm:text-[9px] font-bold tracking-widest border border-slate-300 px-2 py-1 text-slate-600 uppercase">JCI Accredited</span>
+                 </div>
+                 <div className="flex items-center justify-center opacity-40 hover:opacity-100 transition-opacity">
+                    <span className="text-[8px] sm:text-[9px] font-bold tracking-widest border border-slate-300 px-2 py-1 text-slate-600 uppercase">ISO 9001</span>
+                 </div>
+                 <div className="flex items-center justify-center opacity-40 hover:opacity-100 transition-opacity">
+                    <span className="text-[8px] sm:text-[9px] font-bold tracking-widest border border-slate-300 px-2 py-1 text-slate-600 uppercase">HAS Norms</span>
+                 </div>
+              </div>
             </div>
 
             {/* 2. Entreprises & Sociétés */}
             <div className="bg-white p-6 sm:p-10 lg:p-12 border-b lg:border-b-0 lg:border-r border-slate-200 hover:bg-slate-50 transition-colors flex flex-col">
-              <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-brand-teal/10 mb-4 sm:mb-6 rounded-none">
-                 <BriefcaseBusiness size={24} className="text-brand-teal w-5 h-5 sm:w-6 sm:h-6" strokeWidth={1.5} />
-              </div>
+              <div className="w-8 h-px bg-brand-teal mb-6 sm:mb-8"></div>
               <h4 className="text-[16px] sm:text-2xl text-slate-900 mb-3 sm:mb-4 leading-tight" style={{ fontFamily: 'Georgia, serif' }}>Entreprises & DRH</h4>
-              <p className="text-[11px] sm:text-base text-slate-500 font-light leading-relaxed mb-4 sm:mb-8 flex-1">
+              <p className="text-[11px] sm:text-base text-slate-500 font-light leading-relaxed mb-8 flex-1">
                 Fidélisez vos collaborateurs clés et vos expatriés avec un Hub de santé externe. Nous gérons leurs dossiers médicaux avec facturation B2B centralisée et confidentialité absolue.
               </p>
+
+              {/* Certifications B2B — masquées sur très petit mobile */}
+              <div className="hidden sm:flex items-center justify-between gap-3 mt-auto border-t border-slate-100 pt-5 sm:pt-6">
+                 <div className="flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity">
+                    <span className="text-[8px] sm:text-[9px] font-bold tracking-[0.2em] bg-slate-100 px-2.5 py-1 text-slate-600 uppercase rounded-sm">HDS Ready</span>
+                 </div>
+                 <div className="flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity">
+                    <span className="text-[8px] sm:text-[9px] font-bold tracking-[0.2em] bg-slate-100 px-2.5 py-1 text-slate-600 uppercase rounded-sm">ISO 27001</span>
+                 </div>
+                 <div className="flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity">
+                    <span className="text-[8px] sm:text-[9px] font-bold tracking-[0.2em] bg-slate-100 px-2.5 py-1 text-slate-600 uppercase rounded-sm">GDPR</span>
+                 </div>
+              </div>
             </div>
 
             {/* 3. Assurances */}
             <div className="bg-white col-span-2 lg:col-span-1 p-6 sm:p-10 lg:p-12 hover:bg-slate-50 transition-colors flex flex-col relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full blur-3xl -z-0"></div>
-              <div className="relative z-10 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-blue-50 mb-4 sm:mb-6 rounded-none">
-                 <HeartHandshake size={24} className="text-blue-600 w-5 h-5 sm:w-6 sm:h-6" strokeWidth={1.5} />
-              </div>
+              <div className="relative z-10 w-8 h-px bg-blue-600 mb-6 sm:mb-8"></div>
               <h4 className="text-[16px] sm:text-2xl text-slate-900 mb-3 sm:mb-4 relative z-10 leading-tight" style={{ fontFamily: 'Georgia, serif' }}>Compagnies d'Assurance</h4>
-              <p className="text-[11px] sm:text-base text-slate-500 font-light leading-relaxed mb-6 relative z-10">
+              <p className="text-[11px] sm:text-base text-slate-500 font-light leading-relaxed mb-8 relative z-10 flex-1">
                 Nous sommes le réseau de Tiers-Payant international. Intégrez MediBridge pour maîtriser vos coûts sur de véritables accords cadres avec les hôpitaux.
               </p>
               
@@ -151,7 +172,7 @@ export function Packages() {
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: '0px 0px -80px 0px' }}
             className="mt-0 relative w-full overflow-hidden group shadow-xl"
           >
             {/* L'image de fond très corporative/éditoriale */}

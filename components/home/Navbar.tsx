@@ -10,6 +10,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { NAV_DESTINATIONS, NAV_CLINICS, NAV_SPECIALTY_DATA, NAV_SERVICES } from '@/lib/data/homepage'
 import type { ClinicEntry } from '@/lib/data/homepage'
+import { useScrollLock } from '@/lib/hooks/useScrollLock'
 import { ClinicModal } from './ClinicModal'
 import { NavSpecialties } from './NavSpecialties'
 import { NavbarMobile } from './NavbarMobile'
@@ -86,28 +87,8 @@ export function Navbar() {
     return () => window.removeEventListener('resize', measure)
   }, [isScrolled])
 
-  /* iOS-safe body scroll lock — prevents background page from scrolling */
-  useEffect(() => {
-    if (!menuOpen) return
-    const scrollY = window.scrollY
-    const body = document.body
-    body.style.position = 'fixed'
-    body.style.top = `-${scrollY}px`
-    body.style.left = '0'
-    body.style.right = '0'
-    body.style.width = '100%'
-    body.style.overflow = 'hidden'
-    return () => {
-      const top = body.style.top
-      body.style.position = ''
-      body.style.top = ''
-      body.style.left = ''
-      body.style.right = ''
-      body.style.width = ''
-      body.style.overflow = ''
-      window.scrollTo(0, Math.abs(parseInt(top || '0', 10)))
-    }
-  }, [menuOpen])
+  /* App-shell scroll lock — prevents background page from scrolling */
+  useScrollLock(menuOpen)
 
   useEffect(() => {
     const fn = (e: KeyboardEvent) => { if (e.key === 'Escape') closeMenu() }
@@ -117,7 +98,9 @@ export function Navbar() {
 
   useEffect(() => {
     const supabase = createClient()
-    const check = async () => {
+
+    const fetchUser = async (showLoader: boolean) => {
+      if (showLoader) setIsLoading(true)
       try {
         const { data: { user: u }, error } = await supabase.auth.getUser()
         if (error || !u) { setUser(null); return }
@@ -128,8 +111,20 @@ export function Navbar() {
       } catch { setUser(null) }
       finally { setIsLoading(false) }
     }
-    check()
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => check())
+
+    // Initial load — show skeleton
+    fetchUser(true)
+
+    // Subsequent auth events — update silently without blanking the UI
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        setUser(null)
+        setIsLoading(false)
+      } else {
+        fetchUser(false)
+      }
+    })
+
     return () => { subscription.unsubscribe() }
   }, [])
 

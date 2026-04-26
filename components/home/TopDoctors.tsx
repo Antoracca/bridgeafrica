@@ -494,29 +494,39 @@ export function TopDoctors() {
               ))}
             </div>
 
-            {/* Mobile */}
+            {/* Mobile: 1 grand (Maroc) + 2 compacts en dessous */}
             <div className="md:hidden">
-              {visible.length > 0 && (
-                <div className="mb-12">
-                  <DoctorCard
-                    doctor={visible[0]}
-                    onProfile={() => setProfileDoctor(visible[0])}
-                    onRDV={() => setRDVDoctor(visible[0])}
-                  />
-                </div>
-              )}
-              {visible.length > 1 && (
-                <div className="grid grid-cols-2 gap-x-4 gap-y-10 mt-10">
-                  {visible.slice(1).map(d => (
-                    <DoctorCardCompact
-                      key={d.id}
-                      doctor={d}
-                      onProfile={() => setProfileDoctor(d)}
-                      onRDV={() => setRDVDoctor(d)}
-                    />
-                  ))}
-                </div>
-              )}
+              {(() => {
+                // Always show a Moroccan doctor as the featured card
+                const moroccanDoctor = filtered.find(d => d.country === 'ma') || filtered[0]
+                const otherDoctors = filtered.filter(d => d.id !== moroccanDoctor?.id)
+                const mobileCompacts = showAll ? otherDoctors : otherDoctors.slice(0, 2)
+                return (
+                  <>
+                    {moroccanDoctor && (
+                      <div className="mb-12">
+                        <DoctorCard
+                          doctor={moroccanDoctor}
+                          onProfile={() => setProfileDoctor(moroccanDoctor)}
+                          onRDV={() => setRDVDoctor(moroccanDoctor)}
+                        />
+                      </div>
+                    )}
+                    {mobileCompacts.length > 0 && (
+                      <div className="grid grid-cols-2 gap-x-4 gap-y-10 mt-10">
+                        {mobileCompacts.map(d => (
+                          <DoctorCardCompact
+                            key={d.id}
+                            doctor={d}
+                            onProfile={() => setProfileDoctor(d)}
+                            onRDV={() => setRDVDoctor(d)}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </>
+                )
+              })()}
             </div>
 
             {hasMore && (

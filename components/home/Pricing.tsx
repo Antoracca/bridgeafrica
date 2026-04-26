@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Check, Minus, Phone } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { PRICING_PLANS as PLANS, PRICING_FEATURES as FEATURES } from '@/lib/data/pricing'
+import { PurchaseModal, type PlanId } from './PurchaseModal'
 
 function FeatureCell({ value, highlighted }: { value: boolean, highlighted?: boolean }) {
   if (value) {
@@ -14,14 +15,22 @@ function FeatureCell({ value, highlighted }: { value: boolean, highlighted?: boo
 
 export function Pricing() {
   const [activePlanId, setActivePlanId] = useState<string>('serenite')
+  const [isPurchaseOpen, setIsPurchaseOpen] = useState(false)
+  const [selectedPurchasePlan, setSelectedPurchasePlan] = useState<PlanId>('serenite')
+
   const activePlan = PLANS.find(p => p.id === activePlanId) || PLANS[1]
 
+  function openPurchaseModal(id: string) {
+    setSelectedPurchasePlan(id as PlanId)
+    setIsPurchaseOpen(true)
+  }
+
   return (
-    <section id="pricing" className="pt-0 pb-32 bg-[#fafafa]">
+    <section id="pricing" className="pt-0 pb-12 bg-[#fafafa]">
       <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-14">
 
         {/* --- HEADER MAGISTRAL --- */}
-        <div className="text-center mb-16 md:mb-24 max-w-4xl mx-auto">
+        <div className="text-center mb-12 md:mb-16 max-w-4xl mx-auto">
           <h2 className="text-4xl sm:text-5xl md:text-6xl text-slate-900 mb-6 md:mb-8 leading-[1.1]" style={{ fontFamily: 'Georgia, serif' }}>
             Nos Formules. <span className="block mt-2 md:mt-1 md:inline text-brand-teal italic font-light">L'accompagnement à votre mesure.</span>
           </h2>
@@ -149,6 +158,7 @@ export function Pricing() {
                 `}
               >
                 <Button
+                  onClick={() => openPurchaseModal(plan.id)}
                   className={`w-full min-h-14 h-auto py-4 rounded-none font-bold text-xs uppercase tracking-normal text-center leading-tight transition-all shadow-none
                     ${plan.highlighted
                       ? 'bg-brand-teal hover:bg-brand-teal-dark text-white'
@@ -170,6 +180,12 @@ export function Pricing() {
           Aucun engagement. Annulation gratuite jusqu'à 72h avant le séjour.
         </p>
       </div>
+
+      <PurchaseModal 
+        isOpen={isPurchaseOpen} 
+        onClose={() => setIsPurchaseOpen(false)} 
+        initialPlanId={selectedPurchasePlan} 
+      />
     </section>
   )
 }

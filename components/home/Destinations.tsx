@@ -101,7 +101,7 @@ export function Destinations() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: '0px 0px -80px 0px' }}
           className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6"
         >
           <div>
@@ -240,7 +240,7 @@ export function Destinations() {
                     initial={{ opacity: 0, x: -16 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.1, duration: 0.5 }}
-                    viewport={{ once: true }}
+                    viewport={{ once: true, margin: '0px 0px -80px 0px' }}
                   >
                     <p className="text-[2.5rem] sm:text-[3rem] font-black text-brand-navy tracking-tighter leading-none mb-2 drop-shadow-sm">
                       <AnimatedCounter value={m.value} suffix={m.suffix} />
@@ -257,7 +257,7 @@ export function Destinations() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.6 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: '0px 0px -80px 0px' }}
               >
                 <h3 className="text-xl sm:text-2xl font-bold text-brand-navy mb-6">
                   Une sélection clinique d'une exigence absolue
