@@ -287,25 +287,25 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
       <SidebarFooter className="border-t border-slate-100 bg-white w-full overflow-x-hidden p-3 space-y-2">
         <Link
           href="/"
-          className="flex items-center justify-between gap-3 w-full p-2.5 rounded-2xl bg-slate-900 text-white hover:bg-slate-800 transition-all group shadow-sm"
+          className="flex items-center justify-between gap-3 w-full p-2.5 rounded-2xl bg-slate-100/80 hover:bg-slate-200/80 border border-slate-200/80 text-slate-800 transition-all group"
         >
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-white shrink-0 group-hover:scale-105 transition-transform">
-              <Home className="w-4 h-4 text-[#38BDF8]" />
+            <div className="w-7 h-7 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-700 shadow-2xs shrink-0 group-hover:bg-slate-50 transition-colors">
+              <Home className="w-3.5 h-3.5 text-slate-700" strokeWidth={1.8} />
             </div>
             <div className="text-left min-w-0">
-              <p className="text-xs font-bold text-white truncate">Retour à l'Accueil</p>
-              <p className="text-[10px] text-slate-400 truncate">Page principale du site</p>
+              <p className="text-xs font-semibold text-slate-800 truncate">Retour à l'Accueil</p>
+              <p className="text-[10px] text-slate-500 truncate">Page principale du site</p>
             </div>
           </div>
-          <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-white group-hover:translate-x-0.5 transition-all shrink-0" />
+          <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-700 group-hover:translate-x-0.5 transition-all shrink-0" />
         </Link>
 
         {/* Bouton de déconnexion */}
         <button
           onClick={handleLogout}
           disabled={isLoggingOut}
-          className="flex items-center justify-center gap-2 w-full py-2 px-3 rounded-xl text-xs font-medium text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+          className="flex items-center justify-center gap-2 w-full py-1.5 px-3 rounded-xl text-xs font-medium text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
         >
           {isLoggingOut ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" />

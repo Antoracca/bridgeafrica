@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
-import { ShieldCheck, Cookie, Lock, ChevronDown, ChevronUp, Sliders, Sparkles } from "lucide-react"
+import { ShieldCheck, Cookie, Lock, ChevronDown, ChevronUp, Sliders, Activity } from "lucide-react"
 
 const STORAGE_KEY = "pont_afrique_sante_cookie_consent"
 
@@ -166,7 +166,7 @@ export function CookieConsentModal() {
                   <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 text-[#0284C7] shrink-0" />
+                        <Activity className="w-4 h-4 text-[#0284C7] shrink-0" />
                         <h4 className="font-bold text-xs sm:text-sm text-slate-900">2. Mesure d'Audience & Performance</h4>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
