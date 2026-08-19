@@ -26,9 +26,10 @@ export function CookieConsentModal() {
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY)
     if (!saved) {
+      // Attendre 4 secondes avant d'afficher la modale
       const timer = setTimeout(() => {
         setIsOpen(true)
-      }, 700)
+      }, 4000)
       return () => clearTimeout(timer)
     }
     const handleOpenSettings = () => {
