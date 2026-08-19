@@ -6,7 +6,7 @@ import { LottieAnimation } from "@/components/ui/LottieAnimation"
 import OnlineDoctorAnimation from "@/public/Online Doctor.json"
 
 export const metadata: Metadata = {
-  title: "Complétez votre profil | MediBridge Africa",
+  title: "Complétez votre profil | Pont Afrique Santé",
   description: "Une dernière étape pour finaliser votre inscription.",
 }
 
@@ -18,14 +18,14 @@ export default function CompleteProfilePage() {
         <BackgroundSlideshow />
         <div className="relative z-20 flex items-center text-xl font-bold tracking-tight">
           <Activity className="mr-2 h-6 w-6 text-white" />
-          MediBridge Africa
+          Pont Afrique Santé
         </div>
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2 border-l-2 border-emerald-400 pl-6 backdrop-blur-sm bg-black/10 p-4 rounded-r-lg">
             <p className="text-lg font-medium leading-relaxed">
               &ldquo;Votre sécurité et votre bien-être sont notre priorité absolue. Nous vous accompagnons à chaque étape de votre parcours de soins.&rdquo;
             </p>
-            <footer className="text-sm text-emerald-200">L&apos;équipe MediBridge</footer>
+            <footer className="text-sm text-emerald-200">L&apos;équipe Pont Afrique Santé</footer>
           </blockquote>
         </div>
       </div>

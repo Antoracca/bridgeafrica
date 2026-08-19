@@ -27,28 +27,30 @@ export default async function DashboardLayout({
   return (
     <SidebarProvider>
       <AppSidebar user={user} avatarUrl={profile?.avatar_url || null} />
-      <SidebarInset>
-        {/* Header du Dashboard */}
-        <header className="flex h-14 md:h-16 shrink-0 items-center gap-2 border-b px-2 md:px-4 backdrop-blur-sm bg-white sticky top-0 z-10 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 shadow-sm">
-          <div className="flex items-center gap-1 md:gap-2 px-2 md:px-4 w-full overflow-hidden">
-            {/* Bouton Menu pour Mobile */}
-            <SidebarTrigger className="shrink-0 md:hidden h-9 w-9">
-              <Menu className="h-5 w-5 text-slate-700" strokeWidth={2.5} />
+      <SidebarInset className="bg-[#F3F0EE] min-h-screen">
+        {/* Header du Dashboard Mastercard Floating Pill Style */}
+        <header className="flex h-14 md:h-16 shrink-0 items-center gap-2 border-b border-[#E2DDD7] px-3 md:px-6 bg-[#FCFBFA]/90 backdrop-blur-md sticky top-0 z-20">
+          <div className="flex items-center gap-2 w-full overflow-hidden">
+            {/* Bouton Menu Mobile */}
+            <SidebarTrigger className="shrink-0 md:hidden h-8 w-8 rounded-full hover:bg-[#F3F0EE]">
+              <Menu className="h-4 w-4 text-[#141413]" strokeWidth={2} />
             </SidebarTrigger>
-            {/* Bouton standard pour Desktop */}
-            <SidebarTrigger className="shrink-0 hidden md:flex" />
-            <Separator orientation="vertical" className="mr-1 md:mr-2 h-4" />
+            {/* Bouton Desktop */}
+            <SidebarTrigger className="shrink-0 hidden md:flex rounded-full hover:bg-[#F3F0EE]" />
+            <Separator orientation="vertical" className="mx-1 h-3.5 bg-[#E2DDD7]" />
             <div className="flex-1 min-w-0">
               <DynamicBreadcrumb />
             </div>
           </div>
         </header>
 
-        {/* Zone de contenu principale */}
-        <div className="flex flex-1 flex-col gap-4 p-3 pt-3 md:p-6 md:pt-6 lg:p-8 max-w-full overflow-x-hidden">
+        {/* Zone de contenu principale sur Canvas Cream */}
+        <div className="flex flex-1 flex-col gap-6 p-4 md:p-8 lg:p-10 max-w-full overflow-x-hidden">
           {children}
         </div>
       </SidebarInset>
     </SidebarProvider>
   )
 }
+
+

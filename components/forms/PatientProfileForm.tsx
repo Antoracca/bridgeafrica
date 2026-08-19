@@ -23,8 +23,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { toast } from "sonner"
 import { updateProfile, uploadProfilePicture, deleteProfilePicture } from "@/lib/actions/auth"
@@ -44,7 +42,8 @@ import {
   Droplet,
   Pill,
   FileText,
-  Bell
+  Bell,
+  Lock
 } from "lucide-react"
 import countries from 'world-countries'
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
@@ -103,12 +102,11 @@ export function PatientProfileForm({ profile, email }: { profile: PatientProfile
   const [avatarPreview, setAvatarPreview] = useState<string>('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Liste complète des pays
+  // Liste complète des pays avec code ISO
   const countryOptions = countries
     .map(country => ({
       code: country.cca2,
       name: country.name.common,
-      flag: country.flag,
     }))
     .sort((a, b) => a.name.localeCompare(b.name))
 
@@ -152,34 +150,33 @@ export function PatientProfileForm({ profile, email }: { profile: PatientProfile
     }
   }, [])
 
-  // Handle photo selection
+  // Handle photo selection and upload
   const handlePhotoSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
-    // Validate file type
+    // Validation
     if (!file.type.startsWith('image/')) {
-      toast.error('Veuillez sélectionner une image')
+      toast.error('Veuillez sélectionner un fichier image valide')
       return
     }
 
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('L\'image ne doit pas dépasser 5 MB')
+      toast.error('La taille de l\'image ne doit pas dépasser 5 MB')
       return
     }
 
-    // Create preview
+    // Preview
     const reader = new FileReader()
     reader.onloadend = () => {
       setAvatarPreview(reader.result as string)
     }
     reader.readAsDataURL(file)
 
-    // Upload photo
+    // Upload
     setIsUploadingPhoto(true)
     const formData = new FormData()
-    formData.append('file', file)
+    formData.append('avatar', file)
 
     uploadProfilePicture(formData)
       .then((result) => {
@@ -193,7 +190,7 @@ export function PatientProfileForm({ profile, email }: { profile: PatientProfile
       })
       .catch((error) => {
         console.error('Upload error:', error)
-        toast.error('Erreur lors de l\'upload de la photo')
+        toast.error('Erreur lors du téléchargement de la photo')
         setAvatarPreview('')
       })
       .finally(() => {
@@ -234,308 +231,224 @@ export function PatientProfileForm({ profile, email }: { profile: PatientProfile
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Photo de Profil Section */}
-        <Card className="border-2 border-blue-100">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-xl">
-              <Camera className="w-5 h-5 text-blue-600" />
-              Photo de Profil
-            </CardTitle>
-            <CardDescription>
-              Ajoutez une photo pour personnaliser votre profil
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col sm:flex-row items-center gap-6">
-              {/* Avatar Display */}
-              <div className="relative group">
-                <Avatar className="w-32 h-32 border-4 border-blue-100 shadow-lg">
-                  {(avatarPreview || avatarUrl) && (
-                    <AvatarImage
-                      src={avatarPreview || avatarUrl}
-                      alt="Photo de profil"
-                      className="object-cover"
-                    />
-                  )}
-                  <AvatarFallback className="text-3xl font-bold bg-gradient-to-br from-blue-600 to-cyan-600 text-white">
-                    {getInitials()}
-                  </AvatarFallback>
-                </Avatar>
+        <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 space-y-6">
+          <div>
+            <h3 className="text-sm font-extrabold text-slate-950 uppercase tracking-wider">Photo de Profil</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Personnalisez votre avatar patient</p>
+          </div>
 
-                {isUploadingPhoto && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full">
-                    <Loader2 className="w-8 h-8 text-white animate-spin" />
-                  </div>
+          <div className="flex flex-col sm:flex-row items-center gap-6">
+            <div className="relative group">
+              <Avatar className="w-24 h-24 sm:w-28 sm:h-28 border-2 border-slate-200">
+                {(avatarPreview || avatarUrl) && (
+                  <AvatarImage
+                    src={avatarPreview || avatarUrl}
+                    alt="Photo de profil"
+                    className="object-cover"
+                  />
                 )}
+                <AvatarFallback className="text-2xl font-black bg-slate-950 text-white">
+                  {getInitials()}
+                </AvatarFallback>
+              </Avatar>
 
-                {/* Upload Button Overlay */}
-                <button
+              {isUploadingPhoto && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full">
+                  <Loader2 className="w-6 h-6 text-white animate-spin" />
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-3 text-center sm:text-left">
+              <div>
+                <p className="text-xs font-bold text-slate-900">Format JPG, PNG • Max 5 MB</p>
+                <p className="text-[11px] text-slate-400">Photo claire de face recommandée.</p>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                <Button
                   type="button"
+                  variant="outline"
+                  size="sm"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploadingPhoto}
-                  className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/60 transition-all rounded-full cursor-pointer"
+                  className="rounded-full border-slate-200 text-slate-900 hover:bg-slate-100 text-xs font-semibold h-9 px-4"
                 >
-                  <Camera className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                </button>
-              </div>
+                  <Camera className="w-3.5 h-3.5 mr-1.5" />
+                  Choisir une photo
+                </Button>
 
-              {/* Upload Instructions */}
-              <div className="flex-1 space-y-3">
-                <div>
-                  <h4 className="font-semibold text-sm text-slate-900 mb-1">
-                    Téléchargez une photo claire de vous
-                  </h4>
-                  <p className="text-xs text-slate-600">
-                    Format : JPG, PNG • Taille max : 5 MB • Recommandé : 400x400px
-                  </p>
-                </div>
-
-                <div className="flex gap-3">
+                {(avatarUrl || avatarPreview) && (
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
-                    onClick={() => fileInputRef.current?.click()}
+                    onClick={handleDeletePhoto}
                     disabled={isUploadingPhoto}
-                    className="border-blue-600 text-blue-600 hover:bg-blue-50"
+                    className="rounded-full text-slate-500 hover:text-rose-600 text-xs font-semibold h-9 px-3"
                   >
-                    {isUploadingPhoto ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Upload en cours...
-                      </>
-                    ) : (
-                      <>
-                        <Upload className="w-4 h-4 mr-2" />
-                        Choisir une photo
-                      </>
-                    )}
+                    Supprimer
                   </Button>
-
-                  {(avatarUrl || avatarPreview) && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleDeletePhoto}
-                      disabled={isUploadingPhoto}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                    >
-                      {isUploadingPhoto ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Suppression...
-                        </>
-                      ) : (
-                        'Supprimer'
-                      )}
-                    </Button>
-                  )}
-                </div>
-
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handlePhotoSelect}
-                  className="hidden"
-                />
+                )}
               </div>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoSelect}
+                className="hidden"
+              />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Informations Personnelles */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-xl">
-              <User className="w-5 h-5 text-blue-600" />
-              Informations Personnelles
-            </CardTitle>
-            <CardDescription>
-              Vos informations d'identité et de contact
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid gap-4 md:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center gap-2">
-                      <User className="w-4 h-4 text-slate-600" />
-                      Prénom <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input placeholder="Jean" {...field} className="h-11" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center gap-2">
-                      <User className="w-4 h-4 text-slate-600" />
-                      Nom <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input placeholder="Dupont" {...field} className="h-11" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+        <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 space-y-6">
+          <div>
+            <h3 className="text-sm font-extrabold text-slate-950 uppercase tracking-wider">Identité & Coordonnées</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Informations requises pour vos dossiers et devis</p>
+          </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-slate-600" />
-                      Email
-                    </FormLabel>
-                    <FormControl>
-                      <Input placeholder="exemple@email.com" disabled {...field} className="h-11 bg-slate-50" />
-                    </FormControl>
-                    <FormDescription className="text-xs">
-                      L'email ne peut pas être modifié ici
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center gap-2">
-                      <Phone className="w-4 h-4 text-slate-600" />
-                      Téléphone
-                    </FormLabel>
-                    <FormControl>
-                      <PhoneInput
-                        international
-                        defaultCountry={selectedCountry as any}
-                        value={field.value}
+          <div className="grid gap-5 sm:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-bold text-slate-700">Prénom</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Jean" {...field} className="h-12 rounded-2xl border-slate-200 text-sm font-medium" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-                        onChange={(value) => field.onChange(value || '')}
-                        disabled={isPending}
-                        className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
-                      />
-                    </FormControl>
-                    <FormDescription className="text-xs">
-                      WhatsApp recommandé pour les notifications
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </CardContent>
-        </Card>
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-bold text-slate-700">Nom</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Dupont" {...field} className="h-12 rounded-2xl border-slate-200 text-sm font-medium" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        {/* Informations de Résidence */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-xl">
-              <MapPin className="w-5 h-5 text-blue-600" />
-              Lieu de Résidence
-            </CardTitle>
-            <CardDescription>
-              Où vivez-vous actuellement ?
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid gap-4 md:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="country"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center gap-2">
-                      <Globe className="w-4 h-4 text-slate-600" />
-                      Pays de résidence <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value} disabled={isPending}>
-                      <FormControl>
-                        <SelectTrigger className="h-11">
-                          <SelectValue placeholder="Sélectionnez votre pays" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="max-h-[250px]">
-                        {countryOptions.map(c => (
-                          <SelectItem key={c.code} value={c.code}>
-                            <span className="flex items-center gap-2">
-                              <span>{c.flag}</span>
-                              <span>{c.name}</span>
-                            </span>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="city"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center gap-2">
-                      <Building className="w-4 h-4 text-slate-600" />
-                      Ville
-                    </FormLabel>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-bold text-slate-700">Email de connexion</FormLabel>
+                  <FormControl>
+                    <Input placeholder="exemple@email.com" disabled {...field} className="h-12 rounded-2xl border-slate-200 bg-slate-50 text-slate-500 text-sm font-medium" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-bold text-slate-700">Numéro de téléphone</FormLabel>
+                  <FormControl>
+                    <PhoneInput
+                      international
+                      defaultCountry={selectedCountry as any}
+                      value={field.value}
+                      onChange={(value) => field.onChange(value || '')}
+                      disabled={isPending}
+                      className="flex h-12 w-full rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium transition-colors placeholder:text-slate-400 focus-within:ring-2 focus-within:ring-slate-950"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+
+        {/* Résidence */}
+        <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 space-y-6">
+          <div>
+            <h3 className="text-sm font-extrabold text-slate-950 uppercase tracking-wider">Résidence</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Votre localisation géographique</p>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="country"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-bold text-slate-700">Pays de résidence</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value} disabled={isPending}>
                     <FormControl>
-                      <Input placeholder="Libreville" {...field} className="h-11" />
+                      <SelectTrigger className="h-12 rounded-2xl border-slate-200 text-sm font-medium">
+                        <SelectValue placeholder="Sélectionnez votre pays" />
+                      </SelectTrigger>
                     </FormControl>
-                    <FormDescription className="text-xs">
-                      Votre ville de résidence (optionnel)
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </CardContent>
-        </Card>
+                    <SelectContent className="max-h-[250px] rounded-2xl">
+                      {countryOptions.map(c => (
+                        <SelectItem key={c.code} value={c.code}>
+                          <span className="flex items-center gap-2">
+                            <span className="font-mono text-xs text-slate-400 font-bold">[{c.code}]</span>
+                            <span>{c.name}</span>
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        {/* Informations Médicales */}
-        <Card className="border-2 border-purple-100">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-xl">
-              <Heart className="w-5 h-5 text-purple-600" />
-              Informations Médicales
-            </CardTitle>
-            <CardDescription>
-              Ces informations aident nos partenaires médicaux à mieux vous prendre en charge
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
+            <FormField
+              control={form.control}
+              name="city"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-bold text-slate-700">Ville</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Libreville" {...field} className="h-12 rounded-2xl border-slate-200 text-sm font-medium" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+
+        {/* Données Médicales */}
+        <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 space-y-6">
+          <div>
+            <h3 className="text-sm font-extrabold text-slate-950 uppercase tracking-wider">Informations Médicales Permanentes</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Antécédents et éléments de santé pérennes</p>
+          </div>
+
+          <div className="space-y-5">
             <FormField
               control={form.control}
               name="bloodType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="flex items-center gap-2">
-                    <Droplet className="w-4 h-4 text-red-600" />
-                    Groupe Sanguin (Optionnel)
-                  </FormLabel>
+                  <FormLabel className="text-xs font-bold text-slate-700">Groupe Sanguin (Optionnel)</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value} disabled={isPending}>
                     <FormControl>
-                      <SelectTrigger className="h-11">
-                        <SelectValue placeholder="Sélectionnez votre groupe sanguin" />
+                      <SelectTrigger className="h-12 rounded-2xl border-slate-200 text-sm font-medium">
+                        <SelectValue placeholder="Sélectionnez votre groupe" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
+                    <SelectContent className="rounded-2xl">
                       <SelectItem value="A+">A+</SelectItem>
                       <SelectItem value="A-">A-</SelectItem>
                       <SelectItem value="B+">B+</SelectItem>
@@ -556,21 +469,14 @@ export function PatientProfileForm({ profile, email }: { profile: PatientProfile
               name="allergies"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="flex items-center gap-2">
-                    <Pill className="w-4 h-4 text-amber-600" />
-                    Allergies Connues (Optionnel)
-                  </FormLabel>
+                  <FormLabel className="text-xs font-bold text-slate-700">Allergies Connues (Optionnel)</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Ex : Pénicilline, Aspirine, Arachides, Latex..."
-                      className="resize-none h-24"
+                      placeholder="Ex : Pénicilline, Aspirine, Latex, Arachides..."
+                      className="resize-none h-24 rounded-2xl border-slate-200 text-sm font-medium"
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription className="text-xs flex items-start gap-2">
-                    <AlertCircle className="w-3 h-3 mt-0.5 text-amber-600" />
-                    Listez toutes vos allergies médicamenteuses et alimentaires
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -581,116 +487,43 @@ export function PatientProfileForm({ profile, email }: { profile: PatientProfile
               name="medicalHistory"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-blue-600" />
-                    Antécédents Médicaux (Optionnel)
-                  </FormLabel>
+                  <FormLabel className="text-xs font-bold text-slate-700">Antécédents Médicaux / Chirurgicaux (Optionnel)</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Ex : Diabète de type 2, Hypertension artérielle, Chirurgie de l'appendicite en 2015..."
-                      className="resize-none h-28"
+                      placeholder="Ex : Diabète de type 2, Hypertension, Chirurgie antérieure..."
+                      className="resize-none h-28 rounded-2xl border-slate-200 text-sm font-medium"
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription className="text-xs">
-                    Maladies chroniques, opérations passées, traitements en cours
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        {/* Préférences de Communication */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-xl">
-              <Bell className="w-5 h-5 text-blue-600" />
-              Préférences de Communication
-            </CardTitle>
-            <CardDescription>
-              Comment souhaitez-vous recevoir vos notifications ?
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <FormField
-              control={form.control}
-              name="notificationPreference"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Canal de notification préféré</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value} disabled={isPending}>
-                    <FormControl>
-                      <SelectTrigger className="h-11">
-                        <SelectValue placeholder="Choisissez votre préférence" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="email">
-                        <div className="flex items-center gap-2">
-                          <Mail className="w-4 h-4" />
-                          <span>Email uniquement</span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="sms">
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4" />
-                          <span>SMS uniquement</span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="whatsapp">
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4" />
-                          <span>WhatsApp</span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="all">
-                        <div className="flex items-center gap-2">
-                          <Bell className="w-4 h-4" />
-                          <span>Tous les canaux</span>
-                        </div>
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormDescription className="text-xs">
-                    Nous respectons votre choix et ne vous enverrons que des notifications importantes
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </CardContent>
-        </Card>
-
-        <Separator />
-
-        {/* Submit Section */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-          <div className="flex items-start gap-3">
-            <Check className="w-5 h-5 text-blue-600 mt-0.5" />
-            <div className="text-sm">
-              <p className="font-semibold text-blue-900">Vos données sont sécurisées</p>
-              <p className="text-blue-700 text-xs">
-                Ces informations sont chiffrées et partagées uniquement avec vos médecins
-              </p>
+        {/* Submit Bar Revolut */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 bg-slate-950 text-white rounded-3xl">
+          <div className="flex items-center gap-3">
+            <Lock className="w-5 h-5 text-white shrink-0" />
+            <div className="text-xs">
+              <p className="font-bold text-white">Chiffrement AES-256 HDS</p>
+              <p className="text-slate-400 text-[11px]">Vos modifications sont sauvegardées de façon sécurisée.</p>
             </div>
           </div>
+
           <Button
             type="submit"
             disabled={isPending || isUploadingPhoto}
-            className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 h-11 px-8 font-semibold shadow-lg hover:shadow-xl transition-all whitespace-nowrap"
+            className="bg-white hover:bg-slate-100 text-slate-950 font-bold rounded-full h-11 px-8 text-xs shadow-none w-full sm:w-auto"
           >
             {isPending ? (
               <>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Mise à jour...
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <span>Enregistrement...</span>
               </>
             ) : (
-              <>
-                <Check className="mr-2 h-5 w-5" />
-                Enregistrer les modifications
-              </>
+              <span>Enregistrer mon profil</span>
             )}
           </Button>
         </div>

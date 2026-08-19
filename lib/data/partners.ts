@@ -1,5 +1,5 @@
 /**
- * SOURCE DE VÉRITÉ — Partenariats B2B MediBridge
+ * SOURCE DE VÉRITÉ — Partenariats B2B Pont Afrique Santé
  * Utilisé par : NavPartners.tsx (navbar desktop) + NavbarMobile.tsx
  *
  * Règles éditoriales

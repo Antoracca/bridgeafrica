@@ -285,7 +285,7 @@ export function NavSpecialties({
                 {/* CTA */}
                 <div className="mt-8 p-4 bg-slate-50 border border-slate-100">
                   <p className="text-[12px] text-slate-500 mb-3">
-                    Obtenez une estimation personnalisée et découvrez les réductions disponibles via MediBridge.
+                    Obtenez une estimation personnalisée et découvrez les réductions disponibles via Pont Afrique Santé.
                   </p>
                   <Link href="/register" onClick={closeMenu}>
                     <Button className="bg-slate-900 hover:bg-slate-800 text-white px-5 h-10 text-[13px] font-bold shadow-sm rounded-none">
@@ -613,7 +613,7 @@ export function NavSpecialties({
                       {/* CTA */}
                       <div className="mt-8 p-4 bg-slate-50 border border-slate-100">
                         <p className="text-[12px] text-slate-500 mb-3">
-                          Tous les services sont inclus dans votre accompagnement MediBridge — aucun supplément.
+                          Tous les services sont inclus dans votre accompagnement Pont Afrique Santé — aucun supplément.
                         </p>
                         <Link href="/register" onClick={closeMenu}>
                           <Button className="bg-slate-900 hover:bg-slate-800 text-white px-5 h-10 text-[13px] font-bold shadow-sm rounded-none">

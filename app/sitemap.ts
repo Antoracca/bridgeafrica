@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.medibridgeafrica.com'
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.pontafriquesante.com'
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const now = new Date()
@@ -49,7 +49,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // ── Pages informatives / blog (SEO content marketing) ──
     const contentPages = [
-        'guide-tourisme-medical', 'comment-ca-marche', 'pourquoi-medibridge',
+        'guide-tourisme-medical', 'comment-ca-marche', 'pourquoi-pont-afrique-sante',
         'tarifs-et-devis', 'temoignages-patients', 'faq',
         'guide-visa-medical', 'assurance-voyage-medical',
         'avant-apres-chirurgie', 'blog',

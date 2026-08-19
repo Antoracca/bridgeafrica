@@ -43,7 +43,7 @@ function SuccessPageContent() {
         {/* Titre & Description */}
         <div className="space-y-4 mb-8">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground">
-            Bienvenue sur MediBridge
+            Bienvenue sur Pont Afrique Santé
           </h1>
           <p className="text-muted-foreground text-lg md:text-xl max-w-sm mx-auto leading-relaxed">
             Votre inscription est confirmée. Votre espace santé est prêt.
@@ -69,7 +69,7 @@ function SuccessPageContent() {
 
       {/* Footer discret */}
       <div className="absolute bottom-8 text-center text-xs text-muted-foreground opacity-50">
-        MediBridge Africa &copy; {new Date().getFullYear()}
+        Pont Afrique Santé &copy; {new Date().getFullYear()}
       </div>
     </div>
   )

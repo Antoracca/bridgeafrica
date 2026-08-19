@@ -19,84 +19,84 @@ interface BreadcrumbConfig {
 const routeConfig: Record<string, BreadcrumbConfig[]> = {
   // Patient routes
   "/patient": [
-    { label: "MediBridge", href: "/" },
+    { label: "Pont Afrique Santé", href: "/" },
     { label: "Tableau de bord" }
   ],
   "/patient/profile": [
-    { label: "MediBridge", href: "/" },
-    { label: "Tableau de bord", href: "/patient" },
+    { label: "Pont Afrique Santé", href: "/" },
+    { label: "Espace Patient", href: "/patient" },
     { label: "Mon Profil" }
   ],
   "/patient/settings": [
-    { label: "MediBridge", href: "/" },
-    { label: "Tableau de bord", href: "/patient" },
+    { label: "Pont Afrique Santé", href: "/" },
+    { label: "Espace Patient", href: "/patient" },
     { label: "Paramètres" }
   ],
   "/patient/help": [
-    { label: "MediBridge", href: "/" },
-    { label: "Tableau de bord", href: "/patient" },
+    { label: "Pont Afrique Santé", href: "/" },
+    { label: "Espace Patient", href: "/patient" },
     { label: "Centre d'aide" }
   ],
   "/patient/notifications": [
-    { label: "MediBridge", href: "/" },
-    { label: "Tableau de bord", href: "/patient" },
+    { label: "Pont Afrique Santé", href: "/" },
+    { label: "Espace Patient", href: "/patient" },
     { label: "Notifications" }
   ],
   "/patient/messages": [
-    { label: "MediBridge", href: "/" },
-    { label: "Tableau de bord", href: "/patient" },
+    { label: "Pont Afrique Santé", href: "/" },
+    { label: "Espace Patient", href: "/patient" },
     { label: "Messagerie" }
   ],
   "/patient/dossier": [
-    { label: "MediBridge", href: "/" },
-    { label: "Tableau de bord", href: "/patient" },
-    { label: "Dossiers Médicaux" }
+    { label: "Pont Afrique Santé", href: "/" },
+    { label: "Espace Patient", href: "/patient" },
+    { label: "Mes Dossiers" }
   ],
   "/patient/dossier/new": [
-    { label: "MediBridge", href: "/" },
-    { label: "Tableau de bord", href: "/patient" },
-    { label: "Dossiers", href: "/patient/dossier" },
+    { label: "Pont Afrique Santé", href: "/" },
+    { label: "Espace Patient", href: "/patient" },
+    { label: "Mes Dossiers", href: "/patient/dossier" },
     { label: "Nouveau Dossier" }
   ],
 
   // Médecin routes
   "/medecin": [
-    { label: "MediBridge", href: "/" },
+    { label: "Pont Afrique Santé", href: "/" },
     { label: "Espace Médecin" }
   ],
   "/medecin/patients": [
-    { label: "MediBridge", href: "/" },
+    { label: "Pont Afrique Santé", href: "/" },
     { label: "Espace Médecin", href: "/medecin" },
     { label: "Mes Patients" }
   ],
   "/medecin/dossiers": [
-    { label: "MediBridge", href: "/" },
+    { label: "Pont Afrique Santé", href: "/" },
     { label: "Espace Médecin", href: "/medecin" },
     { label: "À Valider" }
   ],
   "/medecin/messages": [
-    { label: "MediBridge", href: "/" },
+    { label: "Pont Afrique Santé", href: "/" },
     { label: "Espace Médecin", href: "/medecin" },
     { label: "Messagerie" }
   ],
 
   // Clinique routes
   "/clinique": [
-    { label: "MediBridge", href: "/" },
+    { label: "Pont Afrique Santé", href: "/" },
     { label: "Espace Clinique" }
   ],
   "/clinique/dossiers": [
-    { label: "MediBridge", href: "/" },
+    { label: "Pont Afrique Santé", href: "/" },
     { label: "Espace Clinique", href: "/clinique" },
     { label: "Demandes Reçues" }
   ],
   "/clinique/devis": [
-    { label: "MediBridge", href: "/" },
+    { label: "Pont Afrique Santé", href: "/" },
     { label: "Espace Clinique", href: "/clinique" },
     { label: "Mes Devis" }
   ],
   "/clinique/planning": [
-    { label: "MediBridge", href: "/" },
+    { label: "Pont Afrique Santé", href: "/" },
     { label: "Espace Clinique", href: "/clinique" },
     { label: "Planning" }
   ],
@@ -114,6 +114,9 @@ const viewConfig: Record<string, string> = {
   voyage: "Mon Voyage",
   teleconsultation: "Téléconsultation",
   historique: "Historique Médical",
+  prescriptions: "Prescriptions",
+  laboratoire: "Analyses de Laboratoire",
+  assurances: "Assurances Voyage",
 }
 
 export function DynamicBreadcrumb() {
@@ -126,29 +129,28 @@ export function DynamicBreadcrumb() {
     const viewLabel = viewConfig[view] || view
     return (
       <Breadcrumb>
-        <BreadcrumbList>
+        <BreadcrumbList className="text-xs font-semibold text-slate-500 gap-1.5 sm:gap-2">
           <BreadcrumbItem className="hidden md:block">
-            <BreadcrumbLink href="/" className="flex items-center gap-1.5 text-slate-600 hover:text-slate-900 transition-colors">
-              <Home className="w-3.5 h-3.5" />
-              <span>MediBridge</span>
+            <BreadcrumbLink href="/" className="flex items-center gap-1 text-slate-700 hover:text-slate-900 transition-colors">
+              <span className="font-bold"><span className="text-[#0284C7]">Pont</span><span className="text-[#141413]">Afrique</span><span className="text-[#CF4500]">Santé</span></span>
             </BreadcrumbLink>
           </BreadcrumbItem>
-          <BreadcrumbSeparator className="hidden md:block">
-            <ChevronRight className="w-4 h-4 text-slate-400" />
+          <BreadcrumbSeparator className="hidden md:block text-slate-300">
+            <ChevronRight className="w-3.5 h-3.5" />
           </BreadcrumbSeparator>
           <BreadcrumbItem className="hidden sm:block">
             <BreadcrumbLink
               href="/patient?view=dashboard"
-              className="text-slate-600 hover:text-slate-900 transition-colors"
+              className="text-slate-500 hover:text-slate-900 transition-colors"
             >
-              Tableau de bord
+              Espace Patient
             </BreadcrumbLink>
           </BreadcrumbItem>
-          <BreadcrumbSeparator className="hidden sm:block">
-            <ChevronRight className="w-4 h-4 text-slate-400" />
+          <BreadcrumbSeparator className="hidden sm:block text-slate-300">
+            <ChevronRight className="w-3.5 h-3.5" />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbPage className="font-semibold text-slate-900 max-w-[200px] truncate">
+            <BreadcrumbPage className="font-bold text-slate-900 tracking-tight max-w-[200px] truncate">
               {viewLabel}
             </BreadcrumbPage>
           </BreadcrumbItem>
@@ -162,12 +164,12 @@ export function DynamicBreadcrumb() {
 
   return (
     <Breadcrumb>
-      <BreadcrumbList>
+      <BreadcrumbList className="text-xs font-semibold text-slate-500 gap-1.5 sm:gap-2">
         {breadcrumbs.map((crumb, index) => (
-          <div key={index} className="flex items-center">
+          <div key={index} className="flex items-center gap-1.5 sm:gap-2">
             {index > 0 && (
-              <BreadcrumbSeparator className={index === 1 ? "hidden md:block" : "hidden sm:block"}>
-                <ChevronRight className="w-4 h-4 text-slate-400" />
+              <BreadcrumbSeparator className="text-slate-300">
+                <ChevronRight className="w-3.5 h-3.5" />
               </BreadcrumbSeparator>
             )}
             <BreadcrumbItem className={
@@ -177,15 +179,16 @@ export function DynamicBreadcrumb() {
               {crumb.href ? (
                 <BreadcrumbLink
                   href={crumb.href}
-                  className={`flex items-center gap-1.5 text-slate-600 hover:text-slate-900 transition-colors ${
-                    index === 0 ? 'font-medium' : ''
-                  }`}
+                  className="text-slate-500 hover:text-slate-900 transition-colors"
                 >
-                  {index === 0 && <Home className="w-3.5 h-3.5" />}
-                  <span>{crumb.label}</span>
+                  {crumb.label === "Pont Afrique Santé" ? (
+                    <span className="font-bold"><span className="text-[#0284C7]">Pont</span><span className="text-[#141413]">Afrique</span><span className="text-[#CF4500]">Santé</span></span>
+                  ) : (
+                    <span>{crumb.label}</span>
+                  )}
                 </BreadcrumbLink>
               ) : (
-                <BreadcrumbPage className="font-semibold text-slate-900 max-w-[200px] truncate">
+                <BreadcrumbPage className="font-bold text-slate-900 tracking-tight max-w-[200px] truncate">
                   {crumb.label}
                 </BreadcrumbPage>
               )}
@@ -196,3 +199,4 @@ export function DynamicBreadcrumb() {
     </Breadcrumb>
   )
 }
+

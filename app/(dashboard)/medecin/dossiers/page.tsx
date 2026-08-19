@@ -4,7 +4,7 @@ import { CaseCard } from "@/components/cases/CaseCard"
 import { AlertCircle, CheckSquare } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Dossiers à Valider | MediBridge Africa",
+  title: "Dossiers à Valider | Pont Afrique Santé",
   description: "Revue des demandes d'évacuation.",
 }
 

@@ -73,10 +73,10 @@ const navConfig = {
   patient: {
     main: [
       { title: "Tableau de bord", url: "/patient?view=dashboard", icon: Home, active: true },
-      { title: "Mes Dossiers", url: "/patient?view=dossiers", icon: FileText, active: true, badge: 1 },
-      { title: "Nouvelle Demande", url: "/patient?view=new", icon: PlusCircle, active: true, highlight: true },
-      { title: "Messagerie", url: "/patient?view=messages", icon: MessageSquare, active: true, badge: 3 },
-      { title: "Rendez-vous", url: "/patient?view=rdv", icon: Calendar, active: true, badge: 1 },
+      { title: "Mes Dossiers", url: "/patient?view=dossiers", icon: FileText, active: true },
+      { title: "Nouvelle Demande", url: "/patient?view=new", icon: PlusCircle, active: true },
+      { title: "Messagerie", url: "/patient?view=messages", icon: MessageSquare, active: true },
+      { title: "Rendez-vous", url: "/patient?view=rdv", icon: Calendar, active: true },
       { title: "Documents Partagés", url: "/patient?view=documents", icon: FileDigit, active: true },
       { title: "Factures & Paiements", url: "/patient?view=finances", icon: CreditCard, active: true },
       { title: "Mon Voyage", url: "/patient?view=voyage", icon: Plane, active: true },
@@ -92,7 +92,7 @@ const navConfig = {
     main: [
       { title: "Tableau de bord", url: "/medecin", icon: Activity, active: true },
       { title: "Mes Patients", url: "/medecin/patients", icon: Users, active: true },
-      { title: "À Valider", url: "/medecin/dossiers", icon: CheckSquare, active: true, badge: 5 },
+      { title: "À Valider", url: "/medecin/dossiers", icon: CheckSquare, active: true },
       { title: "Messagerie", url: "/medecin/messages", icon: MessageSquare, active: true },
     ],
     coming: []
@@ -163,20 +163,20 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
   }
 
   return (
-    <Sidebar collapsible="icon" {...props} className="border-r border-slate-300 bg-white/95 backdrop-blur-sm overflow-x-hidden">
-      <SidebarHeader className="border-b border-slate-300 bg-white w-full">
+    <Sidebar collapsible="icon" {...props} className="border-r border-slate-200/80 bg-white overflow-x-hidden">
+      <SidebarHeader className="border-b border-slate-100 bg-white w-full px-3 py-3">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" className="hover:bg-slate-50 transition-all px-2 py-6">
+            <SidebarMenuButton size="lg" className="hover:bg-slate-50 transition-all rounded-2xl px-2 py-5">
               <div className="flex w-full items-center gap-3">
-                <div className="relative h-12 w-12 flex items-center justify-center shrink-0">
-                  <Image src="/FaviconFinal.png" alt="MediBridge" fill className="object-contain" priority />
+                <div className="relative h-10 w-10 flex items-center justify-center shrink-0">
+                  <Image src="/FaviconFinal.png" alt="Pont Afrique Santé" fill className="object-contain" priority />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-bold text-slate-900 tracking-tight text-[15px]">
-                    MediBridge
+                  <span className="truncate font-extrabold tracking-tight text-[16px] select-none flex items-center">
+                    <span className="text-[#0284C7]">Pont</span><span className="text-[#141413]">Afrique</span><span className="text-[#CF4500]">Santé</span>
                   </span>
-                  <span className="truncate text-[11px] text-slate-500 font-bold uppercase tracking-wider">{roleLabel}</span>
+                  <span className="truncate text-[10px] text-slate-500 font-bold uppercase tracking-wider">{roleLabel}</span>
                 </div>
               </div>
             </SidebarMenuButton>
@@ -184,13 +184,13 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
         </SidebarMenu>
       </SidebarHeader>
 
-      <SidebarContent className="bg-white overflow-x-hidden w-full">
-        <SidebarGroup className="w-full">
-          <SidebarGroupLabel className="text-xs font-bold text-slate-700 uppercase tracking-wider px-2 bg-white w-full">
-            Navigation Principale
+      <SidebarContent className="bg-white overflow-x-hidden w-full px-2 py-3 space-y-4">
+        <SidebarGroup className="w-full p-0">
+          <SidebarGroupLabel className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-1 bg-white w-full">
+            Menu
           </SidebarGroupLabel>
-          <SidebarGroupContent className="bg-white w-full overflow-x-hidden">
-            <SidebarMenu>
+          <SidebarGroupContent className="bg-[#FCFBFA] w-full overflow-x-hidden">
+            <SidebarMenu className="space-y-1">
               {navMain.map((item) => {
                 const isActive = pathname === item.url
                 return (
@@ -200,31 +200,19 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
                       tooltip={item.title}
                       isActive={isActive}
                       className={`
-                          relative transition-all duration-200
+                          relative transition-all duration-150 rounded-[20px] text-xs font-medium px-3.5 py-2.5
                           ${isActive
-                          ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold shadow-md hover:shadow-lg"
-                          : item.highlight
-                            ? "bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-800 font-semibold hover:from-blue-100 hover:to-cyan-100 border border-blue-300"
-                            : "text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
+                          ? "bg-[#141413] text-[#F3F0EE] hover:bg-[#262627] shadow-none"
+                          : "text-[#696969] hover:bg-[#F3F0EE] hover:text-[#141413] bg-transparent"
                         }
                         `}
                     >
-                      <Link href={item.url} className="flex items-center gap-2 w-full min-w-0">
+                      <Link href={item.url} className="flex items-center gap-2.5 w-full min-w-0">
                         <item.icon
-                          className={`${isActive ? "text-white" : item.highlight ? "text-blue-700" : "text-slate-700"} shrink-0`}
-                          strokeWidth={isActive ? 2.5 : 2.5}
+                          className={`${isActive ? "text-[#F37338]" : "text-[#696969] group-hover:text-[#141413]"} shrink-0 w-4 h-4`}
+                          strokeWidth={isActive ? 2.2 : 1.75}
                         />
-                        <span className="font-semibold truncate flex-1 min-w-0">{item.title}</span>
-                        {item.badge && item.badge > 0 && (
-                          <Badge
-                            className={`ml-auto text-[10px] px-1.5 py-0 h-5 min-w-5 flex items-center justify-center font-bold ${isActive
-                                ? "bg-white/20 text-white border-white/30"
-                                : "bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-0 shadow-sm"
-                              }`}
-                          >
-                            {item.badge}
-                          </Badge>
-                        )}
+                        <span className="truncate flex-1 min-w-0">{item.title}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -234,28 +222,23 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
           </SidebarGroupContent>
         </SidebarGroup>
 
+        <SidebarSeparator className="mx-2 bg-[#E2DDD7]" />
 
-
-        <SidebarSeparator className="mx-4 my-2" />
-
-        <SidebarGroup className="w-full">
-          <SidebarGroupLabel className="text-xs font-bold text-slate-700 uppercase tracking-wider px-2 bg-white w-full">
-            Préférences
+        <SidebarGroup className="w-full p-0">
+          <SidebarGroupLabel className="text-[11px] font-bold text-[#696969] uppercase tracking-wider px-3 mb-1 bg-[#FCFBFA] w-full">
+            Compte & Préférences
           </SidebarGroupLabel>
-          <SidebarGroupContent className="bg-white w-full overflow-x-hidden">
-            <SidebarMenu>
+          <SidebarGroupContent className="bg-[#FCFBFA] w-full overflow-x-hidden">
+            <SidebarMenu className="space-y-1">
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
                   tooltip="Notifications"
-                  className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
+                  className="rounded-[20px] text-xs font-medium px-3.5 py-2.5 text-[#696969] hover:bg-[#F3F0EE] hover:text-[#141413] bg-transparent"
                 >
-                  <Link href={isMedecin ? "/medecin/notifications" : isClinique ? "/clinique/notifications" : "/patient/notifications"} className="flex items-center gap-2 relative w-full min-w-0">
-                    <Bell className="text-slate-700 shrink-0" strokeWidth={2.5} />
+                  <Link href={isMedecin ? "/medecin/notifications" : isClinique ? "/clinique/notifications" : "/patient/notifications"} className="flex items-center gap-2.5 relative w-full min-w-0">
+                    <Bell className="text-[#696969] group-hover:text-[#141413] shrink-0 w-4 h-4" strokeWidth={1.75} />
                     <span className="truncate flex-1 min-w-0">Notifications</span>
-                    <Badge className="ml-auto text-[10px] px-1.5 py-0 h-5 min-w-5 flex items-center justify-center font-bold bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-sm shrink-0">
-                      3
-                    </Badge>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -263,10 +246,10 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
                 <SidebarMenuButton
                   asChild
                   tooltip="Mon Profil"
-                  className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
+                  className="rounded-[20px] text-xs font-medium px-3.5 py-2.5 text-[#696969] hover:bg-[#F3F0EE] hover:text-[#141413] bg-transparent"
                 >
-                  <Link href={isMedecin ? "/medecin/profile" : isClinique ? "/clinique/profile" : "/patient/profile"} className="flex items-center gap-2 w-full min-w-0">
-                    <User className="text-slate-700 shrink-0" strokeWidth={2.5} />
+                  <Link href={isMedecin ? "/medecin/profile" : isClinique ? "/clinique/profile" : "/patient/profile"} className="flex items-center gap-2.5 w-full min-w-0">
+                    <User className="text-[#696969] group-hover:text-[#141413] shrink-0 w-4 h-4" strokeWidth={1.75} />
                     <span className="truncate flex-1 min-w-0">Mon Profil</span>
                   </Link>
                 </SidebarMenuButton>
@@ -275,10 +258,10 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
                 <SidebarMenuButton
                   asChild
                   tooltip="Paramètres"
-                  className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
+                  className="rounded-[20px] text-xs font-medium px-3.5 py-2.5 text-[#696969] hover:bg-[#F3F0EE] hover:text-[#141413] bg-transparent"
                 >
-                  <Link href={isMedecin ? "/medecin/settings" : isClinique ? "/clinique/settings" : "/patient/settings"} className="flex items-center gap-2 w-full min-w-0">
-                    <Settings className="text-slate-700 shrink-0" strokeWidth={2.5} />
+                  <Link href={isMedecin ? "/medecin/settings" : isClinique ? "/clinique/settings" : "/patient/settings"} className="flex items-center gap-2.5 w-full min-w-0">
+                    <Settings className="text-[#696969] group-hover:text-[#141413] shrink-0 w-4 h-4" strokeWidth={1.75} />
                     <span className="truncate flex-1 min-w-0">Paramètres</span>
                   </Link>
                 </SidebarMenuButton>
@@ -287,10 +270,10 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
                 <SidebarMenuButton
                   asChild
                   tooltip="Centre d'aide"
-                  className="text-slate-800 hover:bg-slate-100 hover:text-slate-900 font-semibold bg-white"
+                  className="rounded-[20px] text-xs font-medium px-3.5 py-2.5 text-[#696969] hover:bg-[#F3F0EE] hover:text-[#141413] bg-transparent"
                 >
-                  <Link href={isMedecin ? "/medecin/help" : isClinique ? "/clinique/help" : "/patient/help"} className="flex items-center gap-2 w-full min-w-0">
-                    <HelpCircle className="text-slate-700 shrink-0" strokeWidth={2.5} />
+                  <Link href={isMedecin ? "/medecin/help" : isClinique ? "/clinique/help" : "/patient/help"} className="flex items-center gap-2.5 w-full min-w-0">
+                    <HelpCircle className="text-[#696969] group-hover:text-[#141413] shrink-0 w-4 h-4" strokeWidth={1.75} />
                     <span className="truncate flex-1 min-w-0">Centre d'Aide</span>
                   </Link>
                 </SidebarMenuButton>
@@ -300,71 +283,50 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-slate-300 bg-white w-full overflow-x-hidden">
+      <SidebarFooter className="border-t border-slate-100 bg-white w-full overflow-x-hidden p-2">
         <SidebarMenu className="w-full">
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              tooltip="Retour à l'accueil"
-              className="hover:bg-slate-100 transition-all text-slate-800 hover:text-blue-600 font-semibold bg-white"
-            >
-              <Link href="/" className="flex items-center gap-2 w-full min-w-0">
-                <Home className="text-slate-700 shrink-0" strokeWidth={2.5} />
-                <span className="font-semibold truncate flex-1 min-w-0">Retour Accueil</span>
-                <ChevronRight className="ml-auto w-4 h-4 text-slate-600 shrink-0" />
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className="data-[state=open]:bg-white data-[state=open]:shadow-md border border-slate-200 rounded-xl hover:bg-white hover:shadow-sm transition-all bg-white"
+                  className="data-[state=open]:bg-slate-50 border border-slate-200/80 rounded-2xl hover:bg-slate-50 transition-all bg-white"
                 >
-                  <Avatar className="h-9 w-9 rounded-xl bg-gradient-to-br from-blue-100 to-cyan-100 text-blue-600 border-2 border-white shadow-sm">
+                  <Avatar className="h-8 w-8 rounded-full bg-slate-900 text-white shrink-0">
                     {avatarUrl && <AvatarImage src={avatarUrl} alt={displayName} />}
-                    <AvatarFallback className="rounded-xl font-bold text-sm">
+                    <AvatarFallback className="rounded-full font-bold text-xs bg-slate-900 text-white">
                       {displayName.substring(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
+                  <div className="grid flex-1 text-left text-xs leading-tight min-w-0">
                     <span className="truncate font-bold text-slate-900">{displayName}</span>
-                    <span className="truncate text-xs text-slate-500">{user?.email}</span>
+                    <span className="truncate text-[11px] text-slate-400 font-mono">{user?.email}</span>
                   </div>
-                  <ChevronRight className="ml-auto size-4 text-slate-400" />
+                  <ChevronRight className="ml-auto size-4 text-slate-400 shrink-0" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-xl shadow-2xl border-slate-200 bg-white"
-                side="bottom"
+                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-2xl border-slate-200 bg-white p-1.5 shadow-lg"
+                side="top"
                 align="end"
                 sideOffset={8}
               >
-                <DropdownMenuLabel className="p-0 font-normal">
-                  <div className="flex items-center gap-3 px-3 py-3 text-left bg-gradient-to-br from-blue-50 to-cyan-50 rounded-t-xl">
-                    <Avatar className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-600 text-white border-2 border-white shadow-md">
-                      {avatarUrl && <AvatarImage src={avatarUrl} alt={displayName} />}
-                      <AvatarFallback className="rounded-xl font-bold">
-                        {displayName.substring(0, 2).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-bold text-slate-900">{displayName}</span>
-                      <span className="truncate text-xs text-slate-500">{user?.email}</span>
-                    </div>
+                <DropdownMenuLabel className="p-3 font-normal border-b border-slate-100">
+                  <div className="flex flex-col gap-0.5 text-left">
+                    <span className="font-bold text-sm text-slate-900 truncate">{displayName}</span>
+                    <span className="text-xs text-slate-400 truncate">{user?.email}</span>
                   </div>
                 </DropdownMenuLabel>
                 <div className="p-1">
                   <DropdownMenuItem
                     onClick={handleLogout}
                     disabled={isLoggingOut}
-                    className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer rounded-lg font-medium"
+                    className="text-rose-600 focus:text-rose-700 focus:bg-rose-50 cursor-pointer rounded-xl font-semibold text-xs"
                   >
                     {isLoggingOut ? (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
                     ) : (
-                      <LogOut className="mr-2 h-4 w-4" />
+                      <LogOut className="mr-2 h-3.5 w-3.5" />
                     )}
                     {isLoggingOut ? "Déconnexion..." : "Se déconnecter"}
                   </DropdownMenuItem>

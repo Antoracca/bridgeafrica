@@ -7,7 +7,7 @@ import { LottieAnimation } from "@/components/ui/LottieAnimation"
 import OnlineDoctorAnimation from "@/public/Online Doctor.json"
 
 export const metadata: Metadata = {
-  title: "Inscription | MediBridge Africa",
+  title: "Inscription | Pont Afrique Santé",
   description: "Rejoignez le réseau d'excellence médicale.",
 }
 
@@ -15,10 +15,10 @@ export default function RegisterPage() {
   return (
     <div className="relative min-h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0 bg-white lg:bg-slate-50 w-full max-w-full">
 
-      {/* Logo MediBridge - mobile top */}
+      {/* Logo Pont Afrique Santé - mobile top */}
       <div className="lg:hidden absolute top-6 left-6 z-30 flex items-center text-slate-900">
         <Activity className="mr-2 h-5 w-5 text-brand-teal" />
-        <span className="text-base font-bold tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>MediBridge</span>
+        <span className="text-base font-bold tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>Pont Afrique Santé</span>
       </div>
 
       <Link
@@ -33,14 +33,14 @@ export default function RegisterPage() {
         <BackgroundSlideshow />
         <div className="relative z-20 flex items-center text-xl font-bold tracking-tight">
           <Activity className="mr-2 h-6 w-6 text-white" />
-          MediBridge Africa
+          Pont Afrique Santé
         </div>
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2 border-l-2 border-emerald-400 pl-6 backdrop-blur-sm bg-black/10 p-4 rounded-r-lg">
             <p className="text-lg font-medium leading-relaxed">
               &ldquo;Nous avons simplifié chaque étape du parcours médical pour que vous puissiez vous concentrer sur l&apos;essentiel : votre rétablissement.&rdquo;
             </p>
-            <footer className="text-sm text-emerald-200">L&apos;équipe MediBridge</footer>
+            <footer className="text-sm text-emerald-200">L&apos;équipe Pont Afrique Santé</footer>
           </blockquote>
         </div>
       </div>
@@ -62,7 +62,7 @@ export default function RegisterPage() {
               Créer un compte
             </h1>
             <p className="text-sm text-slate-500 font-light">
-              Rejoignez l'écosystème MediBridge
+              Rejoignez l'écosystème Pont Afrique Santé
             </p>
           </div>
 

@@ -43,7 +43,7 @@ export function Packages() {
              <div className="relative w-full max-w-[400px] aspect-[4/5] rounded-l-2xl rounded-r-full overflow-hidden shadow-2xl border-4 border-white">
                <img
                  src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800"
-                 alt="Assistance Patient MediBridge"
+                 alt="Assistance Patient Pont Afrique Santé"
                  className="w-full h-full object-cover"
                  loading="eager"
                />
@@ -154,7 +154,7 @@ export function Packages() {
               <div className="relative z-10 w-8 h-px bg-blue-600 mb-6 sm:mb-8"></div>
               <h4 className="text-[16px] sm:text-2xl text-slate-900 mb-3 sm:mb-4 relative z-10 leading-tight" style={{ fontFamily: 'Georgia, serif' }}>Compagnies d'Assurance</h4>
               <p className="text-[11px] sm:text-base text-slate-500 font-light leading-relaxed mb-8 relative z-10 flex-1">
-                Nous sommes le réseau de Tiers-Payant international. Intégrez MediBridge pour maîtriser vos coûts sur de véritables accords cadres avec les hôpitaux.
+                Nous sommes le réseau de Tiers-Payant international. Intégrez Pont Afrique Santé pour maîtriser vos coûts sur de véritables accords cadres avec les hôpitaux.
               </p>
               
               {/* Vrais Logos Assurances */}
@@ -197,7 +197,7 @@ export function Packages() {
                   Partenaire Stratégique <br className="hidden lg:block"/> des Grandes Instances.
                 </h3>
                 <p className="text-white/60 text-lg font-light leading-relaxed max-w-2xl mb-10">
-                  De la prise en charge d'un cadre dirigeant jusqu'à la sous-traitance intégrale du protocole d'<strong>Évacuation Sanitaire (EVASAN)</strong> d'une nation africaine, MediBridge structure votre Hub de santé délocalisé.
+                  De la prise en charge d'un cadre dirigeant jusqu'à la sous-traitance intégrale du protocole d'<strong>Évacuation Sanitaire (EVASAN)</strong> d'une nation africaine, Pont Afrique Santé structure votre Hub de santé délocalisé.
                 </p>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">

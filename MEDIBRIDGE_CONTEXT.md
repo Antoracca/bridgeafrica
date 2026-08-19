@@ -199,3 +199,35 @@ grep -rn "blue-[0-9]\|cyan-[0-9]\|purple-[0-9]\|#[0-9a-f]\{6\}" components/home/
 - Authentification : **Supabase** (3 rôles : `patient`, `medecin_referent`, `clinique`)
 - Images : **Unsplash** (preconnect configuré dans layout.tsx)
 - Animations : **Framer Motion** (utilisé dans tous les composants homepage)
+
+---
+
+## 11. ESPACE PATIENT — ARCHITECTURE & RÈGLE ZÉRO DONNÉE MOCKÉE
+
+### 11.1 Règle fondamentale : ZÉRO fausse donnée
+- **Strictement interdit** d'inventer des faux antécédents, fausses opérations (*« Prothèse totale du genou »*), faux médecins (*« Dr. Fatima El Amrani »*), faux numéros d'urgence, faux devis de 3 500 €, faux vols RAM ou faux badges de notification.
+- Tous les écrans vides affichent de véritables **Empty States professionnels** rassurants et explicatifs avec des call-to-action (CTA) fonctionnels.
+
+### 11.2 Cartographie des Vues Patient
+```
+app/(dashboard)/patient/dashboard-router.tsx  ← Routeur piloté par ?view=
+  │
+  ├─ ?view=dashboard        → DashboardOverview.tsx / dashboard-mobile.tsx (Stats réelles, onboarding ou dossiers actifs)
+  ├─ ?view=dossiers         → DossiersView.tsx (Dossiers réels Supabase + Empty State)
+  ├─ ?view=new              → MedicalCaseForm.tsx (Formulaire multi-étapes 100% brand-teal)
+  ├─ ?view=messages         → MessagesView.tsx (Messagerie chiffrée HDS + Empty State)
+  ├─ ?view=rdv              → AppointmentsView.tsx (Agenda des consultations + Empty State)
+  ├─ ?view=documents        → DocumentsView.tsx (Coffre-fort HDS drag & drop + Empty State)
+  ├─ ?view=finances         → FinancesView.tsx (Factures, devis & séquestre + Empty State)
+  ├─ ?view=voyage           → TravelView.tsx (Conciergerie & 4 piliers logistiques + Empty State)
+  ├─ ?view=teleconsultation → TeleconsultationView.tsx (Test équipement WebRTC caméra/micro)
+  └─ ?view=historique/...   → Placeholders d'intégration synchronisés
+```
+
+### 11.3 Structure des Pages dédiées
+- `/patient/dossier` : Liste réelle connectée à `supabase.from('medical_cases')`.
+- `/patient/dossier/new` : Formulaire de création.
+- `/patient/dossier/[id]` : Détail complet du dossier connecté.
+- `/patient/messages` : Vue messagerie unifiée.
+- `/patient/notifications` : Liste temps réel des alertes Supabase sans mock data.
+- `/patient/profile`, `/patient/settings`, `/patient/help` : Profil, paramètres et FAQ médicale.

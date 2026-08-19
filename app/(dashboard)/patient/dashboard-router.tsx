@@ -5,16 +5,25 @@ import { useState, useEffect } from 'react'
 import { createClient } from "@/lib/supabase/client"
 import { MedicalCaseForm } from "@/components/forms/MedicalCaseForm"
 import { MobileDashboard } from "./dashboard-mobile"
-import { Progress } from "@/components/ui/progress"
-import { motion, AnimatePresence } from "framer-motion"
-import { Button } from "@/components/ui/button"
+import { motion } from "framer-motion"
 import {
-  Loader2, FileText, Calendar, Plane, ClipboardList,
-  FileDigit, MessageSquare, Video, CreditCard,
-  Microscope, Pill, ShieldCheck, Sparkles
+  Loader2, FileText, ClipboardList,
+  Microscope, Pill, ShieldCheck
 } from "lucide-react"
 
-// Hook pour détecter si on est sur mobile
+import { DashboardOverview } from "./views/DashboardOverview"
+import { DossiersView } from "./views/DossiersView"
+import { MessagesView } from "./views/MessagesView"
+import { AppointmentsView } from "./views/AppointmentsView"
+import { DocumentsView } from "./views/DocumentsView"
+import { FinancesView } from "./views/FinancesView"
+import { TeleconsultationView } from "./views/TeleconsultationView"
+import { TravelView } from "./views/TravelView"
+import { MedicalHistoryView } from "./views/MedicalHistoryView"
+import { PrescriptionsView } from "./views/PrescriptionsView"
+import { LabResultsView } from "./views/LabResultsView"
+import { InsurancesView } from "./views/InsurancesView"
+
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false)
   useEffect(() => {
@@ -38,88 +47,48 @@ interface Stats {
   total: number; en_attente: number; en_cours: number; termine: number
 }
 
-// Sparkline Component - Clean & Minimal
-const Sparkline = ({ data, colorClass = "text-blue-500" }: { data: number[], colorClass?: string }) => {
-  const max = Math.max(...data)
-  const min = Math.min(...data)
-  const range = (max - min) || 1
-  const points = data.map((value, index) => {
-    const x = (index / (data.length - 1)) * 100
-    const y = 100 - ((value - min) / range) * 80 - 10
-    return `${x},${y}`
-  }).join(' ')
-
-  return (
-    <div className="relative w-full h-10 overflow-hidden mt-2">
-      <svg viewBox="0 0 100 100" className="w-full h-full" preserveAspectRatio="none">
-        <motion.polyline
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1, ease: "easeInOut" }}
-          points={points}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className={colorClass}
-        />
-      </svg>
-      <div className={`absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-current to-transparent opacity-5 ${colorClass}`} />
-    </div>
-  )
+interface MedicalCase {
+  id: string
+  diagnosis: string
+  required_specialty: string
+  status: string
+  created_at: string
+  urgency_level?: string
 }
 
-// Simple & Elegant Placeholder
-function DevelopmentPlaceholder({ icon: Icon, title, description }: { icon: React.ElementType, title: string, description: string }) {
+function SectionPlaceholder({ icon: Icon, title, description }: { icon: React.ElementType, title: string, description: string }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-      className="min-h-[calc(100vh-100px)] flex items-center justify-center p-4 md:p-8 bg-slate-50/50"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="min-h-[calc(100vh-160px)] flex items-center justify-center p-4 md:p-8"
     >
-      <div className="max-w-xl w-full">
-        <div className="bg-white border border-slate-100 rounded-2xl p-8 md:p-12 text-center shadow-sm">
-          <div className="w-20 h-20 mx-auto mb-6 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">
-            <Icon className="w-10 h-10" />
-          </div>
-          <h3 className="text-2xl font-bold text-slate-900 mb-3">{title}</h3>
-          <p className="text-slate-500 text-lg leading-relaxed mb-8">{description}</p>
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 border border-slate-100">
-            <span className="text-slate-600 font-medium text-sm">Module en cours d'intégration</span>
-          </div>
+      <div className="max-w-md w-full bg-[#FCFBFA] border border-[#E2DDD7] rounded-[40px] p-8 text-center shadow-[0_4px_24px_rgba(0,0,0,0.02)] space-y-4">
+        <div className="w-16 h-16 mx-auto bg-[#F3F0EE] border border-[#E2DDD7] text-[#141413] rounded-full flex items-center justify-center">
+          <Icon className="w-8 h-8 text-[#CF4500]" />
+        </div>
+        <div className="space-y-1">
+          <h3 className="text-xl font-medium text-[#141413] tracking-tight">{title}</h3>
+          <p className="text-[#696969] text-xs leading-relaxed">{description}</p>
+        </div>
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F3F0EE] border border-[#E2DDD7] text-[#141413] font-mono text-[11px] font-bold">
+          <span>SYNCHRONISATION CLINIQUE EN COURS</span>
         </div>
       </div>
     </motion.div>
   )
 }
 
-// Clean Card Wrapper
-const CleanCard = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
-  <motion.div
-    whileHover={{ y: -2 }}
-    transition={{ duration: 0.2 }}
-    className={`bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden ${className}`}
-  >
-    {children}
-  </motion.div>
-)
-
-// ... [Previous Imports Left Intact]
-import { DashboardOverview } from "./views/DashboardOverview"
-import { MessagesView } from "./views/MessagesView"
-import { AppointmentsView } from "./views/AppointmentsView"
-import { DocumentsView } from "./views/DocumentsView"
-import { FinancesView } from "./views/FinancesView"
-import { TeleconsultationView } from "./views/TeleconsultationView"
-import { TravelView } from "./views/TravelView"
-
 export function PatientDashboardRouter() {
   const searchParams = useSearchParams()
   const view = searchParams.get('view') || 'dashboard'
 
   const [user, setUser] = useState<User | null>(null)
+  const [cases, setCases] = useState<MedicalCase[]>([])
   const [stats, setStats] = useState<Stats>({ total: 0, en_attente: 0, en_cours: 0, termine: 0 })
   const [loading, setLoading] = useState(true)
+  const [fullName, setFullName] = useState<string>("Patient")
   const isMobile = useIsMobile()
 
   useEffect(() => {
@@ -130,46 +99,109 @@ export function PatientDashboardRouter() {
 
         if (currentUser) {
           setUser(currentUser as User)
-          const { count: total } = await supabase.from('medical_cases').select('*', { count: 'exact', head: true }).eq('patient_id', currentUser.id)
-          const { count: en_attente } = await supabase.from('medical_cases').select('*', { count: 'exact', head: true }).eq('patient_id', currentUser.id).eq('status', 'submitted')
-          const { count: en_cours } = await supabase.from('medical_cases').select('*', { count: 'exact', head: true }).eq('patient_id', currentUser.id).in('status', ['in_review', 'matched', 'confirmed'])
-          const { count: termine } = await supabase.from('medical_cases').select('*', { count: 'exact', head: true }).eq('patient_id', currentUser.id).eq('status', 'completed')
 
-          setStats({ total: total || 0, en_attente: en_attente || 0, en_cours: en_cours || 0, termine: termine || 0 })
+          // 1. Récupération du profil complet (Prénom et Nom complet) depuis la table profiles
+          const { data: profileData } = await supabase
+            .from('profiles')
+            .select('first_name, last_name')
+            .eq('id', currentUser.id)
+            .single<any>()
+
+          let resolvedName = ""
+          if (profileData?.first_name || profileData?.last_name) {
+            resolvedName = `${profileData.first_name || ""} ${profileData.last_name || ""}`.trim()
+          } else {
+            resolvedName =
+              currentUser?.user_metadata?.full_name ||
+              currentUser?.user_metadata?.name ||
+              (currentUser?.user_metadata?.first_name 
+                ? `${currentUser.user_metadata.first_name} ${currentUser.user_metadata.last_name || ""}`.trim()
+                : "") ||
+              currentUser?.email?.split('@')[0] ||
+              "Patient"
+          }
+          setFullName(resolvedName || "Patient")
+
+          // 2. Chargement des dossiers réels du patient
+          const { data: casesData } = await supabase
+            .from('medical_cases')
+            .select('*')
+            .eq('patient_id', currentUser.id)
+            .order('created_at', { ascending: false })
+
+          const list = (casesData as MedicalCase[]) || []
+          setCases(list)
+
+          const total = list.length
+          const en_attente = list.filter(c => c.status === 'submitted').length
+          const en_cours = list.filter(c => ['in_review', 'matched', 'confirmed', 'under_review', 'quote_sent', 'quote_accepted'].includes(c.status)).length
+          const termine = list.filter(c => c.status === 'completed').length
+
+          setStats({ total, en_attente, en_cours, termine })
         }
-      } catch (error) { console.error(error) } finally { setLoading(false) }
+      } catch (error) {
+        console.error("Erreur lors du chargement des données patient :", error)
+      } finally {
+        setLoading(false)
+      }
     }
     loadData()
   }, [])
 
-  if (loading) return <div className="flex items-center justify-center min-h-screen"><Loader2 className="w-8 h-8 animate-spin text-blue-600" /></div>
-  if (!user) return <div className="flex items-center justify-center min-h-screen text-slate-500">Erreur de chargement de l'espace patient</div>
-
-  const displayName = user?.user_metadata?.first_name || user?.user_metadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'Utilisateur'
-
-  if (isMobile && view === 'dashboard') {
-    return <MobileDashboard user={user} stats={stats} />
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <Loader2 className="w-8 h-8 animate-spin text-brand-teal" />
+      </div>
+    )
   }
 
-  // Route to the appropriate High-End SaaS View
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh] text-slate-500 font-medium">
+        Session non disponible. Veuillez vous reconnecter.
+      </div>
+    )
+  }
+
+  if (isMobile && view === 'dashboard') {
+    return <MobileDashboard user={user} stats={stats} cases={cases} displayName={fullName} />
+  }
+
   switch (view) {
-    case 'new': return <MedicalCaseForm />
-    case 'messages': return <MessagesView />
-    case 'rdv': return <AppointmentsView />
-    case 'documents': return <DocumentsView />
-    case 'finances': return <FinancesView />
-    case 'voyage': return <TravelView />
-    case 'teleconsultation': return <TeleconsultationView />
+    case 'dossiers':
+      return <DossiersView cases={cases} />
+    case 'new':
+      return <MedicalCaseForm />
+    case 'messages':
+      return <MessagesView />
+    case 'rdv':
+      return <AppointmentsView />
+    case 'documents':
+      return <DocumentsView />
+    case 'finances':
+      return <FinancesView />
+    case 'voyage':
+      return <TravelView />
+    case 'teleconsultation':
+      return <TeleconsultationView />
 
-    // Remaining placeholders
-    case 'historique': return <DevelopmentPlaceholder icon={ClipboardList} title="Historique" description="Accédez à la chronologie complète de vos interventions passées." />
-    case 'dossiers': return <DevelopmentPlaceholder icon={FileText} title="Dossiers Médicaux" description="Liste exhaustive de vos demandes et dossiers de santé." />
-    case 'assurances': return <DevelopmentPlaceholder icon={ShieldCheck} title="Assurances" description="Synchronisez vos assurances voyage et garantie de rapatriement sanitaire." />
-    case 'prescriptions': return <DevelopmentPlaceholder icon={Pill} title="Ordonnances" description="Retrouvez électroniquement vos prescriptions de traitement post-opératoire." />
-    case 'laboratoire': return <DevelopmentPlaceholder icon={Microscope} title="Résultats Labo" description="Vos bilans sanguins et analyses de laboratoire s'afficheront dans cet onglet." />
+    case 'historique':
+      return <MedicalHistoryView />
+    case 'assurances':
+      return <InsurancesView />
+    case 'prescriptions':
+      return <PrescriptionsView />
+    case 'laboratoire':
+      return <LabResultsView />
 
-    case 'dashboard':
     default:
-      return <DashboardOverview displayName={displayName} stats={stats} />
+      return (
+        <DashboardOverview
+          displayName={fullName}
+          stats={stats}
+          cases={cases}
+        />
+      )
   }
 }

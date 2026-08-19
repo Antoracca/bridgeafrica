@@ -305,6 +305,6 @@ export const RESOURCE_ARGUMENTS: ResourceArgument[] = [
     metricLabel: 'des proches se sentent informés et rassurés',
     title: 'Une famille qui n\'est plus dans le flou',
     body: 'Nos guides destinés aux accompagnants couvrent le séjour à l\'hôtel, les visites en chambre, les démarches consulaires et le retour au pays.',
-    source: 'Sondage interne MediBridge, 2024',
+    source: 'Sondage interne Pont Afrique Santé, 2024',
   },
 ]

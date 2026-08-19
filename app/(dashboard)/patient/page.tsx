@@ -3,7 +3,7 @@ import { PatientDashboardRouter } from './dashboard-router'
 import { Loader2 } from 'lucide-react'
 
 export const metadata = {
-  title: "Tableau de bord | MediBridge Africa",
+  title: "Tableau de bord | Pont Afrique Santé",
   description: "Vue d'ensemble de vos dossiers médicaux.",
 }
 

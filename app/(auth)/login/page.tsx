@@ -7,7 +7,7 @@ import { LottieAnimation } from "@/components/ui/LottieAnimation"
 import DoctorAnimation from "@/public/Doctor.json"
 
 export const metadata: Metadata = {
-  title: "Connexion | MediBridge Africa",
+  title: "Connexion | Pont Afrique Santé",
   description: "Accédez à votre portail médical sécurisé.",
 }
 
@@ -22,10 +22,10 @@ export default function LoginPage() {
         <div className="absolute inset-0 bg-linear-to-b from-slate-900/40 via-blue-950/30 to-slate-950/50" />
       </div>
 
-      {/* Logo MediBridge - mobile top */}
+      {/* Logo Pont Afrique Santé - mobile top */}
       <div className="lg:hidden absolute top-5 left-5 z-30 flex items-center text-white drop-shadow-lg">
         <Activity className="mr-2 h-5 w-5 text-blue-400" />
-        <span className="text-base font-bold tracking-tight">MediBridge</span>
+        <span className="text-base font-bold tracking-tight">Pont Afrique Santé</span>
       </div>
 
       <Link
@@ -40,7 +40,7 @@ export default function LoginPage() {
         <BackgroundSlideshow />
         <div className="relative z-20 flex items-center text-xl font-bold tracking-tight">
           <Activity className="mr-2 h-6 w-6 text-blue-400" />
-          MediBridge Africa
+          Pont Afrique Santé
         </div>
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2 border-l-2 border-blue-500 pl-6 backdrop-blur-sm bg-black/10 p-4 rounded-r-lg">
@@ -48,7 +48,7 @@ export default function LoginPage() {
               &ldquo;La santé n&lsquo;a pas de prix, et désormais, elle n&apos;a plus de frontières.
               Accédez aux meilleurs spécialistes internationaux depuis chez vous.&rdquo;
             </p>
-            <footer className="text-sm text-blue-200">L&apos;équipe MediBridge</footer>
+            <footer className="text-sm text-blue-200">L&apos;équipe Pont Afrique Santé</footer>
           </blockquote>
         </div>
       </div>

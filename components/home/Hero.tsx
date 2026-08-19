@@ -173,8 +173,8 @@ export function Hero() {
             </motion.h1>
 
             <motion.p variants={FADE_UP_ANIMATION_VARIANTS} className="text-lg sm:text-xl text-slate-600 mb-10 leading-relaxed max-w-2xl mx-auto xl:mx-0 font-medium">
-              Votre santé mérite les meilleurs experts mondiaux. De la consultation au voyage, nous organisons tout pour vous avec
-              <span className="text-brand-teal font-bold bg-brand-teal-pale px-2.5 py-1 rounded-md mx-1.5 shadow-sm border border-brand-teal-border whitespace-nowrap">0 tracasseries</span>.
+              Votre santé mérite les meilleurs experts mondiaux. De la consultation au voyage, nous organisons tout pour vous avec{" "}
+              <span className="text-brand-teal font-bold">0 tracasseries</span>.
             </motion.p>
 
             {/* Interactive Search Bar */}

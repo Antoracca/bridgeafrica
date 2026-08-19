@@ -6,7 +6,7 @@ export default function AdminDashboardPage() {
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Administration</h1>
-        <p className="text-muted-foreground">Vue d&apos;ensemble de la plateforme MediBridge.</p>
+        <p className="text-muted-foreground">Vue d&apos;ensemble de la plateforme Pont Afrique Santé.</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

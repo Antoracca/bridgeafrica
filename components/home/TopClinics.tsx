@@ -240,7 +240,7 @@ export function TopClinics() {
       <div className="flex justify-center pb-12 px-4">
         <div className="inline-flex items-center gap-6 sm:gap-10 px-8 py-4 bg-white border border-[#E5E5E5] shadow-sm rounded-full">
           <span className="text-[10px] sm:text-[11px] font-black tracking-[0.18em] uppercase text-[#1a1f24] shrink-0">
-            MediBridge Spotlight
+            Pont Afrique Santé Spotlight
           </span>
           {spotlights.map((sp, i) => (
             <Link key={i} href="#" className="text-[11px] sm:text-[13px] font-bold uppercase text-slate-800 border-b-2 border-slate-800 pb-[1px] hover:text-[#1B433E] hover:border-[#1B433E] transition-colors hidden sm:block">

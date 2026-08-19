@@ -82,8 +82,8 @@ export const metadata: Metadata = {
     // ─ Twitter Cards
     twitter: {
         card: 'summary_large_image',
-        site: '@medibridgeafrica',
-        creator: '@medibridgeafrica',
+        site: '@pontafriquesante',
+        creator: '@pontafriquesante',
         title: `${SITE_NAME} — Tourisme Médical Premium`,
         description: SEO_DESCRIPTION,
         images: [`${BASE_URL}/og-image.png`],

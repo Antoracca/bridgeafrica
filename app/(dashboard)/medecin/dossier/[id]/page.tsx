@@ -24,7 +24,7 @@ import { fr } from "date-fns/locale"
 import { CaseActions } from "@/components/cases/CaseActions"
 
 export const metadata: Metadata = {
-  title: "Revue Médicale | MediBridge Africa",
+  title: "Revue Médicale | Pont Afrique Santé",
   description: "Analyse et validation du dossier médical.",
 }
 

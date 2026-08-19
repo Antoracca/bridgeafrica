@@ -188,7 +188,7 @@ export function NavbarMobile({ closeMenu, onSelectClinic }: Props) {
       case 'pricingPlan':    return PRICING_PLANS.find(p => p.id === current.id)?.name || ''
       case 'estimations':    return 'Estimations par spécialité'
       case 'financing':      return 'Solutions de financement'
-      case 'guarantees':     return 'Garanties MediBridge'
+      case 'guarantees':     return 'Garanties Pont Afrique Santé'
       case 'resources':      return 'Ressources Patient'
       case 'guides':         return 'Guides par hub'
       case 'guide':          return PATIENT_GUIDES.find(g => g.id === current.id)?.title || ''
@@ -257,7 +257,7 @@ export function NavbarMobile({ closeMenu, onSelectClinic }: Props) {
     }
     if (current.type === 'tools') return 'Outils pratiques'
     if (current.type === 'why') return 'Pourquoi préparer'
-    return 'MediBridge'
+    return 'Pont Afrique Santé'
   })()
 
   return (
@@ -602,7 +602,7 @@ export function NavbarMobile({ closeMenu, onSelectClinic }: Props) {
 
                   <div className="mt-6 p-4 bg-slate-50 border border-slate-100">
                     <p className="text-[11px] text-slate-500 mb-3 leading-snug">
-                      Obtenez une estimation personnalisée pour cette procédure et découvrez les réductions MediBridge.
+                      Obtenez une estimation personnalisée pour cette procédure et découvrez les réductions Pont Afrique Santé.
                     </p>
                     <Link href="/register" onClick={closeMenu}>
                       <Button className="w-full bg-slate-900 hover:bg-slate-800 text-white h-11 text-[12px] font-bold rounded-none">
@@ -692,7 +692,7 @@ export function NavbarMobile({ closeMenu, onSelectClinic }: Props) {
                     <p className="text-[11px] text-slate-500 mb-3 leading-snug">
                       {isPremium
                         ? 'Service premium disponible en option — contactez-nous pour un devis sur mesure.'
-                        : 'Inclus dans votre accompagnement MediBridge — aucun supplément.'}
+                        : 'Inclus dans votre accompagnement Pont Afrique Santé — aucun supplément.'}
                     </p>
                     <Link href="/register" onClick={closeMenu}>
                       <Button className="w-full bg-slate-900 hover:bg-slate-800 text-white h-11 text-[12px] font-bold rounded-none">
@@ -916,7 +916,7 @@ export function NavbarMobile({ closeMenu, onSelectClinic }: Props) {
             {current.type === 'impact' && (
               <div className="space-y-3">
                 <p className="text-[10px] text-slate-500 leading-relaxed mb-2">
-                  Ces quatre engagements sont contractuels et figurent dans chaque accord cadre signé avec nos partenaires. MediBridge a été lancé en 2025.
+                  Ces quatre engagements sont contractuels et figurent dans chaque accord cadre signé avec nos partenaires. Pont Afrique Santé a été lancé en 2025.
                 </p>
                 {IMPACT_STATS.map((stat, i) => {
                   const Icon = IMPACT_ICONS[stat.iconKey] || Sparkle
@@ -937,7 +937,7 @@ export function NavbarMobile({ closeMenu, onSelectClinic }: Props) {
                   )
                 })}
                 <p className="text-[9px] text-slate-400 text-center pt-3">
-                  MediBridge Africa · Lancé en 2025 · Engagements contractuels
+                  Pont Afrique Santé · Lancé en 2025 · Engagements contractuels
                 </p>
               </div>
             )}
@@ -992,7 +992,7 @@ export function NavbarMobile({ closeMenu, onSelectClinic }: Props) {
                   { label: 'Nos formules', sub: `${PRICING_PLANS.length} forfaits — Essentiel, Sérénité, Excellence`, view: { type: 'pricing' } as View, Icon: Wallet, isPlans: true },
                   { label: 'Combien coûte mon traitement ?', sub: `${PRICE_ESTIMATIONS.length} spécialités — jusqu'à −70 % vs France`, view: { type: 'estimations' } as View, Icon: TrendingDown },
                   { label: 'Solutions de financement', sub: `${FINANCING_OPTIONS.length} options pour étaler le coût`, view: { type: 'financing' } as View, Icon: Landmark },
-                  { label: 'Garanties MediBridge', sub: `${GUARANTEES.length} engagements pour votre sérénité`, view: { type: 'guarantees' } as View, Icon: Shield },
+                  { label: 'Garanties Pont Afrique Santé', sub: `${GUARANTEES.length} engagements pour votre sérénité`, view: { type: 'guarantees' } as View, Icon: Shield },
                 ].map((card, idx) => {
                   // Special: first card expands inline as plan list
                   if (card.isPlans) {

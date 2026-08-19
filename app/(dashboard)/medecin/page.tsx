@@ -29,7 +29,7 @@ import {
 import { StatsCard } from "@/components/dashboard/StatsCard"
 
 export const metadata: Metadata = {
-  title: "Espace Médecin | MediBridge Africa",
+  title: "Espace Médecin | Pont Afrique Santé",
   description: "Gérez les demandes d'évacuation sanitaire.",
 }
 

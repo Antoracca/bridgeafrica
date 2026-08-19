@@ -9,7 +9,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'MediBridge Africa - Authentification',
+  title: 'Pont Afrique Santé - Authentification',
 }
 
 export default function AuthLayout({

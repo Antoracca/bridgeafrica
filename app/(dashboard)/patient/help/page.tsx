@@ -1,18 +1,19 @@
 import { Metadata } from "next"
-import { Separator } from "@/components/ui/separator"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { 
+  InkPillButton, 
+  OutlinedPillButton, 
+  EyebrowDot 
+} from "@/components/ui/mastercard-design"
 import {
   HelpCircle,
   MessageCircle,
   Mail,
   Phone,
   FileText,
-  Video,
   Search,
-  ChevronDown,
-  ExternalLink
+  ExternalLink,
+  ShieldCheck,
+  ChevronRight
 } from "lucide-react"
 import {
   Accordion,
@@ -22,89 +23,51 @@ import {
 } from "@/components/ui/accordion"
 
 export const metadata: Metadata = {
-  title: "Centre d'aide | MediBridge Africa",
-  description: "Trouvez des réponses à vos questions et obtenez de l'aide.",
+  title: "Centre d'Aide | Pont Afrique Santé",
+  description: "Assistance et réponses à vos questions.",
 }
 
 const faqs = [
   {
-    category: "Compte & Profil",
+    category: "Parcours de Soins & Dossier",
     questions: [
       {
-        question: "Comment modifier mes informations personnelles ?",
-        answer: "Allez dans votre profil, cliquez sur 'Modifier' et mettez à jour vos informations. N'oubliez pas de sauvegarder vos modifications."
+        question: "Comment est analysé mon dossier médical ?",
+        answer: "Dès votre soumission, notre collège de médecins référents examine vos pièces médicales (rapports, scanners DICOM) sous 24 heures et sollicite nos cliniques partenaires spécialisées."
       },
       {
-        question: "Comment changer ma photo de profil ?",
-        answer: "Dans votre profil, cliquez sur votre photo actuelle ou sur 'Ajouter une photo', puis sélectionnez une nouvelle image depuis votre appareil (max 5 MB)."
+        question: "Qui a accès à mes données médicales ?",
+        answer: "Seuls les médecins régulateurs accrédités et l'équipe médicale de la clinique de destination ont accès à votre dossier. L'hébergement respecte scrupuleusement les normes HDS (Hébergement de Données de Santé)."
       },
       {
-        question: "Comment changer mon mot de passe ?",
-        answer: "Allez dans Paramètres > Sécurité, puis cliquez sur 'Changer le mot de passe'. Vous recevrez un email de confirmation."
+        question: "Comment ajouter des examens complémentaires à un dossier existant ?",
+        answer: "Rendez-vous dans la rubrique 'Mes Dossiers', sélectionnez votre dossier et utilisez l'onglet 'Documents' pour téléverser de nouveaux éléments (PDF, DICOM, JPG)."
       }
     ]
   },
   {
-    category: "Rendez-vous",
+    category: "Devis & Facturation des Soins",
     questions: [
       {
-        question: "Comment prendre un rendez-vous ?",
-        answer: "Allez dans 'Rendez-vous', cliquez sur 'Nouveau rendez-vous', recherchez un médecin, choisissez un créneau disponible et confirmez."
+        question: "Comment sont établis les devis médicaux ?",
+        answer: "Chaque devis est calculé sur mesure par l'établissement hospitalier après examen de votre dossier clinique par nos praticiens partenaires, incluant les actes chirurgicaux, le séjour et les soins post-opératoires."
       },
       {
-        question: "Puis-je annuler ou reporter un rendez-vous ?",
-        answer: "Oui, vous pouvez annuler jusqu'à 24h avant. Allez dans vos rendez-vous, cliquez sur le rendez-vous concerné et sélectionnez 'Annuler' ou 'Reporter'."
-      },
-      {
-        question: "Comment rejoindre une consultation en ligne ?",
-        answer: "15 minutes avant l'heure, un bouton 'Rejoindre la consultation' apparaîtra sur votre rendez-vous. Assurez-vous d'avoir une bonne connexion internet."
+        question: "Puis-je obtenir une facture acquittée pour mon assurance ?",
+        answer: "Oui. Toutes les factures détaillées et attestations de prise en charge sont téléchargeables au format PDF certifié depuis votre onglet 'Comptes & Facturation des Soins'."
       }
     ]
   },
   {
-    category: "Dossier Médical",
+    category: "Logistique & Voyage Médical",
     questions: [
       {
-        question: "Qui peut voir mon dossier médical ?",
-        answer: "Seuls les médecins que vous consultez peuvent accéder à votre dossier médical, et uniquement avec votre autorisation."
+        question: "Comment s'organise l'obtention du visa médical ?",
+        answer: "Dès validation du devis, Pont Afrique Santé émet une lettre d'invitation médicale officielle adressée au consulat du pays de destination (Tunisie, Turquie, Maroc, France, Espagne) pour accélérer la délivrance prioritaire du visa."
       },
       {
-        question: "Comment ajouter un document à mon dossier ?",
-        answer: "Allez dans 'Dossier Médical', cliquez sur 'Ajouter un document', sélectionnez le type de document et uploadez votre fichier."
-      },
-      {
-        question: "Puis-je télécharger mes documents médicaux ?",
-        answer: "Oui, vous pouvez télécharger tous vos documents en format PDF depuis votre dossier médical."
-      }
-    ]
-  },
-  {
-    category: "Paiements",
-    questions: [
-      {
-        question: "Quels moyens de paiement sont acceptés ?",
-        answer: "Nous acceptons les cartes bancaires, Mobile Money (Orange, MTN, Moov), et les virements bancaires."
-      },
-      {
-        question: "Les consultations sont-elles remboursées ?",
-        answer: "Cela dépend de votre assurance. Contactez votre assureur avec la facture que nous vous envoyons après chaque consultation."
-      },
-      {
-        question: "Comment obtenir une facture ?",
-        answer: "Après chaque paiement, une facture est automatiquement envoyée à votre email. Vous pouvez aussi les retrouver dans 'Paiements > Historique'."
-      }
-    ]
-  },
-  {
-    category: "Sécurité & Confidentialité",
-    questions: [
-      {
-        question: "Mes données sont-elles sécurisées ?",
-        answer: "Oui, toutes vos données sont chiffrées et stockées de manière sécurisée. Nous respectons les normes RGPD et HIPAA."
-      },
-      {
-        question: "Puis-je supprimer mon compte ?",
-        answer: "Oui, dans Paramètres > Données & Confidentialité, vous pouvez télécharger vos données puis supprimer votre compte. Cette action est irréversible."
+        question: "La prise en charge comprend-elle les transferts aéroport ?",
+        answer: "Selon la formule retenue, une ambulance médicalisée ou un véhicule privé avec chauffeur dédié vous accueille dès l'atterrissage pour vous conduire directement à la clinique ou à votre résidence hôtelière partenaire."
       }
     ]
   }
@@ -112,182 +75,103 @@ const faqs = [
 
 export default function HelpPage() {
   return (
-    <div className="space-y-6 pb-8">
-      {/* Header */}
-      <div className="space-y-2">
-        <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-          Centre d&apos;aide
-        </h3>
-        <p className="text-sm md:text-base text-slate-600">
-          Trouvez des réponses à vos questions ou contactez notre support
+    <div className="max-w-4xl mx-auto space-y-10 w-full">
+      {/* Header Mastercard */}
+      <div className="space-y-1 pb-2">
+        <EyebrowDot text="• SUPPORT CLINIQUE & FOIRE AUX QUESTIONS" />
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-medium text-[#141413] tracking-tight">
+          Centre d'Aide & Assistance
+        </h1>
+        <p className="text-[#696969] text-sm sm:text-base font-normal max-w-2xl leading-relaxed">
+          Consultez nos guides protocolaires ou échangez en direct avec votre équipe de coordination médicale.
         </p>
       </div>
-      <Separator className="bg-gradient-to-r from-blue-600/20 to-cyan-600/20 h-0.5" />
 
-      {/* Search */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-            <Input
-              placeholder="Rechercher dans l'aide..."
-              className="pl-10 h-12 text-base"
-            />
+      {/* Cartes de contact direct Mastercard */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="bg-[#FCFBFA] rounded-[32px] border border-[#E2DDD7] p-6 space-y-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+          <div className="w-10 h-10 rounded-full bg-[#F3F0EE] flex items-center justify-center text-[#141413]">
+            <MessageCircle className="w-5 h-5 text-[#CF4500]" />
           </div>
-        </CardContent>
-      </Card>
+          <div>
+            <h3 className="font-medium text-sm text-[#141413]">Messagerie HDS</h3>
+            <p className="text-[#696969] text-xs mt-0.5">Échangez avec votre coordinateur</p>
+          </div>
+          <OutlinedPillButton href="/patient?view=messages" className="w-full py-2 text-xs">
+            <span>Ouvrir le chat</span>
+          </OutlinedPillButton>
+        </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="hover:shadow-md transition-shadow cursor-pointer group">
-          <CardHeader className="pb-3">
-            <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center mb-2 group-hover:bg-blue-100 transition-colors">
-              <MessageCircle className="w-6 h-6 text-blue-600" />
-            </div>
-            <CardTitle className="text-base">Chat en direct</CardTitle>
-            <CardDescription className="text-sm">
-              Discutez avec notre équipe
-            </CardDescription>
-          </CardHeader>
-        </Card>
+        <div className="bg-[#FCFBFA] rounded-[32px] border border-[#E2DDD7] p-6 space-y-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+          <div className="w-10 h-10 rounded-full bg-[#F3F0EE] flex items-center justify-center text-[#141413]">
+            <Mail className="w-5 h-5 text-[#CF4500]" />
+          </div>
+          <div>
+            <h3 className="font-medium text-sm text-[#141413]">Pôle Médical</h3>
+            <p className="text-[#696969] text-xs mt-0.5">contact@pontafriquesante.com</p>
+          </div>
+          <OutlinedPillButton href="mailto:contact@pontafriquesante.com" className="w-full py-2 text-xs">
+            <span>Envoyer un email</span>
+          </OutlinedPillButton>
+        </div>
 
-        <Card className="hover:shadow-md transition-shadow cursor-pointer group">
-          <CardHeader className="pb-3">
-            <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center mb-2 group-hover:bg-green-100 transition-colors">
-              <Mail className="w-6 h-6 text-green-600" />
-            </div>
-            <CardTitle className="text-base">Email</CardTitle>
-            <CardDescription className="text-sm">
-              support@medibridge.africa
-            </CardDescription>
-          </CardHeader>
-        </Card>
-
-        <Card className="hover:shadow-md transition-shadow cursor-pointer group">
-          <CardHeader className="pb-3">
-            <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center mb-2 group-hover:bg-purple-100 transition-colors">
-              <Phone className="w-6 h-6 text-purple-600" />
-            </div>
-            <CardTitle className="text-base">Téléphone</CardTitle>
-            <CardDescription className="text-sm">
-              +241 01 23 45 67
-            </CardDescription>
-          </CardHeader>
-        </Card>
-
-        <Card className="hover:shadow-md transition-shadow cursor-pointer group">
-          <CardHeader className="pb-3">
-            <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center mb-2 group-hover:bg-orange-100 transition-colors">
-              <Video className="w-6 h-6 text-orange-600" />
-            </div>
-            <CardTitle className="text-base">Tutoriels vidéo</CardTitle>
-            <CardDescription className="text-sm">
-              Guides pas à pas
-            </CardDescription>
-          </CardHeader>
-        </Card>
+        <div className="bg-[#FCFBFA] rounded-[32px] border border-[#E2DDD7] p-6 space-y-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+          <div className="w-10 h-10 rounded-full bg-[#F3F0EE] flex items-center justify-center text-[#141413]">
+            <Phone className="w-5 h-5 text-[#CF4500]" />
+          </div>
+          <div>
+            <h3 className="font-medium text-sm text-[#141413]">Régulation SOS</h3>
+            <p className="text-[#696969] text-xs mt-0.5">24h/24 & 7j/7</p>
+          </div>
+          <OutlinedPillButton href="tel:+33189710000" className="w-full py-2 text-xs">
+            <span>Appel d'Urgence</span>
+          </OutlinedPillButton>
+        </div>
       </div>
 
-      {/* FAQs */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-            <HelpCircle className="w-5 h-5 text-blue-600" />
-            Questions fréquentes
-          </CardTitle>
-          <CardDescription>
-            Les réponses aux questions les plus courantes
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {faqs.map((category, idx) => (
+      {/* FAQ Accordion Mastercard */}
+      <div className="bg-[#FCFBFA] rounded-[40px] border border-[#E2DDD7] p-8 space-y-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
+        <div>
+          <h2 className="text-2xl font-medium text-[#141413] tracking-tight">Foire aux Questions Médicales</h2>
+          <p className="text-xs text-[#696969] mt-1">Tout comprendre sur le déroulement de votre prise en charge hospitalière</p>
+        </div>
+
+        <div className="space-y-6">
+          {faqs.map((cat, idx) => (
             <div key={idx} className="space-y-3">
-              <h4 className="font-semibold text-slate-900 flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-                {category.category}
-              </h4>
-              <Accordion type="single" collapsible className="w-full">
-                {category.questions.map((faq, faqIdx) => (
-                  <AccordionItem key={faqIdx} value={`item-${idx}-${faqIdx}`}>
-                    <AccordionTrigger className="text-left text-sm md:text-base hover:no-underline">
-                      {faq.question}
+              <h3 className="text-xs font-bold text-[#CF4500] uppercase tracking-wider">• {cat.category}</h3>
+              <Accordion type="single" collapsible className="w-full space-y-2.5">
+                {cat.questions.map((q, qIdx) => (
+                  <AccordionItem key={qIdx} value={`item-${idx}-${qIdx}`} className="border border-[#E2DDD7] bg-white rounded-[20px] px-5 data-[state=open]:bg-[#F3F0EE]/50">
+                    <AccordionTrigger className="text-left text-xs sm:text-sm font-medium text-[#141413] py-4 hover:no-underline">
+                      {q.question}
                     </AccordionTrigger>
-                    <AccordionContent className="text-sm md:text-base text-slate-600">
-                      {faq.answer}
+                    <AccordionContent className="text-xs text-[#696969] leading-relaxed pb-4">
+                      {q.answer}
                     </AccordionContent>
                   </AccordionItem>
                 ))}
               </Accordion>
             </div>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      {/* Guides & Documentation */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-            <FileText className="w-5 h-5 text-blue-600" />
-            Guides et documentation
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <Button variant="outline" className="w-full justify-between h-auto py-4 px-4" asChild>
-            <a href="#" className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <FileText className="w-5 h-5 text-blue-600" />
-                <div className="text-left">
-                  <div className="font-medium text-sm md:text-base">Guide de démarrage</div>
-                  <div className="text-xs md:text-sm text-slate-500">Premiers pas sur MediBridge</div>
-                </div>
-              </div>
-              <ExternalLink className="w-4 h-4 text-slate-400" />
-            </a>
-          </Button>
+      {/* Assistance Card Mastercard Stadium */}
+      <div className="bg-[#141413] text-[#F3F0EE] rounded-[40px] p-8 sm:p-10 space-y-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-xl border border-white/10">
+        <div className="space-y-1">
+          <h3 className="font-medium text-xl tracking-tight text-white">Une situation médicale particulière ?</h3>
+          <p className="text-xs text-[#D1CDC7] max-w-md leading-relaxed">
+            Nos coordinateurs médicaux répondent à vos demandes spécifiques sous 2 heures ouvrées.
+          </p>
+        </div>
 
-          <Button variant="outline" className="w-full justify-between h-auto py-4 px-4" asChild>
-            <a href="#" className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Video className="w-5 h-5 text-purple-600" />
-                <div className="text-left">
-                  <div className="font-medium text-sm md:text-base">Tutoriels vidéo</div>
-                  <div className="text-xs md:text-sm text-slate-500">Apprenez en regardant</div>
-                </div>
-              </div>
-              <ExternalLink className="w-4 h-4 text-slate-400" />
-            </a>
-          </Button>
-
-          <Button variant="outline" className="w-full justify-between h-auto py-4 px-4" asChild>
-            <a href="#" className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <HelpCircle className="w-5 h-5 text-green-600" />
-                <div className="text-left">
-                  <div className="font-medium text-sm md:text-base">Centre de ressources</div>
-                  <div className="text-xs md:text-sm text-slate-500">Articles et conseils santé</div>
-                </div>
-              </div>
-              <ExternalLink className="w-4 h-4 text-slate-400" />
-            </a>
-          </Button>
-        </CardContent>
-      </Card>
-
-      {/* Contact Support */}
-      <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-cyan-50">
-        <CardHeader>
-          <CardTitle className="text-lg md:text-xl">Besoin d&apos;aide supplémentaire ?</CardTitle>
-          <CardDescription>
-            Notre équipe de support est disponible 24/7 pour vous aider
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700">
-            <MessageCircle className="w-4 h-4 mr-2" />
-            Contacter le support
-          </Button>
-        </CardContent>
-      </Card>
+        <InkPillButton href="/patient?view=messages" className="bg-white text-[#141413] hover:bg-[#F4F2EE] border-white font-semibold shrink-0">
+          <span className="text-[#141413]">Écrire à un coordinateur</span>
+        </InkPillButton>
+      </div>
     </div>
   )
 }
+
+

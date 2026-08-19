@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/table"
 
 export const metadata: Metadata = {
-  title: "Espace Clinique | MediBridge Africa",
+  title: "Espace Clinique | Pont Afrique Santé",
   description: "Gestion des admissions et devis.",
 }
 

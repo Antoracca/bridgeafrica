@@ -104,7 +104,7 @@ function CheckEmailContent() {
                   <CheckCircle2 className="w-4 h-4" /> Instructions :
                 </p>
                 <ul className="list-disc pl-5 space-y-1 opacity-90 text-xs">
-                  <li>Ouvrez l&apos;email reçu de <strong>MediBridge Africa</strong>.</li>
+                  <li>Ouvrez l&apos;email reçu de <strong>Pont Afrique Santé</strong>.</li>
                   <li>Cliquez sur le bouton de confirmation.</li>
                   <li>Cette page se mettra à jour automatiquement.</li>
                 </ul>

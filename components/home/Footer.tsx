@@ -15,14 +15,18 @@ export function Footer() {
           
           {/* Brand Column */}
           <div className="space-y-6">
-            <a href="/" className="inline-block mb-2">
-               <Image 
-                 src="/Logomeba.png" 
-                 alt="MediBridge Africa" 
-                 width={360} 
-                 height={90} 
-                 className="h-16 w-auto object-contain brightness-0 invert hover:opacity-80 transition-opacity" 
-               />
+            <a href="/" className="inline-flex items-center gap-3 mb-2 group">
+              <div className="relative w-12 h-12 sm:w-14 sm:h-14 shrink-0 bg-white rounded-2xl p-2 flex items-center justify-center shadow-md">
+                <Image 
+                  src="/FaviconFinal.png" 
+                  alt="Pont Afrique Santé" 
+                  fill
+                  className="object-contain p-1 group-hover:scale-105 transition-transform" 
+                />
+              </div>
+              <span className="text-2xl font-bold tracking-tight font-sans flex items-center select-none">
+                <span className="text-[#38BDF8]">Pont</span><span className="text-white">Afrique</span><span className="text-[#FB923C]">Santé</span>
+              </span>
             </a>
             <p className="text-slate-400 leading-relaxed text-sm">
               La première plateforme digitale connectant les patients d&apos;Afrique subsaharienne à l&apos;excellence médicale internationale. Sécurité, transparence et accompagnement humain.
@@ -103,7 +107,7 @@ export function Footer() {
                     <Mail size={18} />
                   </div>
                   <div>
-                    <div className="font-bold text-white group-hover:text-brand-teal-light transition-colors">contact@medibridge.com</div>
+                    <div className="font-bold text-white group-hover:text-brand-teal-light transition-colors">contact@pontafriquesante.com</div>
                     <div className="text-xs">Réponse sous 2h</div>
                   </div>
                </div>
@@ -115,7 +119,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-slate-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
           <div>
-            © 2025 MediBridge Africa. Tous droits réservés.
+            © 2025 Pont Afrique Santé. Tous droits réservés.
           </div>
           <div className="flex gap-6">
             <a href="#" className="hover:text-white transition-colors">Mentions Légales</a>

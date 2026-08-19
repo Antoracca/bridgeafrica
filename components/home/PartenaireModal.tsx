@@ -98,7 +98,7 @@ export function PartenaireModal({ isOpen, onClose }: Props) {
               >
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-8 h-px bg-white/50" />
-                  <span className="text-[10px] xl:text-[12px] text-white/70 font-semibold uppercase tracking-[0.25em]">MediBridge · Réseau d'Excellence</span>
+                  <span className="text-[10px] xl:text-[12px] text-white/70 font-semibold uppercase tracking-[0.25em]">Pont Afrique Santé · Réseau d'Excellence</span>
                 </div>
                 <h1
                   className="text-3xl lg:text-4xl xl:text-5xl font-normal text-white leading-[1.2] mb-6"
@@ -132,7 +132,7 @@ export function PartenaireModal({ isOpen, onClose }: Props) {
                     Demande d'affiliation
                   </h2>
                   <p className="text-[#63666A] text-[14px] font-light leading-relaxed max-w-sm">
-                    Constitution de votre dossier médical auprès du comité de validation MediBridge.
+                    Constitution de votre dossier médical auprès du comité de validation Pont Afrique Santé.
                   </p>
                 </div>
                 <button
@@ -177,7 +177,7 @@ export function PartenaireModal({ isOpen, onClose }: Props) {
                   
                   <div className="w-full max-w-lg mt-4 text-left mx-auto">
                     <p className="text-[14px] text-slate-600 font-light leading-relaxed mb-6 text-center">
-                      Le comité d'évaluation MediBridge étudiera avec la plus grande attention votre demande de partenariat.
+                      Le comité d'évaluation Pont Afrique Santé étudiera avec la plus grande attention votre demande de partenariat.
                     </p>
                     <div className="bg-[#f0ece9] border border-[#d6cfc5] px-6 py-6 rounded-sm">
                        <p className="text-[11px] font-bold text-[#1a1f24] uppercase tracking-wider mb-3">Étape Suivante : Vérification Médicale</p>
@@ -352,7 +352,7 @@ export function PartenaireModal({ isOpen, onClose }: Props) {
                         <textarea
                           value={form.message}
                           onChange={e => set('message', e.target.value)}
-                          placeholder="Points de prestige, travaux récents, motivations à intégrer MediBridge..."
+                          placeholder="Points de prestige, travaux récents, motivations à intégrer Pont Afrique Santé..."
                           rows={4}
                           className="w-full bg-white border border-[#E1E1E1] text-slate-800 px-4 py-3 text-base focus:outline-none focus:border-[#7c8f9c] transition-colors placeholder:text-slate-400 font-light resize-none"
                         />

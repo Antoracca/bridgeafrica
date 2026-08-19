@@ -88,7 +88,7 @@ export function NavPartners({ closeMenu }: Props) {
             <div className="flex items-center gap-3 mb-5">
               <div className="w-8 h-px bg-brand-teal" />
               <p className="text-[10px] font-bold text-brand-teal uppercase tracking-[0.3em]">
-                MediBridge Partenaires · Lancé en 2025
+                Pont Afrique Santé Partenaires · Lancé en 2025
               </p>
             </div>
 
@@ -437,7 +437,7 @@ export function NavPartners({ closeMenu }: Props) {
           <div className="flex items-center gap-3 mb-4">
             <div className="w-8 h-px bg-brand-teal" />
             <p className="text-[10px] font-bold text-brand-teal uppercase tracking-[0.3em]">
-              Devenir partenaire MediBridge
+              Devenir partenaire Pont Afrique Santé
             </p>
           </div>
 
@@ -495,7 +495,7 @@ export function NavPartners({ closeMenu }: Props) {
 
       {/* Footer note */}
       <p className="text-center text-[10px] text-slate-400 mt-10 tracking-[0.18em] uppercase font-semibold">
-        MediBridge Africa · Plateforme de coordination médicale · Lancée en 2025
+        Pont Afrique Santé · Plateforme de coordination médicale · Lancée en 2025
       </p>
     </div>
   )

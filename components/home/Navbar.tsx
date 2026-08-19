@@ -185,9 +185,19 @@ export function Navbar() {
               className={`p-2.5 rounded-xl border transition-all duration-200 ${menuOpen ? 'bg-slate-900 text-white border-slate-900' : 'border-slate-200 text-slate-700 hover:bg-slate-50'}`}>
               {menuOpen ? <X size={20} strokeWidth={2.5} /> : <Menu size={20} strokeWidth={2} />}
             </button>
-            <Link href="/" onClick={closeMenu} className="flex items-center group shrink-0">
-              <Image src="/Logomeba.png" alt="MediBridge Africa" width={400} height={100}
-                className="h-16 sm:h-20 w-auto object-contain group-hover:opacity-80 transition-opacity" priority />
+            <Link href="/" onClick={closeMenu} className="flex items-center gap-1 sm:gap-1.5 group shrink-0">
+              <div className="relative w-12 h-12 sm:w-14 sm:h-14 shrink-0">
+                <Image 
+                  src="/FaviconFinal.png" 
+                  alt="Pont Afrique Santé" 
+                  fill
+                  className="object-contain group-hover:scale-105 transition-transform" 
+                  priority 
+                />
+              </div>
+              <span className="text-xl sm:text-2xl font-bold tracking-tight font-sans select-none flex items-center -ml-0.5 sm:-ml-1">
+                <span className="text-[#0284C7]">Pont</span><span className="text-[#141413]">Afrique</span><span className="text-[#CF4500]">Santé</span>
+              </span>
             </Link>
 
             {/* ── Creative strip: visible only when menu is open ── */}

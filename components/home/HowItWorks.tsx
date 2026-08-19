@@ -46,7 +46,7 @@ const steps = [
     tab: 'Conciergerie',
     title: 'Orchestration intégrale de votre parcours',
     description:
-      'MediBridge prend en charge la coordination complète de votre séjour médical : téléconsultation pré-opératoire, visas médicaux, vols, transferts VIP, hébergement à proximité de l\'établissement et suivi post-opératoire personnalisé.',
+      'Pont Afrique Santé prend en charge la coordination complète de votre séjour médical : téléconsultation pré-opératoire, visas médicaux, vols, transferts VIP, hébergement à proximité de l\'établissement et suivi post-opératoire personnalisé.',
     highlights: [
       'Conciergerie médicale dédiée, disponible 24h/24',
       'Logistique complète : vol, visa, transfert, hébergement',

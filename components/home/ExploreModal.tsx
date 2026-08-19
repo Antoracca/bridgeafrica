@@ -216,7 +216,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-[11px] font-bold text-slate-900 uppercase tracking-[0.18em] leading-none mb-0.5">
-                        IA MediBridge
+                        IA Pont Afrique Santé
                       </p>
                       <p className="text-[11px] text-slate-400 truncate">
                         Décrivez votre situation, je vous guide vers les meilleures options
@@ -576,7 +576,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
                   {/* Included services */}
                   <div className="mb-8">
                     <p className="text-[9px] font-bold text-brand-teal uppercase tracking-[0.22em] mb-1">Services inclus</p>
-                    <p className="text-[10px] text-slate-400 mb-4">Intégrés dans chaque accompagnement MediBridge</p>
+                    <p className="text-[10px] text-slate-400 mb-4">Intégrés dans chaque accompagnement Pont Afrique Santé</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {NAV_SERVICES.map((svc, i) => {
                         const Icon = SERVICE_ICONS[svc.iconKey] || Sparkle
@@ -683,7 +683,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
                       </div>
                       <div>
                         <p className="text-[10px] font-bold text-slate-900 uppercase tracking-[0.2em] leading-none mb-0.5">
-                          IA MediBridge
+                          IA Pont Afrique Santé
                         </p>
                         <p className="text-[8px] text-slate-400 font-bold tracking-widest uppercase">
                           Hors ligne
@@ -704,7 +704,7 @@ export function ExploreModal({ isOpen, onClose, initialQuery = '' }: Props) {
                         <div className="relative mb-8">
                           <div className="relative w-24 h-24">
                               <div className="absolute inset-[-6px] rounded-full bg-gradient-to-br from-violet-100 to-blue-50 opacity-80" />
-                              <Image src="/ia.png" alt="IA MediBridge" width={96} height={96} className="relative w-24 h-24 rounded-full object-cover shadow-xl shadow-violet-100/50" />
+                              <Image src="/ia.png" alt="IA Pont Afrique Santé" width={96} height={96} className="relative w-24 h-24 rounded-full object-cover shadow-xl shadow-violet-100/50" />
                               <div className="absolute bottom-1 right-2 w-4 h-4 bg-slate-300 rounded-full border-[2.5px] border-white shadow-sm" />
                           </div>
                         </div>

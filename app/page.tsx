@@ -61,7 +61,7 @@ export default function Home() {
             </h2>
 
             <p className="text-lg lg:text-xl text-slate-400 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
-               Confiez l'intégralité de votre logistique médicale à l'architecture MediBridge. Nos experts orchestrent chaque étape de votre prise en charge internationale avec un devoir d'excellence certifié.
+               Confiez l'intégralité de votre logistique médicale à Pont Afrique Santé. Nos experts orchestrent chaque étape de votre prise en charge internationale avec un devoir d'excellence certifié.
             </p>
 
             <FinalCTAs />

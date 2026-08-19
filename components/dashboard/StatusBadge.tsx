@@ -19,26 +19,67 @@ interface StatusBadgeProps {
   className?: string
 }
 
-const statusConfig: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline"; className?: string }> = {
-  draft: { label: "Brouillon", variant: "outline", className: "text-muted-foreground border-dashed" },
-  submitted: { label: "Soumis", variant: "secondary", className: "bg-blue-100 text-blue-800 hover:bg-blue-100" },
-  under_review: { label: "En Examen", variant: "secondary", className: "bg-yellow-100 text-yellow-800 hover:bg-yellow-100" },
-  approved: { label: "Approuvé", variant: "default", className: "bg-green-600 hover:bg-green-700" },
-  quote_sent: { label: "Devis Reçu", variant: "secondary", className: "bg-purple-100 text-purple-800" },
-  quote_accepted: { label: "Devis Accepté", variant: "default", className: "bg-purple-600" },
-  visa_pending: { label: "Visa en cours", variant: "outline", className: "border-orange-500 text-orange-600" },
-  travel_booked: { label: "Voyage Réservé", variant: "outline", className: "border-blue-500 text-blue-600" },
-  in_treatment: { label: "En Traitement", variant: "default", className: "bg-red-600 animate-pulse" },
-  completed: { label: "Terminé", variant: "outline", className: "border-green-600 text-green-600" },
-  cancelled: { label: "Annulé", variant: "destructive", className: "" },
+const statusConfig: Record<string, { label: string; className: string }> = {
+  draft: { 
+    label: "Brouillon", 
+    className: "bg-slate-100 text-slate-600 border border-slate-200" 
+  },
+  submitted: { 
+    label: "Soumis", 
+    className: "bg-amber-50 text-amber-700 border border-amber-200/80" 
+  },
+  under_review: { 
+    label: "En examen", 
+    className: "bg-slate-900 text-white border border-slate-900" 
+  },
+  approved: { 
+    label: "Validé", 
+    className: "bg-teal-50 text-brand-teal-dark border border-brand-teal-border" 
+  },
+  quote_sent: { 
+    label: "Devis reçu", 
+    className: "bg-brand-teal text-white border border-brand-teal" 
+  },
+  quote_accepted: { 
+    label: "Devis accepté", 
+    className: "bg-emerald-50 text-emerald-700 border border-emerald-200" 
+  },
+  visa_pending: { 
+    label: "Visa en cours", 
+    className: "bg-slate-100 text-slate-800 border border-slate-300" 
+  },
+  travel_booked: { 
+    label: "Voyage confirmé", 
+    className: "bg-slate-900 text-white border border-slate-800" 
+  },
+  in_treatment: { 
+    label: "En soins", 
+    className: "bg-brand-teal text-white border border-brand-teal font-semibold" 
+  },
+  completed: { 
+    label: "Finalisé", 
+    className: "bg-emerald-50 text-emerald-800 border border-emerald-300" 
+  },
+  cancelled: { 
+    label: "Annulé", 
+    className: "bg-rose-50 text-rose-700 border border-rose-200" 
+  },
 }
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {
-  const config = statusConfig[status] || { label: status, variant: "secondary" }
+  const config = statusConfig[status] || { 
+    label: status, 
+    className: "bg-slate-100 text-slate-700 border border-slate-200" 
+  }
   
   return (
-    <Badge variant={config.variant} className={cn(config.className, className)}>
+    <span className={cn(
+      "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold tracking-tight transition-colors select-none",
+      config.className,
+      className
+    )}>
       {config.label}
-    </Badge>
+    </span>
   )
 }
+

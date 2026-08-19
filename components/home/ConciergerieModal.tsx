@@ -125,7 +125,7 @@ export function ConciergerieModal({ isOpen, onClose }: Props) {
                         </button>
 
                         {/* 3. Email (Corporate) */}
-                        <a href="mailto:conciergerie@medibridge-africa.com" 
+                        <a href="mailto:conciergerie@pontafriquesante.com" 
                            className="block p-6 sm:p-8 bg-white border border-[#E1E1E1] hover:border-slate-400 hover:shadow-lg transition-all duration-300 group relative">
                            <div className="flex items-center gap-6">
                               <div className="w-14 h-14 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center shrink-0 group-hover:bg-slate-800 transition-colors duration-300 text-slate-600 group-hover:text-white">

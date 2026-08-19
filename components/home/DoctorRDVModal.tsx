@@ -123,7 +123,7 @@ export function DoctorRDVModal({ isOpen, onClose, doctor }: Props) {
                   {/* Badge */}
                   <div className="flex items-center gap-2 mb-5">
                     <Award size={12} className="text-[#4caf91]" />
-                    <span className="text-[9px] font-bold text-[#4caf91] uppercase tracking-[0.3em]">Partenaire MediBridge</span>
+                    <span className="text-[9px] font-bold text-[#4caf91] uppercase tracking-[0.3em]">Partenaire Pont Afrique Santé</span>
                   </div>
 
                   {/* Doctor info */}
@@ -246,7 +246,7 @@ export function DoctorRDVModal({ isOpen, onClose, doctor }: Props) {
                     </div>
                     <div className="mt-2 flex items-center gap-3">
                       <Monitor size={13} className="text-[#1B433E]" />
-                      <span className="text-[12px] text-slate-700 font-medium">Plateforme MediBridge</span>
+                      <span className="text-[12px] text-slate-700 font-medium">Plateforme Pont Afrique Santé</span>
                     </div>
                   </div>
 
@@ -391,7 +391,7 @@ export function DoctorRDVModal({ isOpen, onClose, doctor }: Props) {
                         <Monitor size={14} className="text-white" />
                       </div>
                       <div>
-                        <p className="text-[12px] font-bold text-slate-800">Plateforme MediBridge</p>
+                        <p className="text-[12px] font-bold text-slate-800">Plateforme Pont Afrique Santé</p>
                         <p className="text-[10px] text-slate-500">Via votre Espace Patient — visioconférence sécurisée</p>
                       </div>
                     </div>

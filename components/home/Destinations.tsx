@@ -264,7 +264,7 @@ export function Destinations() {
                 </h3>
                 <div className="space-y-6 text-[15px] sm:text-base text-slate-600 leading-relaxed font-medium">
                   <p>
-                    Afin de vous garantir une sécurité médicale irréprochable et des résultats thérapeutiques optimaux, le comité de sélection de MediBridge a identifié <strong className="text-brand-teal-dark font-bold">4 hubs internationaux de premier plan</strong>. Ces destinations concentrent l'élite des praticiens spécialisés ainsi que des infrastructures hospitalières rigoureusement conformes aux standards mondiaux de santé.
+                    Afin de vous garantir une sécurité médicale irréprochable et des résultats thérapeutiques optimaux, le comité de sélection de Pont Afrique Santé a identifié <strong className="text-brand-teal-dark font-bold">4 hubs internationaux de premier plan</strong>. Ces destinations concentrent l'élite des praticiens spécialisés ainsi que des infrastructures hospitalières rigoureusement conformes aux standards mondiaux de santé.
                   </p>
                   <p>
                     Chaque établissement de notre réseau est systématiquement audité sur des indicateurs précis : certifications internationales (JCI, ISO), maintien de l'hygiène, taux de succès cliniques, et confort post-opératoire. Nous ne laissons aucune place à l'improvisation lorsqu'il s'agit de votre intégrité physique.

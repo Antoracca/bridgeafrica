@@ -105,7 +105,7 @@ export function AmbassadeurModal({ isOpen, onClose }: Props) {
               >
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-8 h-px bg-white/50" />
-                  <span className="text-[10px] xl:text-[12px] text-[#4caf91] font-semibold uppercase tracking-[0.25em]">MediBridge · Collège des Ambassadeurs</span>
+                  <span className="text-[10px] xl:text-[12px] text-[#4caf91] font-semibold uppercase tracking-[0.25em]">Pont Afrique Santé · Collège des Ambassadeurs</span>
                 </div>
                 <h1
                   className="text-3xl lg:text-4xl xl:text-5xl font-normal text-white leading-[1.2] mb-6"
@@ -139,7 +139,7 @@ export function AmbassadeurModal({ isOpen, onClose }: Props) {
                     Demande de Mandat
                   </h2>
                   <p className="text-[#63666A] text-[14px] font-light leading-relaxed max-w-sm">
-                    Constitution de votre dossier auprès du collège d'évaluation MediBridge.
+                    Constitution de votre dossier auprès du collège d'évaluation Pont Afrique Santé.
                   </p>
                 </div>
                 <button
@@ -190,7 +190,7 @@ export function AmbassadeurModal({ isOpen, onClose }: Props) {
                        <p className="text-[11px] font-bold text-[#1B433E] uppercase tracking-wider mb-3">Étape Suivante : Validation Médicale</p>
                        <p className="text-[13px] text-slate-700 font-light leading-relaxed mb-3">Notre délégation régionale vous contactera sous <strong>72 heures ouvrées</strong> pour convenir d'un rendez-vous de validation.</p>
                        <p className="text-[13px] text-slate-700 font-light leading-relaxed">
-                         <span className="font-semibold text-[#1B433E]">Important :</span> Il vous sera formellement demandé peu après de transmettre vos <strong>Diplômes médicaux, Attestations d'exercice légal et Accréditations professionnelles</strong> pour valider la convention d'Ambassadeur MediBridge.
+                         <span className="font-semibold text-[#1B433E]">Important :</span> Il vous sera formellement demandé peu après de transmettre vos <strong>Diplômes médicaux, Attestations d'exercice légal et Accréditations professionnelles</strong> pour valider la convention d'Ambassadeur Pont Afrique Santé.
                        </p>
                     </div>
                   </div>
@@ -355,7 +355,7 @@ export function AmbassadeurModal({ isOpen, onClose }: Props) {
                         <textarea
                           value={form.motivation}
                           onChange={e => set('motivation', e.target.value)}
-                          placeholder="Décrivez en quelques mots pourquoi vous êtes en adéquation avec les mandats éthiques et qualitatifs de l'institution MediBridge, et quels besoins rencontrent vos patients."
+                          placeholder="Décrivez en quelques mots pourquoi vous êtes en adéquation avec les mandats éthiques et qualitatifs de l'institution Pont Afrique Santé, et quels besoins rencontrent vos patients."
                           rows={5}
                           className="w-full bg-white border border-[#E1E1E1] text-slate-800 px-4 py-3 text-base focus:outline-none focus:border-[#4caf91] transition-colors placeholder:text-slate-400 font-light resize-none"
                         />

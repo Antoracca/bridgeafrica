@@ -53,10 +53,10 @@ export function PageLoader({ message = "Chargement en cours...", onLoadComplete 
           />
         </div>
 
-        {/* Texte MediBridge */}
+        {/* Texte Pont Afrique Santé */}
         <div className="text-center space-y-3 px-4">
           <h1 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600 animate-pulse">
-            MediBridge
+            Pont Afrique Santé
           </h1>
           <p className="text-sm md:text-base text-slate-600 font-medium">{message}</p>
         </div>

@@ -182,7 +182,7 @@ export function CompleteProfileForm() {
         // Succès - rediriger vers la page success
         console.log('[COMPLETE PROFILE] Profil complété avec succès')
         toast.success("Profil complété !", {
-          description: "Bienvenue sur MediBridge",
+          description: "Bienvenue sur Pont Afrique Santé",
         })
 
         // IMPORTANT: Redirection vers success page (qui redirigera ensuite vers /patient)

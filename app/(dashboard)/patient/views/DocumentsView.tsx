@@ -1,160 +1,233 @@
 "use client"
 
 import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Progress } from "@/components/ui/progress"
+import { motion } from "framer-motion"
+import { 
+  InkPillButton, 
+  EyebrowDot 
+} from "@/components/ui/mastercard-design"
 import {
-    FileText, Search, Upload, Filter, Download, MoreVertical,
-    FolderLock, Image as ImageIcon, FileDigit, BrainCircuit, Activity, Lock
+  FileText,
+  UploadCloud,
+  ShieldCheck,
+  Download,
+  File,
+  ArrowUpRight,
+  FileCode2,
+  X
 } from "lucide-react"
 
-export function DocumentsView() {
-    const [activeTab, setActiveTab] = useState('all')
+interface MedicalDocument {
+  id: string
+  name: string
+  type: string
+  size: string
+  createdAt: string
+  url?: string
+}
 
-    const stats = [
-        { label: "Espace Sécurisé", value: "3.2 GB", total: "15 GB", icon: FolderLock, color: "text-blue-500", bg: "bg-blue-50" },
-        { label: "Analyses IA", value: "4", total: "Terminées", icon: BrainCircuit, color: "text-purple-500", bg: "bg-purple-50" },
-        { label: "Fichiers Chiffrés", value: "100%", total: "AES-256", icon: Lock, color: "text-emerald-500", bg: "bg-emerald-50" }
-    ]
+interface DocumentsViewProps {
+  documents?: MedicalDocument[]
+}
 
-    const documents = [
-        { id: 1, name: "IRM_Cervicale_UHD_Full_Scan.dcm", type: "DICOM / Imagerie", category: "imagerie", size: "1.2 GB", date: "12 Jan 2025", status: "Analysé", icon: ImageIcon, color: "text-blue-600" },
-        { id: 2, name: "Bilan_Sanguin_Complet.pdf", type: "Résultat Biologie", category: "labo", size: "2.4 MB", date: "10 Jan 2025", status: "Vérifié", icon: Activity, color: "text-purple-600" },
-        { id: 3, name: "Devis_Chirurgie_Clinique_El_Manar.pdf", type: "Contrat / Finance", category: "admin", size: "1.1 MB", date: "18 Jan 2025", status: "Validé", icon: FileDigit, color: "text-emerald-600" },
-        { id: 4, name: "Lettre_Recommandation_Medecin_Traitant.pdf", type: "Correspondance", category: "clinique", size: "450 KB", date: "08 Jan 2025", status: "Lu", icon: FileText, color: "text-slate-600" },
-        { id: 5, name: "Passeport_Scanner_Couleur.png", type: "Identité", category: "admin", size: "4.8 MB", date: "27 Jan 2025", status: "Requis", icon: FileText, color: "text-amber-600" },
-    ]
+export function DocumentsView({ documents = [] }: DocumentsViewProps) {
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
+  const [dragActive, setDragActive] = useState(false)
+  const [categoryFilter, setCategoryFilter] = useState<string>("all")
+  const hasDocuments = documents && documents.length > 0
 
-    const filteredDocs = activeTab === 'all' ? documents : documents.filter(d => d.category === activeTab)
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true)
+    } else if (e.type === "dragleave") {
+      setDragActive(false)
+    }
+  }
 
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-            className="max-w-7xl mx-auto space-y-6 lg:space-y-8"
-        >
-            {/* Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold text-slate-900 mb-1 flex items-center gap-3">
-                        Coffre-Fort Médical <Lock className="w-5 h-5 text-emerald-500" />
-                    </h1>
-                    <p className="text-slate-500 font-medium tracking-wide">
-                        Vos données de santé sont chiffrées de bout-en-bout (HDS) et strictement confidentielles.
-                    </p>
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setDragActive(false)
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const newFiles = Array.from(e.dataTransfer.files)
+      setUploadedFiles((prev) => [...prev, ...newFiles])
+    }
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files)
+      setUploadedFiles((prev) => [...prev, ...newFiles])
+    }
+  }
+
+  const removeFile = (index: number) => {
+    setUploadedFiles((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  const categories = [
+    { key: "all", label: "Tous les documents" },
+    { key: "dicom", label: "Imagerie & DICOM" },
+    { key: "bio", label: "Bilans Biologiques" },
+    { key: "quotes", label: "Devis & Courriers" },
+  ]
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="max-w-7xl mx-auto space-y-10 w-full"
+    >
+      {/* En-tête directement sur le fond de page */}
+      <div className="space-y-1 pb-2">
+        <EyebrowDot text="ESPACE NUMÉRIQUE DE SANTÉ & IMAGERIE" />
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-medium text-[#141413] tracking-tight">
+          Documents Médicaux & Imagerie
+        </h1>
+        <p className="text-[#696969] text-sm sm:text-base font-normal max-w-2xl leading-relaxed">
+          Espace sécurisé pour vos scanners DICOM, comptes rendus opératoires, analyses biologiques et devis de soins.
+        </p>
+      </div>
+
+      {/* Barre de filtres de catégories épurée */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1">
+        {categories.map((cat) => (
+          <button
+            key={cat.key}
+            type="button"
+            onClick={() => setCategoryFilter(cat.key)}
+            className={`px-4 py-2 rounded-full text-xs font-semibold transition-all shrink-0 ${
+              categoryFilter === cat.key
+                ? "bg-[#141413] text-[#F3F0EE]"
+                : "bg-[#F4F2EE] text-[#696969] hover:bg-[#EAE7E1] hover:text-[#141413]"
+            }`}
+          >
+            {cat.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Zone de Téléversement Directement Intégrée */}
+      <div
+        onDragEnter={handleDrag}
+        onDragLeave={handleDrag}
+        onDragOver={handleDrag}
+        onDrop={handleDrop}
+        className={`border-2 border-dashed rounded-[32px] p-8 sm:p-12 text-center transition-all relative ${
+          dragActive ? "border-[#141413] bg-[#F4F2EE]" : "border-[#E2DDD7] hover:border-[#141413]/40 bg-[#FCFBFA]"
+        }`}
+      >
+        <input
+          type="file"
+          multiple
+          onChange={handleFileChange}
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          accept=".pdf,.jpg,.jpeg,.png,.dicom,.doc,.docx"
+        />
+        <div className="w-12 h-12 rounded-full bg-[#F4F2EE] border border-[#E2DDD7] flex items-center justify-center mx-auto mb-3 text-[#141413]">
+          <UploadCloud className="w-6 h-6 text-[#CF4500]" />
+        </div>
+        <h3 className="font-semibold text-[#141413] text-base mb-1">
+          Ajouter un compte rendu, une imagerie ou un bilan
+        </h3>
+        <p className="text-xs text-[#696969] mb-2">
+          Glissez-déposez vos fichiers ici ou cliquez pour parcourir votre appareil
+        </p>
+        <p className="text-[11px] text-[#857F78] font-mono">
+          Formats acceptés : PDF, DICOM, JPG, PNG • Chiffrement sécurisé
+        </p>
+      </div>
+
+      {/* Fichiers en attente d'association */}
+      {uploadedFiles.length > 0 && (
+        <div className="p-6 rounded-[28px] bg-[#F4F2EE] border border-[#E2DDD7] space-y-4">
+          <div className="flex items-center justify-between">
+            <h4 className="text-xs font-semibold text-[#141413] uppercase tracking-wider">
+              Fichiers sélectionnés ({uploadedFiles.length})
+            </h4>
+            <button
+              onClick={() => setUploadedFiles([])}
+              className="text-xs text-[#696969] hover:text-[#141413]"
+            >
+              Tout effacer
+            </button>
+          </div>
+
+          <div className="space-y-2">
+            {uploadedFiles.map((file, idx) => (
+              <div key={idx} className="flex items-center justify-between p-3.5 bg-white rounded-[16px] border border-[#E2DDD7] text-xs">
+                <div className="flex items-center gap-2.5 min-w-0 pr-4">
+                  <File className="w-4 h-4 text-[#CF4500] shrink-0" />
+                  <span className="font-semibold text-[#141413] truncate">{file.name}</span>
                 </div>
-                <div className="flex gap-3 w-full md:w-auto">
-                    <Button variant="outline" className="border-slate-200 text-slate-700 bg-white shadow-sm flex-1 md:flex-none">
-                        <Download className="w-4 h-4 mr-2" /> Tout exporter
-                    </Button>
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-md flex-1 md:flex-none">
-                        <Upload className="w-4 h-4 mr-2" /> Déposer un fichier
-                    </Button>
+                <div className="flex items-center gap-3 shrink-0">
+                  <span className="text-[#857F78] font-mono">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                  <button onClick={() => removeFile(idx)} className="text-[#857F78] hover:text-[#141413]">
+                    <X className="w-4 h-4" />
+                  </button>
                 </div>
-            </div>
+              </div>
+            ))}
+          </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {stats.map((stat, i) => (
-                    <div key={i} className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm flex items-center gap-4">
-                        <div className={`w-12 h-12 rounded-xl ${stat.bg} flex items-center justify-center shrink-0`}>
-                            <stat.icon className={`w-6 h-6 ${stat.color}`} />
-                        </div>
-                        <div className="flex-1">
-                            <p className="text-slate-500 text-sm font-semibold">{stat.label}</p>
-                            <div className="flex items-end gap-2">
-                                <span className="text-xl font-bold text-slate-900">{stat.value}</span>
-                                <span className="text-xs text-slate-400 mb-0.5">/ {stat.total}</span>
-                            </div>
-                        </div>
-                        {i === 0 && <Progress value={20} className="w-16 h-1.5 [&>div]:bg-blue-500 absolute right-6 top-6" />}
-                    </div>
-                ))}
-            </div>
+          <div className="pt-2 flex justify-end">
+            <InkPillButton href="/patient?view=new">
+              <span>Associer à mon dossier de soins</span>
+              <ArrowUpRight className="w-4 h-4" />
+            </InkPillButton>
+          </div>
+        </div>
+      )}
 
-            {/* Main Content Area */}
-            <div className="bg-white border border-slate-100 rounded-3xl shadow-sm overflow-hidden flex flex-col md:flex-row min-h-[500px]">
+      {/* Liste des Documents Existants OU État Vide */}
+      {hasDocuments ? (
+        <div className="space-y-4 pt-4 border-t border-[#E2DDD7]">
+          <h2 className="text-xl sm:text-2xl font-medium text-[#141413] tracking-tight">
+            Pièces Médicales Enregistrées
+          </h2>
 
-                {/* Left Sidebar - Filters */}
-                <div className="w-full md:w-64 border-b md:border-b-0 md:border-r border-slate-100 bg-slate-50/50 p-6 shrink-0">
-                    <h3 className="font-bold text-slate-900 mb-4 uppercase tracking-wider text-xs">Catégories</h3>
-                    <div className="space-y-1">
-                        <button onClick={() => setActiveTab('all')} className={`w-full text-left px-4 py-2.5 rounded-xl font-medium text-sm transition-colors ${activeTab === 'all' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'}`}>Tous les fichiers</button>
-                        <button onClick={() => setActiveTab('imagerie')} className={`w-full text-left px-4 py-2.5 rounded-xl font-medium text-sm transition-colors ${activeTab === 'imagerie' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'}`}>Imagerie (DICOM)</button>
-                        <button onClick={() => setActiveTab('labo')} className={`w-full text-left px-4 py-2.5 rounded-xl font-medium text-sm transition-colors ${activeTab === 'labo' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'}`}>Biologie & Analyses</button>
-                        <button onClick={() => setActiveTab('clinique')} className={`w-full text-left px-4 py-2.5 rounded-xl font-medium text-sm transition-colors ${activeTab === 'clinique' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'}`}>Dossier Clinique</button>
-                        <button onClick={() => setActiveTab('admin')} className={`w-full text-left px-4 py-2.5 rounded-xl font-medium text-sm transition-colors ${activeTab === 'admin' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'}`}>Administratif</button>
-                    </div>
+          <div className="divide-y divide-[#E2DDD7]">
+            {documents.map((doc) => (
+              <div key={doc.id} className="py-4 flex items-center justify-between gap-4 hover:bg-[#F4F2EE] px-3 rounded-[20px] transition-all">
+                <div className="flex items-center gap-4 min-w-0">
+                  <div className="w-10 h-10 rounded-full bg-[#F4F2EE] border border-[#E2DDD7] flex items-center justify-center text-[#141413] shrink-0">
+                    <FileText className="w-5 h-5 text-[#CF4500]" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-sm text-[#141413] truncate">{doc.name}</p>
+                    <p className="text-xs text-[#696969]">{doc.type} • {doc.size} • {doc.createdAt}</p>
+                  </div>
                 </div>
 
-                {/* File List */}
-                <div className="flex-1 p-6 flex flex-col">
-                    {/* Toolbar */}
-                    <div className="flex items-center gap-4 mb-6">
-                        <div className="relative flex-1 max-w-md">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                            <Input className="pl-9 bg-slate-50 border-slate-200 focus:border-blue-400 focus:bg-white rounded-xl shadow-inner h-10" placeholder="Rechercher un document..." />
-                        </div>
-                        <Button variant="outline" size="icon" className="h-10 w-10 text-slate-600 rounded-xl bg-white border-slate-200"><Filter className="w-4 h-4" /></Button>
-                    </div>
+                <button className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-[#E2DDD7] bg-white text-xs font-semibold text-[#141413] hover:bg-[#141413] hover:text-white transition-all shrink-0">
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Télécharger</span>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="py-8 px-4 border-t border-[#E2DDD7] text-center space-y-2 max-w-xl mx-auto">
+          <h3 className="text-lg font-medium text-[#141413]">
+            Aucun document archivé pour le moment
+          </h3>
+          <p className="text-xs text-[#696969] leading-relaxed">
+            Les examens transmis lors de vos demandes de prise en charge et les comptes rendus d'hospitalisation seront automatiquement synchronisés et conservés ici.
+          </p>
+        </div>
+      )}
 
-                    {/* List Header */}
-                    <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl mb-3 text-xs font-bold text-slate-500 uppercase tracking-wider">
-                        <div className="col-span-6 md:col-span-5">Nom du fichier</div>
-                        <div className="col-span-3 hidden md:block">Type</div>
-                        <div className="col-span-3 md:col-span-2 text-center md:text-left">Date</div>
-                        <div className="col-span-3 md:col-span-2 text-right">Statut</div>
-                    </div>
-
-                    {/* Files Grid */}
-                    <div className="space-y-2 overflow-y-auto flex-1 pb-4">
-                        <AnimatePresence>
-                            {filteredDocs.map((doc, idx) => (
-                                <motion.div
-                                    key={doc.id}
-                                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ delay: idx * 0.05 }}
-                                    className={`grid grid-cols-12 gap-4 px-4 py-3 items-center bg-white border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors group cursor-pointer ${doc.status === 'Requis' ? 'hover:border-amber-200 bg-amber-50/10' : 'hover:border-blue-100 hover:shadow-sm'
-                                        }`}
-                                >
-                                    <div className="col-span-6 md:col-span-5 flex items-center gap-3 min-w-0">
-                                        <div className={`w-10 h-10 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0 group-hover:bg-white`}>
-                                            <doc.icon className={`w-5 h-5 ${doc.color}`} />
-                                        </div>
-                                        <div className="min-w-0 flex-1">
-                                            <p className={`font-bold text-sm truncate ${doc.status === 'Requis' ? 'text-amber-900' : 'text-slate-900'}`}>{doc.name}</p>
-                                            <p className="text-xs text-slate-500 font-medium">{doc.size}</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="col-span-3 hidden md:block">
-                                        <span className="text-xs font-medium text-slate-600 bg-slate-100 px-2 py-1 rounded-md">{doc.type}</span>
-                                    </div>
-
-                                    <div className="col-span-3 md:col-span-2 text-slate-500 text-xs font-semibold text-center md:text-left">
-                                        {doc.date}
-                                    </div>
-
-                                    <div className="col-span-3 md:col-span-2 flex items-center justify-end gap-3">
-                                        {doc.status === 'Requis' ? (
-                                            <span className="shrink-0 bg-amber-100 text-amber-700 text-[10px] font-black uppercase px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
-                                                Requis
-                                            </span>
-                                        ) : (
-                                            <span className="shrink-0 bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] font-bold uppercase px-2 py-1 rounded-md hidden sm:block">
-                                                {doc.status}
-                                            </span>
-                                        )}
-                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity bg-white shadow-sm border border-slate-100 rounded-full hover:text-blue-600">
-                                            <MoreVertical className="w-4 h-4" />
-                                        </Button>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </AnimatePresence>
-                    </div>
-                </div>
-            </div>
-        </motion.div>
-    )
+      {/* Garanties de Confidentialité Médicale en bas de page */}
+      <div className="p-6 rounded-[24px] bg-[#F4F2EE] border border-[#E2DDD7] flex items-start gap-3.5 text-xs text-[#696969]">
+        <ShieldCheck className="w-5 h-5 text-[#CF4500] shrink-0 mt-0.5" />
+        <p className="leading-relaxed">
+          Toutes les pièces médicales (radios, IRM, bilans sanguins, ordonnances) bénéficient d'un hébergement sécurisé aux normes HDS avec chiffrement de bout en bout. Seule l'équipe médicale accréditée de votre dossier peut y accéder.
+        </p>
+      </div>
+    </motion.div>
+  )
 }

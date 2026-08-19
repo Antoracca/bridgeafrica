@@ -1,11 +1,11 @@
 // ══════════════════════════════════════════════════════════════════════════════
-// MediBridge Africa — SEO Configuration Nucléaire
+// Pont Afrique Santé — SEO Configuration
 // 700+ mots-clés stratégiques · Schema.org · Open Graph · Twitter Cards
 // ══════════════════════════════════════════════════════════════════════════════
 
-export const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.medibridgeafrica.com'
+export const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.pontafriquesante.com'
 
-export const SITE_NAME = 'MediBridge Africa'
+export const SITE_NAME = 'Pont Afrique Santé'
 export const SITE_TAGLINE = 'Votre pont vers les meilleurs soins médicaux en Afrique et dans le monde'
 
 // ── 700+ mots-clés SEO stratégiques ──────────────────────────────────────────
@@ -227,7 +227,7 @@ export const SEO_KEYWORDS = [
 
     // ─── TECHNOLOGIE ET PLATEFORME ───
     'plateforme santé digitale', 'healthtech Afrique', 'e-santé Afrique',
-    'MediBridge', 'MediBridge Africa', 'medibridgeafrica',
+    'Pont Afrique Santé', 'pontafriquesante',
     'application santé', 'app médicale', 'suivi médical en ligne',
     'dossier patient en ligne', 'espace santé numérique',
     'intelligence artificielle santé', 'IA médicale', 'diagnostic IA',
@@ -236,11 +236,11 @@ export const SEO_KEYWORDS = [
 
 // ── Description SEO principale (160 caractères optimisés) ────────────────────
 export const SEO_DESCRIPTION =
-    'MediBridge Africa : plateforme n°1 de tourisme médical. Chirurgie, greffe, dentaire, FIV au Maroc, Tunisie, Turquie. Devis gratuit, conciergerie VIP, suivi complet.'
+    'Pont Afrique Santé : plateforme de coordination et de tourisme médical. Chirurgie, bilans, conciergerie et prise en charge internationale.'
 
 // ── Description longue (pour les pages qui l'acceptent) ──────────────────────
 export const SEO_DESCRIPTION_LONG =
-    'MediBridge Africa est la plateforme leader du tourisme médical en Afrique. Nous connectons les patients africains et internationaux aux meilleures cliniques et chirurgiens certifiés au Maroc, en Tunisie, en Turquie et en France. Chirurgie esthétique, greffe de cheveux, implants dentaires, FIV, chirurgie bariatrique, oncologie — obtenez un devis gratuit en 24h. Service conciergerie VIP : visa, vol, hôtel, transfert, accompagnement et suivi post-opératoire inclus.'
+    'Pont Afrique Santé est la plateforme de coordination médicale connectant les patients aux meilleures cliniques et chirurgiens certifiés au Maroc, en Tunisie, en Turquie et en France. Conciergerie VIP : visa, vol, hôtel, transfert et suivi post-opératoire inclus.'
 
 // ── Schema.org JSON-LD pour la page d'accueil ────────────────────────────────
 export function getOrganizationSchema() {
@@ -248,9 +248,9 @@ export function getOrganizationSchema() {
         '@context': 'https://schema.org',
         '@type': 'MedicalOrganization',
         name: SITE_NAME,
-        alternateName: 'MediBridge',
+        alternateName: 'Pont Afrique Santé',
         url: BASE_URL,
-        logo: `${BASE_URL}/favicon-final.png`,
+        logo: `${BASE_URL}/FaviconFinal.png`,
         description: SEO_DESCRIPTION_LONG,
         foundingDate: '2024',
         areaServed: [
@@ -277,11 +277,9 @@ export function getOrganizationSchema() {
             availableLanguage: ['French', 'English', 'Arabic'],
         },
         sameAs: [
-            'https://www.facebook.com/medibridgeafrica',
-            'https://www.instagram.com/medibridgeafrica',
-            'https://www.linkedin.com/company/medibridgeafrica',
-            'https://twitter.com/medibridgeafrica',
-            'https://www.youtube.com/@medibridgeafrica',
+            'https://www.facebook.com/pontafriquesante',
+            'https://www.instagram.com/pontafriquesante',
+            'https://www.linkedin.com/company/pontafriquesante',
         ],
     }
 }
@@ -314,34 +312,34 @@ export function getFAQSchema() {
         mainEntity: [
             {
                 '@type': 'Question',
-                name: 'Comment fonctionne le tourisme médical avec MediBridge ?',
+                name: 'Comment fonctionne la coordination médicale avec Pont Afrique Santé ?',
                 acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'MediBridge vous accompagne de A à Z : demande de devis gratuit, sélection du chirurgien, organisation du voyage (visa, vol, hôtel), accompagnement sur place et suivi post-opératoire à distance.',
+                    text: 'Pont Afrique Santé vous accompagne de A à Z : demande de devis gratuit, sélection du chirurgien, organisation du voyage (visa, vol, hôtel), accompagnement sur place et suivi post-opératoire à distance.',
                 },
             },
             {
                 '@type': 'Question',
-                name: 'Quels pays sont disponibles pour le tourisme médical ?',
+                name: 'Quels pays sont disponibles pour les soins ?',
                 acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'MediBridge propose des cliniques certifiées au Maroc (Casablanca, Rabat, Marrakech), en Tunisie (Tunis), en Turquie (Istanbul) et en France (Paris).',
+                    text: 'Pont Afrique Santé propose des cliniques certifiées au Maroc (Casablanca, Rabat, Marrakech), en Tunisie (Tunis), en Turquie (Istanbul) et en France (Paris).',
                 },
             },
             {
                 '@type': 'Question',
-                name: 'Combien coûte une chirurgie via MediBridge ?',
+                name: 'Combien coûte une prise en charge via Pont Afrique Santé ?',
                 acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'Les prix varient selon l\'intervention et la destination. En moyenne, vous économisez 40 à 70% par rapport aux tarifs européens. Obtenez un devis gratuit personnalisé en 24h.',
+                    text: 'Les prix varient selon l\'intervention et la destination. Vous recevez un devis clair et transparent en Francs CFA ou devise locale en moins de 24h.',
                 },
             },
             {
                 '@type': 'Question',
-                name: 'Le tourisme médical est-il sûr ?',
+                name: 'La prise en charge est-elle sécurisée ?',
                 acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'Oui. MediBridge ne travaille qu\'avec des cliniques accréditées (JCI, ISO) et des chirurgiens certifiés. Nous assurons un suivi complet et une assurance rapatriement est incluse.',
+                    text: 'Oui. Pont Afrique Santé ne travaille qu\'avec des cliniques accréditées (JCI, ISO) et des praticiens certifiés. Nous assurons un suivi complet et une garantie de prise en charge.',
                 },
             },
             {

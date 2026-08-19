@@ -441,7 +441,7 @@ export function OnboardingModal({ isOpen, onClose }: Props) {
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-6 h-px bg-[#4caf91]/50" />
-                  <span className="text-[10px] text-[#4caf91] font-bold uppercase tracking-[0.25em]">MediBridge Privilège</span>
+                  <span className="text-[10px] text-[#4caf91] font-bold uppercase tracking-[0.25em]">Pont Afrique Santé Privilège</span>
                 </div>
                 <h1
                   className="text-3xl lg:text-5xl font-normal text-white leading-[1.2]"
@@ -466,7 +466,7 @@ export function OnboardingModal({ isOpen, onClose }: Props) {
               <div className="flex items-start justify-between mb-1">
                 <div>
                   <p className="text-[8px] font-bold text-[#1B433E] uppercase tracking-[0.35em] mb-2">
-                    MediBridge · Dossier Admis
+                    Pont Afrique Santé · Dossier Admis
                   </p>
                   <h2
                     className="text-[22px] text-[#1a1f24] leading-tight tracking-tight"

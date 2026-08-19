@@ -32,7 +32,7 @@ export const PRICING_PLANS: PricingPlan[] = [
     cta: 'Choisir',
     shortDesc: 'Accès plateforme et premier devis médical, sans engagement.',
     keyFeatures: [
-      'Accès plateforme MediBridge',
+      'Accès plateforme Pont Afrique Santé',
       'Mise en relation avec une clinique',
       'Devis médical personnalisé',
       'Aucun engagement',
@@ -84,7 +84,7 @@ export interface PricingFeature {
 }
 
 export const PRICING_FEATURES: PricingFeature[] = [
-  { label: 'Accès à la plateforme MediBridge', essentiel: true,  serenite: true, excellence: true  },
+  { label: 'Accès à la plateforme Pont Afrique Santé', essentiel: true,  serenite: true, excellence: true  },
   { label: 'Mise en relation avec une clinique', essentiel: true,  serenite: true, excellence: true  },
   { label: 'Devis médical personnalisé',          essentiel: true,  serenite: true, excellence: true  },
   { label: 'Coordinateur dédié (WhatsApp + Email)', essentiel: false, serenite: true, excellence: true },
@@ -199,7 +199,7 @@ export const FINANCING_OPTIONS: FinancingOption[] = [
   {
     name: 'Crédit santé partenaire',
     desc: 'Solutions de crédit dédiées via nos partenaires bancaires panafricains.',
-    details: 'Accord rapide sous 72 h avec Ecobank, Coris Bank, BGFI Bank. Taux préférentiels patients MediBridge.',
+    details: 'Accord rapide sous 72 h avec Ecobank, Coris Bank, BGFI Bank. Taux préférentiels patients Pont Afrique Santé.',
     badgeKey: 'partenaire',
   },
   {

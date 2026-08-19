@@ -225,7 +225,7 @@ export function Technology() {
           {/* 1. Label + Titre */}
           <div className="mb-8">
             <div className="text-[#38BDF8] font-semibold tracking-widest uppercase text-xs mb-6">
-              Architecture MediBridge
+              Architecture Pont Afrique Santé
             </div>
             <h2 className="text-[34px] font-medium leading-[1.1] text-white tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>
               L&apos;Intelligence Clinique.
@@ -313,7 +313,7 @@ export function Technology() {
           <div className="w-7/12">
             <div className="max-w-xl">
               <div className="text-[#38BDF8] font-semibold tracking-widest uppercase text-xs mb-8">
-                Architecture MediBridge
+                Architecture Pont Afrique Santé
               </div>
               <h2 className="text-[52px] font-medium leading-[1.1] text-white mb-8 tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>
                 L&apos;Intelligence Clinique.

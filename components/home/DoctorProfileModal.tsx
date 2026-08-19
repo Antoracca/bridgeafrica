@@ -67,7 +67,7 @@ export function DoctorProfileModal({ isOpen, onClose, doctor, onBookRDV }: Props
                 <div className="flex items-start justify-between mb-7">
                   <span className="inline-flex items-center gap-1.5 bg-white/10 border border-white/20 px-3 py-1 text-[8px] font-bold text-white uppercase tracking-[0.3em]">
                     <Award size={9} />
-                    Partenaire MediBridge
+                    Partenaire Pont Afrique Santé
                   </span>
                   <button
                     onClick={onClose}

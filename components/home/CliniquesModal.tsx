@@ -63,7 +63,7 @@ export function CliniquesModal({ isOpen, onClose }: Props) {
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-[8px] font-bold text-[#1B433E] uppercase tracking-[0.35em] mb-2">
-                    MediBridge · Réseau Médical
+                    Pont Afrique Santé · Réseau Médical
                   </p>
                   <h2
                     className="text-[22px] text-[#1a1f24] leading-tight tracking-tight"
@@ -111,7 +111,7 @@ export function CliniquesModal({ isOpen, onClose }: Props) {
                     { done: true,  text: 'Sélection des partenaires' },
                     { done: true,  text: 'Vérification accréditations' },
                     { done: false, text: 'Audit sur site' },
-                    { done: false, text: 'Publication MediBridge' },
+                    { done: false, text: 'Publication Pont Afrique Santé' },
                   ].map((step, i) => (
                     <div key={i} className="flex items-center gap-3 py-3 border-b border-slate-100">
                       <div className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${step.done ? 'bg-[#1B433E]' : 'border border-slate-200'}`}>

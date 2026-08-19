@@ -335,7 +335,7 @@ export function PurchaseModal({ isOpen, onClose, initialPlanId }: Props) {
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-6 h-px bg-[#4caf91]/50" />
-                  <span className="text-[10px] text-[#4caf91] font-bold uppercase tracking-[0.25em]">MediBridge Privilège</span>
+                  <span className="text-[10px] text-[#4caf91] font-bold uppercase tracking-[0.25em]">Pont Afrique Santé Privilège</span>
                 </div>
                 <h1
                   className="text-3xl lg:text-5xl font-normal text-white leading-[1.2]"

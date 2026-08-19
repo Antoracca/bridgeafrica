@@ -260,7 +260,7 @@ export function NavPricing({ closeMenu }: Props) {
           Nos engagements
         </p>
         <h3 className="text-[18px] text-slate-900 tracking-tight mb-5" style={{ fontFamily: 'Georgia, serif' }}>
-          Les garanties MediBridge
+          Les garanties Pont Afrique Santé
         </h3>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
