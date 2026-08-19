@@ -97,9 +97,15 @@ export const metadata: Metadata = {
         statusBarStyle: 'default',
     },
     icons: {
-        icon: '/favicon-final.png',
-        shortcut: '/favicon-final.png',
-        apple: '/favicon-final.png',
+        icon: [
+            { url: '/FaviconFinal.png', type: 'image/png' },
+            { url: '/favicon.png', type: 'image/png' },
+        ],
+        shortcut: '/FaviconFinal.png',
+        apple: [
+            { url: '/FaviconFinal.png', sizes: '180x180', type: 'image/png' },
+            { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+        ],
     },
 
     // ─ Alternates (hreflang pour SEO multilingue)
