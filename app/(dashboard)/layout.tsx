@@ -6,7 +6,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { Menu } from "lucide-react"
+import Link from "next/link"
+import { Menu, Home } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
 
 export default async function DashboardLayout({
@@ -37,6 +38,17 @@ export default async function DashboardLayout({
             </SidebarTrigger>
             {/* Bouton Desktop */}
             <SidebarTrigger className="shrink-0 hidden md:flex rounded-full hover:bg-[#F3F0EE]" />
+            
+            {/* Bouton Accueil pour retourner à la page principale */}
+            <Link
+              href="/"
+              title="Retour à l'Accueil"
+              className="inline-flex items-center justify-center h-8 px-3 rounded-full text-slate-700 hover:text-slate-950 hover:bg-[#F3F0EE] transition-all text-xs font-semibold gap-1.5 border border-[#E2DDD7] bg-white shadow-xs shrink-0"
+            >
+              <Home className="h-3.5 w-3.5 text-[#0284C7]" />
+              <span className="hidden sm:inline">Accueil</span>
+            </Link>
+
             <Separator orientation="vertical" className="mx-1 h-3.5 bg-[#E2DDD7]" />
             <div className="flex-1 min-w-0">
               <DynamicBreadcrumb />

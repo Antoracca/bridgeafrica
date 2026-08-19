@@ -121,9 +121,30 @@ export function Footer() {
           <div>
             © 2025 Pont Afrique Santé. Tous droits réservés.
           </div>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap gap-6 items-center">
             <a href="#" className="hover:text-slate-900 transition-colors">Mentions Légales</a>
-            <a href="#" className="hover:text-slate-900 transition-colors">Politique de Confidentialité</a>
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.dispatchEvent(new CustomEvent('open-cookie-settings'))
+                }
+              }}
+              className="hover:text-slate-900 transition-colors cursor-pointer"
+            >
+              Politique de Confidentialité
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.dispatchEvent(new CustomEvent('open-cookie-settings'))
+                }
+              }}
+              className="hover:text-slate-900 transition-colors cursor-pointer underline underline-offset-4"
+            >
+              Gestion des Cookies
+            </button>
             <a href="#" className="hover:text-slate-900 transition-colors">CGV</a>
           </div>
         </div>

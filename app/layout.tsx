@@ -4,6 +4,7 @@ import "./globals.css";
 import { LoadingProvider } from "@/contexts/LoadingContext";
 import { Toaster } from "sonner";
 import { InitialPageLoader } from "@/components/loaders/InitialPageLoader";
+import { CookieConsentModal } from "@/components/home/CookieConsentModal";
 import {
     BASE_URL, SITE_NAME, SITE_TAGLINE,
     SEO_KEYWORDS, SEO_DESCRIPTION, SEO_DESCRIPTION_LONG,
@@ -175,6 +176,7 @@ export default function RootLayout({
                     </div>
                 </LoadingProvider>
                 <Toaster position="top-right" richColors />
+                <CookieConsentModal />
             </body>
         </html>
     );

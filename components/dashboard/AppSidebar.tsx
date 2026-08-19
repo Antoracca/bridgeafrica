@@ -37,7 +37,8 @@ import {
   Video,
   ClipboardList,
   Star,
-  Users2
+  Users2,
+  ArrowRight
 } from "lucide-react"
 
 import {
@@ -283,58 +284,36 @@ export function AppSidebar({ user, avatarUrl, ...props }: AppSidebarProps) {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-slate-100 bg-white w-full overflow-x-hidden p-2">
-        <SidebarMenu className="w-full">
-          <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton
-                  size="lg"
-                  className="data-[state=open]:bg-slate-50 border border-slate-200/80 rounded-2xl hover:bg-slate-50 transition-all bg-white"
-                >
-                  <Avatar className="h-8 w-8 rounded-full bg-slate-900 text-white shrink-0">
-                    {avatarUrl && <AvatarImage src={avatarUrl} alt={displayName} />}
-                    <AvatarFallback className="rounded-full font-bold text-xs bg-slate-900 text-white">
-                      {displayName.substring(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="grid flex-1 text-left text-xs leading-tight min-w-0">
-                    <span className="truncate font-bold text-slate-900">{displayName}</span>
-                    <span className="truncate text-[11px] text-slate-400 font-mono">{user?.email}</span>
-                  </div>
-                  <ChevronRight className="ml-auto size-4 text-slate-400 shrink-0" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-2xl border-slate-200 bg-white p-1.5 shadow-lg"
-                side="top"
-                align="end"
-                sideOffset={8}
-              >
-                <DropdownMenuLabel className="p-3 font-normal border-b border-slate-100">
-                  <div className="flex flex-col gap-0.5 text-left">
-                    <span className="font-bold text-sm text-slate-900 truncate">{displayName}</span>
-                    <span className="text-xs text-slate-400 truncate">{user?.email}</span>
-                  </div>
-                </DropdownMenuLabel>
-                <div className="p-1">
-                  <DropdownMenuItem
-                    onClick={handleLogout}
-                    disabled={isLoggingOut}
-                    className="text-rose-600 focus:text-rose-700 focus:bg-rose-50 cursor-pointer rounded-xl font-semibold text-xs"
-                  >
-                    {isLoggingOut ? (
-                      <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                    ) : (
-                      <LogOut className="mr-2 h-3.5 w-3.5" />
-                    )}
-                    {isLoggingOut ? "Déconnexion..." : "Se déconnecter"}
-                  </DropdownMenuItem>
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
+      <SidebarFooter className="border-t border-slate-100 bg-white w-full overflow-x-hidden p-3 space-y-2">
+        <Link
+          href="/"
+          className="flex items-center justify-between gap-3 w-full p-2.5 rounded-2xl bg-slate-900 text-white hover:bg-slate-800 transition-all group shadow-sm"
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-white shrink-0 group-hover:scale-105 transition-transform">
+              <Home className="w-4 h-4 text-[#38BDF8]" />
+            </div>
+            <div className="text-left min-w-0">
+              <p className="text-xs font-bold text-white truncate">Retour à l'Accueil</p>
+              <p className="text-[10px] text-slate-400 truncate">Page principale du site</p>
+            </div>
+          </div>
+          <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-white group-hover:translate-x-0.5 transition-all shrink-0" />
+        </Link>
+
+        {/* Bouton de déconnexion */}
+        <button
+          onClick={handleLogout}
+          disabled={isLoggingOut}
+          className="flex items-center justify-center gap-2 w-full py-2 px-3 rounded-xl text-xs font-medium text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+        >
+          {isLoggingOut ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          ) : (
+            <LogOut className="h-3.5 w-3.5" />
+          )}
+          <span>{isLoggingOut ? "Déconnexion..." : "Se déconnecter"}</span>
+        </button>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
