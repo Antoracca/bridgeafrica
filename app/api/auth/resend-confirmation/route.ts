@@ -17,20 +17,20 @@ export async function POST(request: NextRequest) {
     }
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-    if (!supabaseUrl || !supabaseServiceRoleKey) {
-        console.error('SUPABASE_URL ou SUPABASE_SERVICE_ROLE_KEY non configuré.')
+    if (!supabaseUrl || !supabaseKey) {
+        console.error('SUPABASE_URL ou clés Supabase non configurées.')
         return NextResponse.json(
-            { error: 'Configuration serveur Supabase incomplète.' },
+            { error: 'Configuration serveur Supabase incomplète. Veuillez vérifier les variables d\'environnement.' },
             { status: 500 }
         )
     }
 
-    // Créer un client admin avec SERVICE_ROLE_KEY
+    // Créer un client Supabase (avec service role ou anon key)
     const supabaseAdmin = createClient(
       supabaseUrl,
-      supabaseServiceRoleKey,
+      supabaseKey,
       {
         auth: {
           autoRefreshToken: false,
