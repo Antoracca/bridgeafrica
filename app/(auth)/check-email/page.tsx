@@ -137,18 +137,6 @@ function CheckEmailContent() {
                 </div>
               </div>
 
-              {/* Instructions simples */}
-              <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-4 text-xs text-slate-600 text-left">
-                <p className="font-semibold text-slate-800 mb-1.5 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-brand-teal" /> Prochaines étapes :
-                </p>
-                <ol className="list-decimal pl-4 space-y-1 opacity-90">
-                  <li>Ouvrez l&apos;email reçu de <strong>Pont Afrique Santé</strong>.</li>
-                  <li>Cliquez sur <strong>« Confirmer mon adresse email »</strong>.</li>
-                  <li>Cette page vous redirigera automatiquement.</li>
-                </ol>
-              </div>
-
               <div className="flex flex-col gap-3 pt-2">
                  <Button
                   onClick={handleResendEmail}
