@@ -9,6 +9,9 @@ import { Loader2, Mail, CheckCircle2, AlertCircle, RefreshCw, ArrowRight } from 
 import { toast } from 'sonner'
 import { Progress } from "@/components/ui/progress"
 
+import Link from 'next/link'
+import Image from 'next/image'
+
 function CheckEmailContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -62,7 +65,7 @@ function CheckEmailContent() {
 
       if (response.ok && result.success) {
         toast.success('Email envoyé', {
-          description: 'Vérifiez votre boîte de réception.',
+          description: 'Vérifiez votre boîte de réception et vos spams.',
         })
         setCountdown(45) // Cooldown de 45 secondes
       } else {
@@ -76,71 +79,107 @@ function CheckEmailContent() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-muted/20">
-      <Card className="w-full max-w-md border-none shadow-lg animate-in fade-in zoom-in duration-300">
-        <CardHeader className="space-y-4 pb-2 text-center">
-          <div className="mx-auto bg-blue-50 dark:bg-blue-900/20 w-16 h-16 rounded-full flex items-center justify-center mb-2">
+    <div className="flex min-h-screen flex-col items-center justify-center p-4 bg-slate-50/70">
+      
+      {/* Brand Header */}
+      <Link href="/" className="inline-flex items-center gap-2 mb-6 group">
+        <div className="relative w-9 h-9 shrink-0">
+          <Image 
+            src="/FaviconFinal.png" 
+            alt="Pont Afrique Santé" 
+            fill
+            className="object-contain group-hover:scale-105 transition-transform" 
+            priority 
+          />
+        </div>
+        <span className="text-xl font-bold tracking-tight font-sans select-none flex items-center">
+          <span className="text-[#0284C7]">Pont</span><span className="text-[#141413]">Afrique</span><span className="text-[#CF4500]">Santé</span>
+        </span>
+      </Link>
+
+      <Card className="w-full max-w-md border border-slate-200/80 shadow-xl bg-white rounded-2xl animate-in fade-in zoom-in duration-300">
+        <CardHeader className="space-y-3 pb-2 text-center pt-8">
+          <div className="mx-auto bg-blue-50 dark:bg-blue-900/20 w-16 h-16 rounded-full flex items-center justify-center mb-1">
             {isVerified ? (
               <CheckCircle2 className="h-8 w-8 text-green-600 dark:text-green-400" />
             ) : (
-              <Mail className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+              <Mail className="h-8 w-8 text-brand-teal" />
             )}
           </div>
-          <CardTitle className="text-2xl font-bold">
-            {isVerified ? 'Compte vérifié !' : 'Vérifiez vos emails'}
+          <CardTitle className="text-2xl font-bold text-slate-900">
+            {isVerified ? 'Compte vérifié !' : 'Vérifiez votre boîte email'}
           </CardTitle>
-          <CardDescription className="text-base">
+          <CardDescription className="text-sm text-slate-600">
             {isVerified 
-              ? 'Redirection en cours...' 
-              : <>Nous avons envoyé un lien de confirmation à <br/><span className="font-medium text-foreground">{email}</span></>}
+              ? 'Redirection en cours vers votre espace...' 
+              : <>Nous avons envoyé un lien d&apos;activation à :<br/><span className="font-semibold text-slate-900 block mt-1 text-base">{email}</span></>}
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-6 pt-4">
+        <CardContent className="space-y-5 pt-2 pb-8 px-6">
           {!isVerified && (
             <>
-              <div className="bg-blue-50/50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900 rounded-lg p-4 text-sm text-blue-800 dark:text-blue-300 text-left">
-                <p className="font-semibold mb-2 flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4" /> Instructions :
-                </p>
-                <ul className="list-disc pl-5 space-y-1 opacity-90 text-xs">
-                  <li>Ouvrez l&apos;email reçu de <strong>Pont Afrique Santé</strong>.</li>
-                  <li>Cliquez sur le bouton de confirmation.</li>
-                  <li>Cette page se mettra à jour automatiquement.</li>
-                </ul>
+              {/* ENCART SPAM ULTRA VISIBLE */}
+              <div className="bg-amber-50/90 border-2 border-amber-300/80 rounded-xl p-4 text-amber-900 text-left shadow-xs">
+                <div className="flex items-start gap-2.5">
+                  <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                  <div className="text-xs space-y-1">
+                    <p className="font-bold text-amber-950 text-sm">
+                      ⚠️ Vous ne trouvez pas l&apos;email ?
+                    </p>
+                    <p className="leading-relaxed">
+                      Pensez à vérifier votre dossier <strong>Spams / Courriers indésirables</strong> ou l&apos;onglet <strong>Promotions / Notifications</strong>.
+                    </p>
+                    <p className="text-[11px] text-amber-800 font-medium">
+                      💡 Cliquez sur <em>« Ne pas marquer comme spam »</em> pour recevoir tous vos futurs rendez-vous médicaux.
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              <div className="flex flex-col gap-3">
+              {/* Instructions simples */}
+              <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-4 text-xs text-slate-600 text-left">
+                <p className="font-semibold text-slate-800 mb-1.5 flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-brand-teal" /> Prochaines étapes :
+                </p>
+                <ol className="list-decimal pl-4 space-y-1 opacity-90">
+                  <li>Ouvrez l&apos;email reçu de <strong>Pont Afrique Santé</strong>.</li>
+                  <li>Cliquez sur <strong>« Confirmer mon adresse email »</strong>.</li>
+                  <li>Cette page vous redirigera automatiquement.</li>
+                </ol>
+              </div>
+
+              <div className="flex flex-col gap-3 pt-2">
                  <Button
                   onClick={handleResendEmail}
                   disabled={isResending || countdown > 0}
                   variant={countdown > 0 ? "secondary" : "default"}
-                  className="w-full relative overflow-hidden transition-all"
+                  className="w-full h-11 relative overflow-hidden transition-all bg-brand-teal hover:bg-brand-teal-dark text-white font-medium rounded-xl shadow-sm"
                 >
                   {isResending ? (
                     <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Envoi en cours...</>
                   ) : countdown > 0 ? (
-                    <span className="flex items-center">
-                      <RefreshCw className="mr-2 h-4 w-4 opacity-50" /> 
-                      Renvoyer dans {countdown}s
+                    <span className="flex items-center text-slate-500 font-normal text-xs">
+                      <RefreshCw className="mr-2 h-3.5 w-3.5 opacity-50" /> 
+                      Renvoyer l&apos;email dans {countdown}s
                     </span>
                   ) : (
                     <span className="flex items-center">
-                      <Mail className="mr-2 h-4 w-4" /> Renvoyer l&apos;email
+                      <Mail className="mr-2 h-4 w-4" /> Renvoyer un nouvel email
                     </span>
                   )}
                   
                   {countdown > 0 && (
-                    <div className="absolute bottom-0 left-0 h-1 bg-primary/20 w-full">
+                    <div className="absolute bottom-0 left-0 h-1 bg-brand-teal/30 w-full">
                        <div
-                         className="h-full bg-primary transition-all duration-1000 ease-linear"
+                         className="h-full bg-brand-teal transition-all duration-1000 ease-linear"
                          style={{ width: `${(countdown / 45) * 100}%` }}
                        />
                     </div>
                   )}
                 </Button>
                 
-                <Button variant="ghost" className="text-xs text-muted-foreground hover:text-foreground" onClick={() => router.push('/login')}>
+                <Button variant="ghost" className="text-xs text-slate-500 hover:text-slate-900" onClick={() => router.push('/login')}>
                   Retour à la connexion
                 </Button>
               </div>
@@ -148,9 +187,9 @@ function CheckEmailContent() {
           )}
 
           {isVerified && (
-             <div className="flex flex-col items-center gap-4">
-                <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                <p className="text-sm text-muted-foreground">Accès au tableau de bord...</p>
+             <div className="flex flex-col items-center gap-4 py-4">
+                <Loader2 className="h-7 w-7 animate-spin text-brand-teal" />
+                <p className="text-sm font-medium text-slate-600">Accès à votre espace patient en cours...</p>
              </div>
           )}
         </CardContent>
