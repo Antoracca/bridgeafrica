@@ -1,6 +1,7 @@
 import { Metadata } from "next"
+import Link from "next/link"
+import Image from "next/image"
 import { CompleteProfileForm } from "@/components/forms/CompleteProfileForm"
-import { Activity } from "lucide-react"
 import { BackgroundSlideshow } from "@/components/ui/BackgroundSlideshow"
 import { LottieAnimation } from "@/components/ui/LottieAnimation"
 import OnlineDoctorAnimation from "@/public/Online Doctor.json"
@@ -16,10 +17,20 @@ export default function CompleteProfilePage() {
 
       <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
         <BackgroundSlideshow />
-        <div className="relative z-20 flex items-center text-xl font-bold tracking-tight">
-          <Activity className="mr-2 h-6 w-6 text-white" />
-          Pont Afrique Santé
-        </div>
+        <Link href="/" className="relative z-20 flex items-center gap-2.5 group w-fit">
+          <div className="relative w-10 h-10 shrink-0">
+            <Image 
+              src="/FaviconFinal.png" 
+              alt="Pont Afrique Santé" 
+              fill
+              className="object-contain group-hover:scale-105 transition-transform" 
+              priority 
+            />
+          </div>
+          <span className="text-2xl font-bold tracking-tight font-sans select-none flex items-center">
+            <span className="text-[#38BDF8]">Pont</span><span className="text-white">Afrique</span><span className="text-[#FB923C]">Santé</span>
+          </span>
+        </Link>
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2 border-l-2 border-emerald-400 pl-6 backdrop-blur-sm bg-black/10 p-4 rounded-r-lg">
             <p className="text-lg font-medium leading-relaxed">

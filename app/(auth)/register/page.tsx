@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 import Link from "next/link"
+import Image from "next/image"
 import { RegisterForm } from "@/components/forms/RegisterForm"
-import { Activity } from "lucide-react"
 import { BackgroundSlideshow } from "@/components/ui/BackgroundSlideshow"
 import { LottieAnimation } from "@/components/ui/LottieAnimation"
 import OnlineDoctorAnimation from "@/public/Online Doctor.json"
@@ -16,10 +16,20 @@ export default function RegisterPage() {
     <div className="relative min-h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0 bg-white lg:bg-slate-50 w-full max-w-full">
 
       {/* Logo Pont Afrique Santé - mobile top */}
-      <div className="lg:hidden absolute top-6 left-6 z-30 flex items-center text-slate-900">
-        <Activity className="mr-2 h-5 w-5 text-brand-teal" />
-        <span className="text-base font-bold tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>Pont Afrique Santé</span>
-      </div>
+      <Link href="/" className="lg:hidden absolute top-5 left-5 z-30 flex items-center gap-2 group">
+        <div className="relative w-8 h-8 shrink-0">
+          <Image 
+            src="/FaviconFinal.png" 
+            alt="Pont Afrique Santé" 
+            fill
+            className="object-contain group-hover:scale-105 transition-transform" 
+            priority 
+          />
+        </div>
+        <span className="text-base sm:text-lg font-bold tracking-tight font-sans select-none flex items-center">
+          <span className="text-[#0284C7]">Pont</span><span className="text-[#141413]">Afrique</span><span className="text-[#CF4500]">Santé</span>
+        </span>
+      </Link>
 
       <Link
         href="/login"
@@ -28,13 +38,23 @@ export default function RegisterPage() {
         Déjà un compte ?
       </Link>
 
-      {/* Panneau gauche desktop - inchangé */}
+      {/* Panneau gauche desktop */}
       <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
         <BackgroundSlideshow />
-        <div className="relative z-20 flex items-center text-xl font-bold tracking-tight">
-          <Activity className="mr-2 h-6 w-6 text-white" />
-          Pont Afrique Santé
-        </div>
+        <Link href="/" className="relative z-20 flex items-center gap-2.5 group w-fit">
+          <div className="relative w-10 h-10 shrink-0">
+            <Image 
+              src="/FaviconFinal.png" 
+              alt="Pont Afrique Santé" 
+              fill
+              className="object-contain group-hover:scale-105 transition-transform" 
+              priority 
+            />
+          </div>
+          <span className="text-2xl font-bold tracking-tight font-sans select-none flex items-center">
+            <span className="text-[#38BDF8]">Pont</span><span className="text-white">Afrique</span><span className="text-[#FB923C]">Santé</span>
+          </span>
+        </Link>
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2 border-l-2 border-emerald-400 pl-6 backdrop-blur-sm bg-black/10 p-4 rounded-r-lg">
             <p className="text-lg font-medium leading-relaxed">
