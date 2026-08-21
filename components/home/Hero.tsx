@@ -154,9 +154,9 @@ export function Hero() {
             </motion.div>
 
             {/* Main Headline */}
-            <motion.h1 variants={FADE_UP_ANIMATION_VARIANTS} className="text-5xl sm:text-6xl md:text-7xl lg:text-[5rem] font-extrabold text-slate-900 leading-[1.1] mb-8 tracking-tight">
+            <motion.h1 variants={FADE_UP_ANIMATION_VARIANTS} className="text-3xl min-[360px]:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5rem] font-extrabold text-slate-900 leading-[1.1] mb-6 sm:mb-8 tracking-tight break-words">
               L'excellence médicale <br className="hidden md:block" />
-              sans <span className="inline-grid w-[240px] sm:w-[350px] justify-center xl:justify-start">
+              sans <span className="inline-grid w-[160px] min-[360px]:w-[195px] min-[420px]:w-[240px] sm:w-[320px] md:w-[360px] lg:w-[420px] justify-center xl:justify-start">
                 <AnimatePresence mode="sync">
                   <motion.span
                     key={currentWordIndex}
@@ -172,33 +172,33 @@ export function Hero() {
               </span>
             </motion.h1>
 
-            <motion.p variants={FADE_UP_ANIMATION_VARIANTS} className="text-lg sm:text-xl text-slate-600 mb-10 leading-relaxed max-w-2xl mx-auto xl:mx-0 font-medium">
+            <motion.p variants={FADE_UP_ANIMATION_VARIANTS} className="text-base sm:text-lg md:text-xl text-slate-600 mb-8 sm:mb-10 leading-relaxed max-w-2xl mx-auto xl:mx-0 font-medium">
               Votre santé mérite les meilleurs experts mondiaux. De la consultation au voyage, nous organisons tout pour vous avec{" "}
               <span className="text-brand-teal font-bold">0 tracasseries</span>.
             </motion.p>
 
             {/* Interactive Search Bar */}
-            <motion.div variants={FADE_UP_ANIMATION_VARIANTS} className="relative w-full max-w-2xl mx-auto xl:mx-0 group mb-12 cursor-text">
+            <motion.div variants={FADE_UP_ANIMATION_VARIANTS} className="relative w-full max-w-2xl mx-auto xl:mx-0 group mb-8 sm:mb-12 cursor-text">
               <div className="absolute -inset-2 bg-gradient-to-r from-brand-teal-pale via-brand-teal-light to-brand-teal-pale rounded-[1.5rem] blur-xl opacity-30 group-hover:opacity-60 transition duration-700"></div>
 
-              <div className="relative bg-white/60 backdrop-blur-2xl rounded-2xl shadow-2xl shadow-slate-200/30 border border-white/80 p-2.5 flex flex-col sm:flex-row gap-3 transition-all duration-500 z-10 group-hover:bg-white/80">
-                <div className="flex-1 flex items-center gap-3 px-5 h-14 sm:h-auto bg-slate-50/50 rounded-xl border border-white/50 focus-within:bg-white focus-within:border-brand-teal-light focus-within:ring-4 ring-brand-teal-pale/50 transition-all">
-                  <Search className="text-brand-teal w-5 h-5 flex-shrink-0" />
+              <div className="relative bg-white/60 backdrop-blur-2xl rounded-2xl shadow-2xl shadow-slate-200/30 border border-white/80 p-2 sm:p-2.5 flex flex-col sm:flex-row gap-2.5 sm:gap-3 transition-all duration-500 z-10 group-hover:bg-white/80">
+                <div className="flex-1 flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-5 h-12 sm:h-14 bg-slate-50/50 rounded-xl border border-white/50 focus-within:bg-white focus-within:border-brand-teal-light focus-within:ring-4 ring-brand-teal-pale/50 transition-all">
+                  <Search className="text-brand-teal w-4.5 h-4.5 sm:w-5 sm:h-5 flex-shrink-0" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyDown={(e) => { if (e.key === 'Enter') setExploreOpen(true) }}
                     placeholder="Intervention, pays, clinique..."
-                    className="w-full bg-transparent outline-none text-slate-800 placeholder:text-slate-400 font-medium text-base sm:text-lg"
+                    className="w-full bg-transparent outline-none text-slate-800 placeholder:text-slate-400 font-medium text-sm sm:text-base md:text-lg min-w-0"
                     suppressHydrationWarning
                   />
                 </div>
                 <Button
                   onClick={() => setExploreOpen(true)}
-                  className="w-full sm:w-auto relative group/btn rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-white px-8 h-14 text-base font-bold shadow-lg transition-all animate-none overflow-hidden hover:scale-[1.02]"
+                  className="w-full sm:w-auto relative group/btn rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-white px-6 sm:px-8 h-12 sm:h-14 text-sm sm:text-base font-bold shadow-lg transition-all animate-none overflow-hidden hover:scale-[1.02] shrink-0"
                 >
-                  <span className="relative z-10 flex items-center gap-2">
+                  <span className="relative z-10 flex items-center justify-center gap-2">
                     Explorer
                     <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1.5 transition-transform duration-300" />
                   </span>
@@ -207,13 +207,13 @@ export function Hero() {
               </div>
 
               {/* Quick Tags */}
-              <div className="mt-5 flex flex-wrap justify-center xl:justify-start gap-2 items-center relative z-20">
-                <span className="text-sm font-semibold text-slate-400 mr-1 shrink-0">Populaire :</span>
+              <div className="mt-4 sm:mt-5 flex flex-wrap justify-center xl:justify-start gap-1.5 sm:gap-2 items-center relative z-20">
+                <span className="text-xs sm:text-sm font-semibold text-slate-400 mr-1 shrink-0">Populaire :</span>
                 {['Cancer', 'Chirurgie', 'BBL', 'Cardiologie'].map((tag) => (
                   <span
                     key={tag}
                     onClick={() => { setSearchQuery(tag); setExploreOpen(true) }}
-                    className="px-3.5 py-1.5 bg-white text-slate-600 text-sm font-semibold rounded-full border border-slate-200 shadow-sm cursor-pointer hover:border-brand-teal-light hover:text-brand-teal hover:shadow-md hover:bg-brand-teal-pale transition-all"
+                    className="px-2.5 sm:px-3.5 py-1 sm:py-1.5 bg-white text-slate-600 text-xs sm:text-sm font-semibold rounded-full border border-slate-200 shadow-2xs cursor-pointer hover:border-brand-teal-light hover:text-brand-teal hover:shadow-sm hover:bg-brand-teal-pale transition-all"
                   >
                     {tag}
                   </span>
@@ -222,7 +222,7 @@ export function Hero() {
             </motion.div>
 
             {/* Engagements / Valeurs (Remplacement des fausses stats) */}
-            <motion.div variants={FADE_UP_ANIMATION_VARIANTS} className="grid grid-cols-2 lg:grid-cols-4 gap-y-6 gap-x-4 pt-10 border-t border-slate-100 mt-8">
+            <motion.div variants={FADE_UP_ANIMATION_VARIANTS} className="grid grid-cols-2 lg:grid-cols-4 gap-y-4 sm:gap-y-6 gap-x-3 sm:gap-x-4 pt-6 sm:pt-10 border-t border-slate-100 mt-6 sm:mt-8">
               {[
                 { title: 'Validation', desc: 'Comité médical expert' },
                 { title: 'Sérénité', desc: 'Logistique EVASAN' },
@@ -230,8 +230,8 @@ export function Hero() {
                 { title: 'Sur-mesure', desc: 'Accompagnement premium' },
               ].map((item, i) => (
                 <div key={i} className="flex flex-col py-1">
-                  <div className="text-[15px] sm:text-[17px] font-extrabold text-slate-900 mb-1 leading-none">{item.title}</div>
-                  <div className="text-[11px] sm:text-[13px] text-slate-500 font-semibold leading-snug">{item.desc}</div>
+                  <div className="text-sm sm:text-[15px] md:text-[17px] font-extrabold text-slate-900 mb-0.5 sm:mb-1 leading-none">{item.title}</div>
+                  <div className="text-[10px] sm:text-[11px] md:text-[13px] text-slate-500 font-semibold leading-snug">{item.desc}</div>
                 </div>
               ))}
             </motion.div>

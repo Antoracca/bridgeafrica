@@ -223,20 +223,20 @@ export function Technology() {
         <div className="flex flex-col gap-0 lg:hidden">
 
           {/* 1. Label + Titre */}
-          <div className="mb-8">
-            <div className="text-[#38BDF8] font-semibold tracking-widest uppercase text-xs mb-6">
+          <div className="mb-4 sm:mb-8">
+            <div className="text-[#38BDF8] font-semibold tracking-widest uppercase text-xs mb-3 sm:mb-6">
               Architecture Pont Afrique Santé
             </div>
-            <h2 className="text-[34px] font-medium leading-[1.1] text-white tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>
+            <h2 className="text-2xl min-[360px]:text-3xl sm:text-[34px] font-medium leading-[1.15] text-white tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>
               L&apos;Intelligence Clinique.
               <br />
               <span className="text-white/40">La Sécurité Absolue.</span>
             </h2>
           </div>
 
-          {/* 2. Image Téléphone — wrapper py-20 pour absorber le débordement du trou noir */}
-          <div className="w-full py-20">
-            <div className="relative aspect-square max-w-[320px] mx-auto">
+          {/* 2. Image Téléphone — wrapper adapté */}
+          <div className="w-full py-8 sm:py-14">
+            <div className="relative aspect-square max-w-[300px] sm:max-w-[340px] mx-auto">
               {/* Effet Trou Noir — limité à 100% sur mobile pour ne pas déborder */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full z-0 pointer-events-none">
                 <div className="absolute inset-0 rounded-full" style={{ background: 'radial-gradient(ellipse at center, transparent 25%, rgba(0,20,40,0.90) 65%, #070C14 100%)' }} />
@@ -258,11 +258,11 @@ export function Technology() {
           </div>
 
           {/* 3. Description + Stats */}
-          <div className="mt-0">
-            <p className="text-lg text-white/50 font-light leading-relaxed mb-10">
+          <div className="mt-2 sm:mt-4">
+            <p className="text-sm sm:text-base md:text-lg text-white/60 font-light leading-relaxed mb-8">
               Le traitement de vos données de santé n&apos;est pas confié au hasard. Notre écosystème fusionne un cryptage inviolable avec une puissance de routing capable de cibler l&apos;établissement le plus pertinent selon vos pathologies en quelques fractions de seconde.
             </p>
-            <div className="grid grid-cols-2 gap-x-8 gap-y-8 border-t border-white/10 pt-10">
+            <div className="grid grid-cols-2 gap-x-4 sm:gap-x-8 gap-y-6 sm:gap-y-8 border-t border-white/10 pt-8 sm:pt-10">
               <div>
                 <div className="text-[28px] font-light text-white mb-2 tracking-tighter">AES-256</div>
                 <p className="text-white/40 leading-relaxed text-sm font-light">Chiffrement intégral &quot;zéro-connaissance&quot;. Seul votre médecin coordinateur accède au dossier.</p>

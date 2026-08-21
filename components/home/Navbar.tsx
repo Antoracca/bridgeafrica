@@ -180,13 +180,13 @@ export function Navbar() {
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
 
           {/* LEFT — hamburger + logo + creative strip (menu open) */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-1.5 min-[360px]:gap-2 sm:gap-3 shrink-0 min-w-0">
             <button onClick={() => setMenuOpen(o => !o)} aria-label="Menu"
-              className={`p-2.5 rounded-xl border transition-all duration-200 ${menuOpen ? 'bg-slate-900 text-white border-slate-900' : 'border-slate-200 text-slate-700 hover:bg-slate-50'}`}>
-              {menuOpen ? <X size={20} strokeWidth={2.5} /> : <Menu size={20} strokeWidth={2} />}
+              className={`p-2 sm:p-2.5 rounded-xl border transition-all duration-200 shrink-0 ${menuOpen ? 'bg-slate-900 text-white border-slate-900' : 'border-slate-200 text-slate-700 hover:bg-slate-50'}`}>
+              {menuOpen ? <X size={18} className="sm:w-5 sm:h-5" strokeWidth={2.5} /> : <Menu size={18} className="sm:w-5 sm:h-5" strokeWidth={2} />}
             </button>
-            <Link href="/" onClick={closeMenu} className="flex items-center gap-1 sm:gap-1.5 group shrink-0">
-              <div className="relative w-12 h-12 sm:w-14 sm:h-14 shrink-0">
+            <Link href="/" onClick={closeMenu} className="flex items-center gap-0.5 sm:gap-1.5 group shrink-0 min-w-0">
+              <div className="relative w-8 h-8 min-[360px]:w-9 min-[360px]:h-9 sm:w-11 sm:h-11 md:w-13 md:h-13 shrink-0">
                 <Image 
                   src="/FaviconFinal.png" 
                   alt="Pont Afrique Santé" 
@@ -195,7 +195,7 @@ export function Navbar() {
                   priority 
                 />
               </div>
-              <span className="text-xl sm:text-2xl font-bold tracking-tight font-sans select-none flex items-center -ml-0.5 sm:-ml-1">
+              <span className="text-[15px] min-[360px]:text-base sm:text-xl md:text-2xl font-bold tracking-tight font-sans select-none flex items-center -ml-0.5 sm:-ml-1 shrink-0">
                 <span className="text-[#0284C7]">Pont</span><span className="text-[#141413]">Afrique</span><span className="text-[#CF4500]">Santé</span>
               </span>
             </Link>
@@ -274,20 +274,20 @@ export function Navbar() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 10 }}
                 transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                className="flex items-center gap-2 shrink-0"
+                className="flex items-center gap-1.5 sm:gap-2 shrink-0"
               >
                 {!isLoading ? (
                   user ? (
                     <>
                       <Link href={dashLink()}>
-                        <Button className="rounded-full bg-brand-teal hover:bg-brand-teal-dark text-white px-4 sm:px-5 h-9 text-[13px] font-bold shadow-md shadow-brand-teal/20">
-                          <User size={15} className="mr-1.5" />
+                        <Button className="rounded-full bg-brand-teal hover:bg-brand-teal-dark text-white px-3 sm:px-5 h-8 sm:h-9 text-xs sm:text-[13px] font-bold shadow-md shadow-brand-teal/20">
+                          <User size={14} className="mr-1 sm:mr-1.5" />
                           <span className="hidden sm:inline">{dashText()}</span>
-                          <span className="sm:hidden">Mon espace</span>
+                          <span className="sm:hidden">Espace</span>
                         </Button>
                       </Link>
-                      <Button variant="ghost" onClick={handleLogout} className="rounded-full text-slate-500 hover:text-red-600 hover:bg-red-50 h-9 w-9 p-0">
-                        <LogOut size={16} />
+                      <Button variant="ghost" onClick={handleLogout} className="rounded-full text-slate-500 hover:text-red-600 hover:bg-red-50 h-8 w-8 sm:h-9 sm:w-9 p-0">
+                        <LogOut size={15} />
                       </Button>
                     </>
                   ) : (
@@ -295,18 +295,18 @@ export function Navbar() {
                       <Link href="/login" className="hidden sm:flex text-[13px] font-bold text-slate-600 hover:text-brand-teal transition-colors items-center gap-1.5 px-3">
                         <LogIn size={15} /> Connexion
                       </Link>
-                      <Link href="/login" className="sm:hidden flex items-center justify-center w-9 h-9 rounded-full border border-slate-200 text-slate-600 hover:text-brand-teal hover:border-brand-teal-border transition-all">
-                        <LogIn size={16} />
+                      <Link href="/login" title="Connexion" className="sm:hidden flex items-center justify-center w-8 h-8 rounded-full border border-slate-200 text-slate-600 hover:text-brand-teal hover:border-brand-teal transition-all shrink-0">
+                        <LogIn size={15} />
                       </Link>
                       <Link href="/register">
-                        <Button className="rounded-full bg-brand-teal hover:bg-brand-teal-dark text-white px-4 sm:px-5 h-9 text-[13px] font-bold shadow-md shadow-brand-teal/20">
+                        <Button className="rounded-full bg-brand-teal hover:bg-brand-teal-dark text-white px-2.5 min-[380px]:px-3.5 sm:px-5 h-8 sm:h-9 text-[11px] min-[380px]:text-xs sm:text-[13px] font-bold shadow-md shadow-brand-teal/20 shrink-0">
                           <span className="hidden sm:inline">Mon Espace Santé</span>
                           <span className="sm:hidden">S&#39;inscrire</span>
                         </Button>
                       </Link>
                     </>
                   )
-                ) : <div className="w-28 h-9 bg-slate-100 rounded-full animate-pulse" />}
+                ) : <div className="w-20 sm:w-28 h-8 sm:h-9 bg-slate-100 rounded-full animate-pulse" />}
               </motion.div>
             )}
           </AnimatePresence>
@@ -343,7 +343,15 @@ export function Navbar() {
               </div>
 
               {/* ── MOBILE — drill-down navigation < lg ── */}
-              <NavbarMobile closeMenu={closeMenu} onSelectClinic={setSelectedClinic} />
+              <NavbarMobile
+                closeMenu={closeMenu}
+                onSelectClinic={setSelectedClinic}
+                user={user}
+                isLoading={isLoading}
+                handleLogout={handleLogout}
+                dashLink={dashLink}
+                dashText={dashText}
+              />
 
               {/* Main split — DESKTOP only (≥ lg) */}
               <div className="hidden lg:flex flex-1 overflow-hidden">

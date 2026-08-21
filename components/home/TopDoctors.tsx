@@ -386,14 +386,14 @@ export function TopDoctors() {
           <div className="absolute inset-0 bg-gradient-to-t from-[#002840]/30 to-transparent z-10" />
         </div>
 
-        <div className="relative z-20 max-w-7xl mx-auto px-4 md:px-8 xl:px-12 w-full pt-8 md:pt-16">
+        <div className="relative z-20 max-w-7xl mx-auto px-4 md:px-8 xl:px-12 w-full pt-6 sm:pt-8 md:pt-16">
           <h2
-            className="text-[30px] sm:text-[40px] md:text-[48px] lg:text-[56px] font-medium text-white mb-5 tracking-tight leading-[1.05] drop-shadow-lg"
+            className="text-2xl min-[360px]:text-3xl sm:text-[40px] md:text-[48px] lg:text-[56px] font-medium text-white mb-3 sm:mb-5 tracking-tight leading-[1.05] drop-shadow-lg"
             style={{ fontFamily: 'Georgia, serif' }}
           >
             Annuaire des médecins<br className="hidden md:block" /> partenaires
           </h2>
-          <p className="text-white/90 text-base sm:text-lg lg:text-[22px] max-w-2xl font-light leading-relaxed">
+          <p className="text-white/90 text-sm sm:text-base md:text-lg lg:text-[22px] max-w-2xl font-light leading-relaxed">
             Médecins triés sur le volet pour leur excellence et leur savoir-faire international.
           </p>
         </div>

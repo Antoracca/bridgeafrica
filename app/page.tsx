@@ -13,7 +13,7 @@ const Footer       = dynamic(() => import('@/components/home/Footer').then(m => 
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white font-sans selection:bg-brand-teal-pale selection:text-brand-navy">
+    <main className="min-h-screen bg-white font-sans selection:bg-brand-teal-pale selection:text-brand-navy overflow-x-hidden w-full max-w-full">
       <Navbar />
       
       {/* 1. Hero Section */}
@@ -38,7 +38,7 @@ export default function Home() {
       <Packages />
 
       {/* 8. Call to Action Final */}
-      <section className="relative pt-16 pb-16 md:pt-24 md:pb-20 bg-[#020617] overflow-hidden flex items-center justify-center border-t border-slate-800">
+      <section className="relative pt-12 pb-14 sm:pt-16 sm:pb-16 md:pt-24 md:pb-20 bg-[#020617] overflow-hidden flex items-center justify-center border-t border-slate-800">
          {/* Background Image */}
          <div className="absolute inset-0">
            <img
@@ -51,16 +51,16 @@ export default function Home() {
          </div>
 
          <div className="max-w-5xl mx-auto px-4 sm:px-8 relative z-10 text-center">
-            <h3 className="text-brand-teal tracking-[0.3em] text-[10px] uppercase font-bold mb-6">
+            <h3 className="text-brand-teal tracking-[0.3em] text-[10px] uppercase font-bold mb-4 sm:mb-6">
                Prêt à franchir le pas
             </h3>
 
-            <h2 className="text-4xl md:text-5xl lg:text-7xl font-normal text-white mb-8 leading-[1.05]" style={{ fontFamily: 'Georgia, serif' }}>
+            <h2 className="text-2xl min-[360px]:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-normal text-white mb-6 sm:mb-8 leading-[1.08]" style={{ fontFamily: 'Georgia, serif' }}>
                Votre santé est absolue.<br />
                <span className="text-slate-400 italic font-light">Notre engagement aussi.</span>
             </h2>
 
-            <p className="text-lg lg:text-xl text-slate-400 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-slate-400 mb-8 sm:mb-10 max-w-2xl mx-auto font-light leading-relaxed">
                Confiez l'intégralité de votre logistique médicale à Pont Afrique Santé. Nos experts orchestrent chaque étape de votre prise en charge internationale avec un devoir d'excellence certifié.
             </p>
 

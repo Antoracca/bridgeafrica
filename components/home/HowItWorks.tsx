@@ -62,7 +62,7 @@ export function HowItWorks() {
   const step = steps[active]
 
   return (
-    <section className="bg-[#f3f3f3] py-24 sm:py-32">
+    <section className="bg-[#f3f3f3] py-14 sm:py-24 md:py-32">
       <div className="max-w-5xl mx-auto px-4 sm:px-8">
 
         {/* Header — à gauche, grand, aéré */}
@@ -71,15 +71,15 @@ export function HowItWorks() {
            whileInView={{ opacity: 1, y: 0 }}
            viewport={{ once: true, margin: '0px 0px -80px 0px' }}
            transition={{ duration: 0.6 }}
-           className="mb-16 sm:mb-20"
+           className="mb-10 sm:mb-16 md:mb-20"
         >
-          <p className="text-[11px] tracking-[0.25em] uppercase text-slate-400 font-semibold mb-5">
+          <p className="text-[11px] tracking-[0.25em] uppercase text-slate-400 font-semibold mb-3 sm:mb-5">
             Comment ça marche
           </p>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.05]">
+          <h2 className="text-3xl min-[360px]:text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.05]">
             Une précision<br /> chirurgicale
           </h2>
-          <p className="text-base sm:text-lg text-slate-400 leading-relaxed max-w-lg mt-5">
+          <p className="text-sm sm:text-base md:text-lg text-slate-500 leading-relaxed max-w-lg mt-3 sm:mt-5">
             Chaque étape de votre parcours est pensée pour garantir sécurité, efficacité et sérénité totale.
           </p>
         </motion.div>
@@ -87,17 +87,17 @@ export function HowItWorks() {
         {/* Tabs + Card container */}
         <div className="relative">
 
-          {/* Onglets — posés comme des notes individuelles sur le dessus de la carte */}
-          <div className="flex gap-3 relative z-10 px-4 sm:px-8" style={{ marginBottom: '-1px' }}>
+          {/* Onglets — grille responsive 2x2 sur mobile et 4 colonnes sur desktop */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 relative z-10 px-1 sm:px-6 mb-2 sm:mb-0 sm:-mb-[1px]">
             {steps.map((s, idx) => (
               <button
                 key={idx}
                 onClick={() => setActive(idx)}
                 className={`
-                  flex-1 py-3.5 text-sm sm:text-[15px] font-bold transition-all duration-300
+                  w-full py-2.5 sm:py-3.5 px-2 text-xs min-[360px]:text-sm sm:text-[15px] font-bold transition-all duration-300 rounded-t-lg sm:rounded-t-none
                   ${active === idx
                     ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white shadow-lg shadow-orange-300/40'
-                    : 'bg-white text-slate-700 shadow-md hover:shadow-lg hover:-translate-y-0.5'
+                    : 'bg-white text-slate-700 shadow-xs hover:shadow-md hover:-translate-y-0.5'
                   }
                 `}
               >
@@ -114,26 +114,26 @@ export function HowItWorks() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.25, ease: 'easeOut' }}
-              className="bg-white shadow-xl relative z-0"
+              className="bg-white shadow-xl relative z-0 rounded-2xl sm:rounded-none overflow-hidden"
             >
-              <div className="px-8 sm:px-12 lg:px-14 py-10 sm:py-14">
+              <div className="px-5 sm:px-10 lg:px-14 py-7 sm:py-12">
 
                 {/* Titre de l'étape */}
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug mb-4">
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug mb-3 sm:mb-4">
                   {step.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-[15px] text-slate-500 leading-relaxed max-w-2xl mb-10">
+                <p className="text-sm sm:text-[15px] text-slate-500 leading-relaxed max-w-2xl mb-6 sm:mb-8">
                   {step.description}
                 </p>
 
-                {/* Points clés — liste sobre avec marqueur vert */}
-                <ul className="space-y-4">
+                {/* Points clés — grille 1 ou 2 colonnes */}
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   {step.highlights.map((h, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <span className="w-1.5 h-1.5 mt-[9px] rounded-full bg-brand-teal shrink-0" />
-                      <span className="text-[15px] text-slate-700 font-medium leading-relaxed">
+                    <li key={i} className="flex items-start gap-2.5 p-2.5 sm:p-3 rounded-lg bg-slate-50 border border-slate-100">
+                      <span className="w-2 h-2 mt-1.5 rounded-full bg-brand-teal shrink-0" />
+                      <span className="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
                         {h}
                       </span>
                     </li>
@@ -152,12 +152,12 @@ export function HowItWorks() {
            whileInView={{ opacity: 1, y: 0 }}
            viewport={{ once: true, margin: '0px 0px -80px 0px' }}
            transition={{ duration: 0.5, delay: 0.15 }}
-           className="mt-14 sm:mt-16"
+           className="mt-10 sm:mt-16"
         >
           <button
             onClick={() => setOnboardingOpen(true)}
-            className="h-14 px-10 bg-slate-900 hover:bg-brand-teal text-white text-base font-semibold
-                       transition-all duration-300 hover:scale-[1.02] inline-flex items-center gap-3 group shadow-lg"
+            className="w-full sm:w-auto h-12 sm:h-14 px-6 sm:px-10 bg-slate-900 hover:bg-brand-teal text-white text-sm sm:text-base font-semibold
+                       transition-all duration-300 hover:scale-[1.02] inline-flex items-center justify-center gap-3 group shadow-lg"
           >
             Démarrer votre accompagnement
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

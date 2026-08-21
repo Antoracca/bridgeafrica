@@ -9,7 +9,7 @@ import {
   Wallet, TrendingDown, Calendar, Landmark, BriefcaseBusiness, Shield, Phone,
   BookOpen, Clock, Stethoscope, Sparkle, Quote,
   ClipboardCheck, Languages, Calculator, GitCompare, NotebookPen, PlayCircle,
-  ShieldCheck, Activity, Users,
+  ShieldCheck, Activity, Users, LogIn, LogOut, User,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -156,12 +156,17 @@ type View =
 interface Props {
   closeMenu: () => void
   onSelectClinic: (c: ClinicEntry) => void
+  user?: any
+  isLoading?: boolean
+  handleLogout?: () => void
+  dashLink?: () => string
+  dashText?: () => string
 }
 
 /* ══════════════════════════════════════════════════════════════
    NAVBAR MOBILE — Drill-down navigation < lg
    ══════════════════════════════════════════════════════════════ */
-export function NavbarMobile({ closeMenu, onSelectClinic }: Props) {
+export function NavbarMobile({ closeMenu, onSelectClinic, user, isLoading, handleLogout, dashLink, dashText }: Props) {
   const [stack, setStack] = useState<View[]>([{ type: 'root' }])
   const current = stack[stack.length - 1]
   const push = (v: View) => setStack(s => [...s, v])
@@ -1443,6 +1448,41 @@ export function NavbarMobile({ closeMenu, onSelectClinic }: Props) {
 
           </motion.div>
         </AnimatePresence>
+      </div>
+
+      {/* ── Fixed Bottom Auth Action Bar (Toujours visible et ergonomique sur mobile) ── */}
+      <div className="shrink-0 p-3.5 sm:p-4 border-t border-slate-200/90 bg-white/95 backdrop-blur-md shadow-lg z-20">
+        {!isLoading && !user && (
+          <div className="grid grid-cols-2 gap-2 sm:gap-3">
+            <Link href="/login" onClick={closeMenu} className="w-full">
+              <Button variant="outline" className="w-full h-11 text-xs sm:text-[13px] font-bold rounded-xl border-slate-300 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5 shadow-2xs">
+                <LogIn size={15} /> Se connecter
+              </Button>
+            </Link>
+            <Link href="/register" onClick={closeMenu} className="w-full">
+              <Button className="w-full h-11 text-xs sm:text-[13px] font-bold rounded-xl bg-brand-teal hover:bg-brand-teal-dark text-white flex items-center justify-center gap-1.5 shadow-md shadow-brand-teal/20">
+                S'inscrire <ArrowRight size={14} />
+              </Button>
+            </Link>
+          </div>
+        )}
+        {!isLoading && user && (
+          <div className="flex items-center gap-2">
+            <Link href={dashLink ? dashLink() : '/patient'} onClick={closeMenu} className="flex-1">
+              <Button className="w-full h-11 text-xs sm:text-[13px] font-bold rounded-xl bg-brand-teal hover:bg-brand-teal-dark text-white flex items-center justify-center gap-1.5 shadow-md shadow-brand-teal/20">
+                <User size={15} /> {dashText ? dashText() : 'Mon Espace Santé'}
+              </Button>
+            </Link>
+            {handleLogout && (
+              <Button variant="outline" onClick={() => { handleLogout(); closeMenu() }}
+                className="h-11 px-3 text-xs text-red-600 border-red-200 hover:bg-red-50 font-semibold rounded-xl shrink-0"
+                title="Déconnexion"
+              >
+                <LogOut size={16} />
+              </Button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )

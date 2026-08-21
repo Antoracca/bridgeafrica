@@ -102,22 +102,22 @@ export function Destinations() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '0px 0px -80px 0px' }}
-          className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6"
+          className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 sm:gap-6"
         >
           <div>
-            <p className="text-[11px] tracking-[0.25em] uppercase text-slate-400 font-semibold mb-4">
+            <p className="text-[11px] tracking-[0.25em] uppercase text-slate-400 font-semibold mb-2 sm:mb-4">
               Destinations
             </p>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.1]">
+            <h2 className="text-2xl min-[360px]:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.1]">
               Votre pont vers les <br className="hidden sm:block" />
               meilleurs soins au monde
             </h2>
           </div>
           <button
             onClick={() => setDestModalOpen(true)}
-            className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full
-                       bg-slate-900 text-white text-sm font-semibold
-                       hover:bg-slate-800 transition-all duration-300 self-start sm:self-auto flex-shrink-0"
+            className="group inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-full
+                       bg-slate-900 text-white text-xs sm:text-sm font-semibold
+                       hover:bg-slate-800 transition-all duration-300 self-start sm:self-auto flex-shrink-0 shadow-sm"
           >
             Toutes les destinations
             <ArrowUpRight className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />

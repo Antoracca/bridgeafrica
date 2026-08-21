@@ -17,16 +17,16 @@ export function FinalCTAs() {
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row gap-6 justify-center items-center z-20 relative">
+      <div className="flex flex-col sm:flex-row gap-3.5 sm:gap-6 justify-center items-center z-20 relative w-full max-w-md sm:max-w-none mx-auto">
         <button 
           onClick={() => setOnboardingOpen(true)}
-          className="w-full sm:w-auto bg-brand-teal text-white px-10 h-16 text-xs font-bold uppercase tracking-[0.1em] hover:bg-brand-teal-dark transition-all duration-300 flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(72,156,140,0.2)]"
+          className="w-full sm:w-auto bg-brand-teal text-white px-6 sm:px-10 h-13 sm:h-16 text-xs sm:text-[13px] font-bold uppercase tracking-[0.1em] hover:bg-brand-teal-dark transition-all duration-300 flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(72,156,140,0.2)] rounded-none"
         >
           Débuter L'Étude de Dossier <ArrowRight size={14} />
         </button>
         <button 
           onClick={() => setConciergerieOpen(true)}
-          className="w-full sm:w-auto bg-transparent border border-white/20 text-white px-10 h-16 text-xs font-bold uppercase tracking-[0.1em] hover:bg-white hover:text-slate-900 transition-all duration-300 flex items-center justify-center gap-3"
+          className="w-full sm:w-auto bg-transparent border border-white/20 text-white px-6 sm:px-10 h-13 sm:h-16 text-xs sm:text-[13px] font-bold uppercase tracking-[0.1em] hover:bg-white hover:text-slate-900 transition-all duration-300 flex items-center justify-center gap-3 rounded-none"
         >
           Contacter La Conciergerie
         </button>

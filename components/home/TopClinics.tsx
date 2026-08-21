@@ -58,12 +58,12 @@ export function TopClinics() {
   return (
     <section className="bg-[#f5f5f5] overflow-hidden">
       {/* ── Titre ── */}
-      <div className="pt-8 sm:pt-12 pb-6 text-center px-4">
-        <p className="text-[11px] tracking-[0.3em] uppercase text-[#1B433E] font-bold mb-4">
+      <div className="pt-8 sm:pt-12 pb-4 sm:pb-6 text-center px-4">
+        <p className="text-[11px] tracking-[0.3em] uppercase text-[#1B433E] font-bold mb-2 sm:mb-4">
           Excellence Médicale
         </p>
         <h2
-          className="text-3xl sm:text-4xl lg:text-5xl text-[#1a1f24] leading-[1.15] tracking-tight max-w-4xl mx-auto"
+          className="text-2xl min-[360px]:text-3xl sm:text-4xl lg:text-5xl text-[#1a1f24] leading-[1.15] tracking-tight max-w-4xl mx-auto"
           style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontWeight: 400 }}
         >
           Les Établissements Qui<br className="hidden sm:block" />
@@ -72,14 +72,12 @@ export function TopClinics() {
       </div>
 
       {/* ── Carrousel Convoyeur Majeur ── */}
-      <div className="w-full flex justify-center pb-4 pt-10">
+      <div className="w-full flex justify-center pb-4 pt-6 sm:pt-10 overflow-hidden">
         {/* Le conteneur ne doit pas avoir d'overflow hidden pour permettre au card-in-card de déborder au besoin */}
-        <div className="relative flex items-center justify-center gap-[4vw] sm:gap-[5vw] min-h-[550px]">
+        <div className="relative flex items-center justify-center gap-[3vw] sm:gap-[5vw] min-h-[460px] sm:min-h-[550px] max-w-full">
           <AnimatePresence mode="popLayout" initial={false}>
             {visibleItems.map(item => {
               const isCenter = item.pos === 0
-              const isSide = Math.abs(item.pos) === 1
-              // Les items à -2 ou +2 existent dans le DOM pour le recalcul layout, mais doivent être invisibles
               const isHidden = Math.abs(item.pos) > 1
 
               return (
@@ -100,8 +98,7 @@ export function TopClinics() {
                   onMouseLeave={() => { if (isCenter) setIsHovered(false) }}
                   className="shrink-0 relative cursor-pointer"
                   style={{
-                    // Diminution de 10-15% des largeurs. Bords stricts : pas de border-radius
-                    width: isCenter ? 'clamp(280px, 30vw, 380px)' : 'clamp(170px, 19vw, 240px)',
+                    width: isCenter ? 'clamp(260px, min(85vw, 360px), 380px)' : 'clamp(130px, 18vw, 240px)',
                     aspectRatio: isCenter ? '4/5' : '3/4',
                     zIndex: isCenter ? 30 : isHidden ? 0 : 10
                   }}
@@ -137,77 +134,54 @@ export function TopClinics() {
                            className="absolute inset-0 z-20 pointer-events-none"
                          >
                            {/* Badge Supérieur - Capsule, arrondie */}
-                           <div className="absolute top-5 left-0 right-0 flex justify-center">
-                             <div className="bg-[#1a1f24]/75 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20">
-                               <span className="text-[9px] font-bold tracking-[0.18em] uppercase text-white">
-                                 {item.data.tag}
+                           <div className="absolute top-4 sm:top-5 left-0 right-0 flex justify-center px-2">
+                             <div className="bg-white/90 backdrop-blur-md px-3 sm:px-4 py-1 sm:py-1.5 rounded-full flex items-center gap-1.5 sm:gap-2 shadow-xs border border-white/40">
+                               <span className="w-1.5 h-1.5 rounded-full bg-[#1B433E]" />
+                               <span className="text-[9px] sm:text-[10px] font-bold tracking-widest uppercase text-[#1a1f24] truncate">
+                                 {item.data.hub}
                                </span>
                              </div>
                            </div>
 
-                           {/* Gradient Sombre en bas */}
-                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-                           {/* Textes de la carte */}
-                           <div className="absolute inset-x-0 bottom-0 px-6 pb-14 text-center sm:text-left">
-                             <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/70 mb-2.5">
-                               <span className="text-white">{item.data.type}</span>
-                               <span className="mx-2 text-white/30">|</span>
-                               <span>{item.data.date}</span>
-                             </p>
-                             <h3
-                               className="text-xl sm:text-2xl text-white leading-snug mb-3"
-                               style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontWeight: 400 }}
-                             >
+                           {/* Infos Inférieures */}
+                           <div className="absolute bottom-0 inset-x-0 p-4 sm:p-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                             <div className="text-[10px] sm:text-xs text-white/75 font-medium uppercase tracking-wider mb-1">
+                               {item.data.city}
+                             </div>
+                             <div className="text-base sm:text-lg font-bold text-white leading-tight mb-2" style={{ fontFamily: 'Georgia, serif' }}>
                                {item.data.name}
-                             </h3>
-                           </div>
-
-                           {/* Bloc card-in-card débordant */}
-                           <div className="absolute -bottom-10 left-4 right-4 pointer-events-auto shadow-2xl">
-                             <div className="bg-[#f0ece9] rounded-xl px-5 py-4 border border-white/30">
-                               <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-[#63666A] mb-1.5">
-                                 {item.data.hub} <span className="mx-1 text-[#C4C4C4]">|</span> {item.data.city} <span className="mx-1 text-[#C4C4C4]">|</span> ★ {item.data.rating}
-                               </p>
-                               <p className="text-[13px] text-[#424242] font-serif leading-relaxed line-clamp-2">
-                                 {item.data.spec}
-                               </p>
+                             </div>
+                             <div className="text-[11px] sm:text-xs text-white/90 line-clamp-2">
+                               {item.data.spec}
                              </div>
                            </div>
                          </motion.div>
                       )}
-                    </AnimatePresence>
 
-                    {/* Nouveau Contenu HOVER (Carte Centrale) */}
-                    <AnimatePresence>
+                      {/* État Survolé (Hover) */}
                       {isCenter && isHovered && (
                         <motion.div
-                          initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
-                          animate={{ 
-                            opacity: 1, 
-                            backdropFilter: 'blur(8px)', 
-                            transition: { duration: 0.4, delay: 0.1 } 
-                          }}
-                          exit={{ 
-                            opacity: 0, 
-                            backdropFilter: 'blur(0px)', 
-                            transition: { duration: 0.3 } 
-                          }}
-                          className="absolute inset-0 z-40 bg-white/20 flex flex-col pointer-events-auto"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="absolute inset-0 bg-[#1a1f24]/90 backdrop-blur-sm z-20 p-5 sm:p-7 flex flex-col justify-between text-white"
                         >
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#1a1f24] via-[#1a1f24]/50 to-transparent" />
-                          <div className="relative z-50 flex flex-col h-full px-7 pt-12 pb-8 text-white">
-                            <h4 className="text-xl sm:text-2xl font-bold mb-4" style={{ fontFamily: 'Georgia, serif' }}>
+                          <div>
+                            <div className="text-[10px] tracking-widest text-[#489C8C] font-bold uppercase mb-2">
+                              {item.data.tag}
+                            </div>
+                            <h4 className="text-lg sm:text-2xl font-bold mb-3 sm:mb-4 leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
                               Détails de l'établissement
                             </h4>
-                            <p className="text-xs sm:text-sm text-white/90 leading-relaxed mb-auto">
+                            <p className="text-xs sm:text-sm text-white/90 leading-relaxed">
                               Découvrez nos équipements de pointe, nos parcours personnalisés et notre équipe dédiée à votre santé au sein de {item.data.name}.
                             </p>
-                            <div className="flex justify-start mt-4">
-                              <Link href="/cliniques" className="bg-[#1B433E] text-white hover:bg-[#122c28] px-5 py-3 flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase transition-colors shadow-lg">
-                                En Savoir Plus <ArrowRight className="w-4 h-4 ml-1" />
-                              </Link>
-                            </div>
+                          </div>
+                          <div className="pt-4">
+                            <button onClick={() => setShowCliniques(true)} className="bg-[#1B433E] text-white hover:bg-[#122c28] px-4 sm:px-5 py-2.5 sm:py-3 flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase transition-colors shadow-lg">
+                              En Savoir Plus <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                            </button>
                           </div>
                         </motion.div>
                       )}
@@ -220,41 +194,40 @@ export function TopClinics() {
         </div>
       </div>
 
-      {/* ── Contrôles Carrés & Espace de respiration pour le card-in-card ── */}
-      {/* Modification critique : justify-start au lieu de justify-center, ramenés à gauche */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 mt-12 mb-10 flex justify-start">
+      {/* ── Contrôles Carrés ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 mt-8 sm:mt-12 mb-6 sm:mb-10 flex justify-start">
         <div className="flex items-center gap-[5px]">
-          <button onClick={() => setPaused(!paused)} className="w-10 h-10 bg-white border border-[#E5E5E5] flex items-center justify-center transition-colors text-[#63666A] hover:text-[#1a1f24] hover:border-[#1a1f24]">
-            {paused ? <Play size={14} /> : <Pause size={14} />}
+          <button onClick={() => setPaused(!paused)} aria-label={paused ? 'Play' : 'Pause'} className="w-9 h-9 sm:w-10 sm:h-10 bg-white border border-[#E5E5E5] flex items-center justify-center transition-colors text-[#63666A] hover:text-[#1a1f24] hover:border-[#1a1f24]">
+            {paused ? <Play size={13} /> : <Pause size={13} />}
           </button>
-          <button onClick={prev} className="w-10 h-10 bg-white border border-[#E5E5E5] flex items-center justify-center transition-colors text-[#63666A] hover:text-[#1a1f24] hover:border-[#1a1f24]">
-            <ChevronLeft size={16} />
+          <button onClick={prev} aria-label="Précédent" className="w-9 h-9 sm:w-10 sm:h-10 bg-white border border-[#E5E5E5] flex items-center justify-center transition-colors text-[#63666A] hover:text-[#1a1f24] hover:border-[#1a1f24]">
+            <ChevronLeft size={15} />
           </button>
-          <button onClick={next} className="w-10 h-10 bg-white border border-[#E5E5E5] flex items-center justify-center transition-colors text-[#63666A] hover:text-[#1a1f24] hover:border-[#1a1f24]">
-            <ChevronRight size={16} />
+          <button onClick={next} aria-label="Suivant" className="w-9 h-9 sm:w-10 sm:h-10 bg-white border border-[#E5E5E5] flex items-center justify-center transition-colors text-[#63666A] hover:text-[#1a1f24] hover:border-[#1a1f24]">
+            <ChevronRight size={15} />
           </button>
         </div>
       </div>
 
       {/* ── Spotlight Bar ── */}
-      <div className="flex justify-center pb-12 px-4">
-        <div className="inline-flex items-center gap-6 sm:gap-10 px-8 py-4 bg-white border border-[#E5E5E5] shadow-sm rounded-full">
+      <div className="flex justify-center pb-8 sm:pb-12 px-4">
+        <div className="inline-flex items-center gap-4 sm:gap-10 px-5 sm:px-8 py-3 sm:py-4 bg-white border border-[#E5E5E5] shadow-xs rounded-full max-w-full overflow-x-auto">
           <span className="text-[10px] sm:text-[11px] font-black tracking-[0.18em] uppercase text-[#1a1f24] shrink-0">
             Pont Afrique Santé Spotlight
           </span>
           {spotlights.map((sp, i) => (
-            <Link key={i} href="#" className="text-[11px] sm:text-[13px] font-bold uppercase text-slate-800 border-b-2 border-slate-800 pb-[1px] hover:text-[#1B433E] hover:border-[#1B433E] transition-colors hidden sm:block">
+            <span key={i} className="text-[11px] sm:text-[13px] font-bold uppercase text-slate-800 border-b-2 border-slate-800 pb-[1px] hover:text-[#1B433E] hover:border-[#1B433E] transition-colors hidden sm:block shrink-0">
               {sp}
-            </Link>
+            </span>
           ))}
         </div>
       </div>
 
       {/* ── CTA ── */}
-      <div className="text-center pb-24 px-4">
+      <div className="text-center pb-16 sm:pb-24 px-4">
         <button
           onClick={() => setShowCliniques(true)}
-          className="h-14 px-9 bg-[#1a1f24] hover:bg-black text-white text-[13px] font-bold tracking-wide uppercase transition-all duration-300 inline-flex items-center gap-3 group rounded-none"
+          className="w-full sm:w-auto h-12 sm:h-14 px-6 sm:px-9 bg-[#1a1f24] hover:bg-black text-white text-xs sm:text-[13px] font-bold tracking-wide uppercase transition-all duration-300 inline-flex items-center justify-center gap-3 group rounded-none shadow-md"
         >
           Visiter nos Hôpitaux et cliniques
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />

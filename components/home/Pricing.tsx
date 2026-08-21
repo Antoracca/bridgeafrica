@@ -30,11 +30,11 @@ export function Pricing() {
       <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-14">
 
         {/* --- HEADER MAGISTRAL --- */}
-        <div className="text-center mb-12 md:mb-16 max-w-4xl mx-auto">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl text-slate-900 mb-6 md:mb-8 leading-[1.1]" style={{ fontFamily: 'Georgia, serif' }}>
-            Nos Formules. <span className="block mt-2 md:mt-1 md:inline text-brand-teal italic font-light">L'accompagnement à votre mesure.</span>
+        <div className="text-center mb-8 sm:mb-12 md:mb-16 max-w-4xl mx-auto">
+          <h2 className="text-2xl min-[360px]:text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-slate-900 mb-4 sm:mb-6 md:mb-8 leading-[1.1]" style={{ fontFamily: 'Georgia, serif' }}>
+            Nos Formules. <span className="block mt-1 sm:mt-2 md:mt-1 md:inline text-brand-teal italic font-light">L'accompagnement à votre mesure.</span>
           </h2>
-          <p className="text-lg md:text-xl text-slate-500 leading-relaxed font-light mx-auto max-w-2xl">
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-slate-500 leading-relaxed font-light mx-auto max-w-2xl">
             Peu importe la maladie ou la destination, choisissez le niveau d'orchestration qui sécurise parfaitement votre séjour.
           </p>
         </div>
