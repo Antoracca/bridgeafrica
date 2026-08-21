@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useEmailVerification } from '@/hooks/use-email-verification'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { Loader2, Mail, CheckCircle2, AlertCircle, RefreshCw, ArrowRight } from 'lucide-react'
+import { Loader2, Mail, CheckCircle2, Info, RefreshCw, ArrowRight } from 'lucide-react'
 import { toast } from 'sonner'
 import { Progress } from "@/components/ui/progress"
 
@@ -119,22 +119,12 @@ function CheckEmailContent() {
         <CardContent className="space-y-5 pt-2 pb-8 px-6">
           {!isVerified && (
             <>
-              {/* ENCART SPAM ULTRA VISIBLE */}
-              <div className="bg-amber-50/90 border-2 border-amber-300/80 rounded-xl p-4 text-amber-900 text-left shadow-xs">
-                <div className="flex items-start gap-2.5">
-                  <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                  <div className="text-xs space-y-1">
-                    <p className="font-bold text-amber-950 text-sm">
-                      ⚠️ Vous ne trouvez pas l&apos;email ?
-                    </p>
-                    <p className="leading-relaxed">
-                      Pensez à vérifier votre dossier <strong>Spams / Courriers indésirables</strong> ou l&apos;onglet <strong>Promotions / Notifications</strong>.
-                    </p>
-                    <p className="text-[11px] text-amber-800 font-medium">
-                      💡 Cliquez sur <em>« Ne pas marquer comme spam »</em> pour recevoir tous vos futurs rendez-vous médicaux.
-                    </p>
-                  </div>
-                </div>
+              {/* Information discrète et professionnelle */}
+              <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 text-left flex items-start gap-2.5">
+                <Info className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Si vous ne trouvez pas l&apos;email dans votre boîte principale, pensez à vérifier votre dossier <strong>Spams</strong> ou <strong>Courriers indésirables</strong>.
+                </p>
               </div>
 
               <div className="flex flex-col gap-3 pt-2">
